@@ -169,7 +169,7 @@ struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct DynamicPool *
 struct GraphNodeSwitchCase *init_graph_node_switch_case(struct DynamicPool *pool,
                                                         struct GraphNodeSwitchCase *graphNode,
                                                         s16 numCases, s16 selectedCase,
-                                                        GraphNodeFunc nodeFunc, s32 unused) {
+                                                        GraphNodeFunc nodeFunc, s32 extended) {
     if (pool != NULL) {
         graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeSwitchCase));
     }
@@ -179,7 +179,8 @@ struct GraphNodeSwitchCase *init_graph_node_switch_case(struct DynamicPool *pool
         graphNode->numCases = numCases;
         graphNode->selectedCase = selectedCase;
         graphNode->fnNode.func = nodeFunc;
-        graphNode->unused = unused;
+        graphNode->unused = extended;
+        if (extended) printf("This Switch case is Extended!");
 
         if (nodeFunc != NULL) {
             nodeFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);

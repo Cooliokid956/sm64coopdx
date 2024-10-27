@@ -368,6 +368,16 @@ struct GraphNodeCullingRadius
     u8 pad1E[2];
 };
 
+/** Lua counterpart of the Switch Case node.
+ */
+struct GraphNodeSwitchCaseExt
+{
+    /*0x00*/ struct FnGraphNode fnNode;
+    /*0x18*/ s32 unused;
+    /*0x1C*/ s16 numCases;
+    /*0x1E*/ s16 selectedCase;
+};
+
 extern struct GraphNodeMasterList *gCurGraphNodeMasterList;
 extern struct GraphNodePerspective *gCurGraphNodeCamFrustum;
 extern struct GraphNodeCamera *gCurGraphNodeCamera;
@@ -396,7 +406,7 @@ struct GraphNodeMasterList *init_graph_node_master_list(struct DynamicPool *pool
 struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct DynamicPool *pool, struct GraphNodeLevelOfDetail *graphNode,
                                                             s16 minDistance, s16 maxDistance);
 struct GraphNodeSwitchCase *init_graph_node_switch_case(struct DynamicPool *pool, struct GraphNodeSwitchCase *graphNode,
-                                                        s16 numCases, s16 selectedCase, GraphNodeFunc nodeFunc, s32 unused);
+                                                        s16 numCases, s16 selectedCase, GraphNodeFunc nodeFunc, s32 extended);
 struct GraphNodeCamera *init_graph_node_camera(struct DynamicPool *pool, struct GraphNodeCamera *graphNode,
                                                f32 *pos, f32 *focus, GraphNodeFunc func, s32 mode);
 struct GraphNodeTranslationRotation *init_graph_node_translation_rotation(struct DynamicPool *pool, struct GraphNodeTranslationRotation *graphNode,

@@ -574,6 +574,7 @@ LuaFunction smlua_get_function_mod_variable(u16 modIndex, const char *variable) 
     return value;
 }
 
+s32 gAnyFunctionModIndex;
 LuaFunction smlua_get_any_function_mod_variable(const char *variable) {
     lua_State *L = gLuaState;
     u8 prevSuppress = gSmLuaSuppressErrors;
@@ -592,6 +593,7 @@ LuaFunction smlua_get_any_function_mod_variable(const char *variable) {
 
         if (gSmLuaConvertSuccess) {
             gSmLuaSuppressErrors = prevSuppress;
+            gAnyFunctionModIndex = i;
             return value;
         }
     }

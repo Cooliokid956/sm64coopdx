@@ -132,6 +132,22 @@ ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode) {
     return NULL;
 }
 
+const char *DynOS_Actor_GetToken(GraphNode* aGraphNode, u32 index) {
+    GfxData *gfxData = DynOS_Actor_GetActorGfx(aGraphNode)->mGfxData;
+    if (gfxData == NULL) {
+        return NULL;
+    }
+
+    // have to 1-index due to to pointer read code
+    index = index - 1;
+
+    if (index >= gfxData->mLuaTokenList.Count()) {
+        return NULL;
+    }
+
+    return gfxData->mLuaTokenList[index].begin();
+}
+
 void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx) {
     if (aGeoref == NULL) { return; }
     auto& _ValidActors = DynosValidActors();

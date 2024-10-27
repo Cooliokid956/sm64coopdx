@@ -525,11 +525,20 @@ static void geo_process_level_of_detail(struct GraphNodeLevelOfDetail *node) {
  * if it is 0, and among the node's children, only the selected child is
  * processed next.
  */
+extern s32 gAnyFunctionModIndex;
 static void geo_process_switch(struct GraphNodeSwitchCase *node) {
     struct GraphNode *selectedChild = node->fnNode.node.children;
 
     if (node->fnNode.func != NULL) {
-        node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, gMatStack[gMatStackIndex]);
+        if (!node->unused) {
+            node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, gMatStack[gMatStackIndex]);
+        } else { // is a lua function
+            const char *funcStr = dynos_actor_get_token((struct GraphNode *)node, (uintptr_t)node->fnNode.func);
+
+            LuaFunction funcRef = smlua_get_any_function_mod_variable(funcStr);
+
+            printf("\nProcessing Extended Switch Case");
+        }
     }
     for (s32 i = 0; selectedChild != NULL && node->selectedCase > i; i++) {
         selectedChild = selectedChild->next;

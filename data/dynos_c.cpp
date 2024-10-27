@@ -119,6 +119,10 @@ const void* dynos_geolayout_get(const char *name) {
     return DynOS_Actor_GetLayoutFromName(name);
 }
 
+const char* dynos_actor_get_token(struct GraphNode* aGraphNode, u32 index) {
+    return DynOS_Actor_GetToken(aGraphNode, index);
+}
+
 // -- collisions -- //
 
 void dynos_add_collision(const char *filePath, const char* collisionName) {

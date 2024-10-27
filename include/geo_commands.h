@@ -439,4 +439,14 @@
     CMD_PTR(background), \
     CMD_PTR(function)
 
+/**
+ * 0x22: Create Lua switch-case scene graph node
+ *   0x01: unused
+ *   0x02: s16 numCases
+ *   0x04: GraphNodeFunc caseSelectorFunc
+ */
+#define GEO_SWITCH_CASE_EXT(count, function) \
+    CMD_BBH(0x22, 0x00, count), \
+    CMD_PTR(function)
+
 #endif // GEO_COMMANDS_H

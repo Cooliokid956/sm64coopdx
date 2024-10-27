@@ -94,7 +94,7 @@ static s64 DynOS_Geo_ParseConstants(const String& _Arg, bool* found) {
     return 0;
 }
 
-static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64& aTokenIndex) {
+static s64 ParseGeoSymbolArgInternal(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64& aTokenIndex, bool *found) {
     const String& _Arg = aNode->mTokens[aTokenIndex++];
 
     // Integers
@@ -147,9 +147,18 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
         return rdValue;
     }
 
-    // Unknown
-    PrintDataError("  ERROR: Unknown geo arg: %s", _Arg.begin());
+    *found = false;
     return 0;
+}
+
+static s64 ParseGeoSymbolArg(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, u64 &aTokenIndex) {
+    bool found = true;
+    s64 value = ParseGeoSymbolArgInternal(aGfxData, aNode, aTokenIndex, &found);
+    if (!found) {
+        const String &_Arg = aNode->mTokens[aTokenIndex - 1];
+        PrintDataError("  ERROR: Unknown geo arg: %s", _Arg.begin());
+    }
+    return value;
 }
 
 #define geo_symbol_0(symb)                       \
@@ -323,12 +332,25 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
         // Start a switch
         aSwitchNodes.Add(0);
 
+        u64 topTokenIndex = aTokenIndex;
+
+        bool foundFunc = true;
+
         s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
-        aGfxData->mPointerList.Add(aHead + 1);
-        GeoLayout _Gl[] = { GEO_SWITCH_CASE(_Arg0, _Arg1) };
-        memcpy(aHead, _Gl, sizeof(_Gl));
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        s64 _Arg1 = ParseGeoSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundFunc);
+
+        if (foundFunc) {
+            aGfxData->mPointerList.Add(aHead + 1);
+            GeoLayout _Gl[] = { GEO_SWITCH_CASE(_Arg0, _Arg1) };
+            memcpy(aHead, _Gl, sizeof(_Gl));
+            aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        } else {
+            printf("\nGenerating Extended Switch Case.");
+            u32 funcIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
+            GeoLayout _Gl[] = { GEO_SWITCH_CASE_EXT(_Arg0, funcIndex) };
+            memcpy(aHead, _Gl, sizeof(_Gl));
+            aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        }
         return;
     }
 

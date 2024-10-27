@@ -45,6 +45,7 @@ GeoLayoutCommandProc GeoLayoutJumpTable[] = {
     geo_layout_cmd_node_culling_radius,
     // coop
     geo_layout_cmd_node_background_ext,
+    geo_layout_cmd_node_switch_case_ext,
 };
 
 struct GraphNode gObjParentGraphNode;
@@ -788,6 +789,30 @@ void geo_layout_cmd_node_background_ext(void) {
     register_scene_graph_node(&graphNode->fnNode.node);
 
     gGeoLayoutCommand += 0x0C << CMD_SIZE_SHIFT;
+}
+
+/*
+  0x22: Create Lua switch-case scene graph node
+   cmd+0x02: s16 initialSelectedCase
+   cmd+0x04: GraphNodeFunc caseSelectorFunc
+
+  caseSelectorFunc returns an index which is used to select the child node to render.
+  Used for animating coins, blinking, color selection, etc.
+*/
+void geo_layout_cmd_node_switch_case_ext(void) {
+    struct GraphNodeSwitchCase *graphNode;
+
+    graphNode =
+        init_graph_node_switch_case(gGraphNodePool, NULL,
+                                    cur_geo_cmd_s16(0x02), // case which is initially selected
+                                    0,
+                                    (GraphNodeFunc) cur_geo_cmd_ptr(0x04), // case update function
+                                    1);
+
+    register_scene_graph_node(&graphNode->fnNode.node);
+
+    printf("\nExtended Switch Case Processed.");
+    gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
 }
 
 struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *segptr) {
