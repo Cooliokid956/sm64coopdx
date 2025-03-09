@@ -119,6 +119,11 @@ function bhv_alpha_boo_key_loop()
     -- ...
 end
 
+--- Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
+function bhv_ambient_light_init()
+    -- ...
+end
+
 --- Behavior init function for ambient sounds
 function bhv_ambient_sounds_init()
     -- ...
@@ -1761,6 +1766,16 @@ end
 
 --- Behavior loop function for playing a jingle when in a 200 unit radius
 function bhv_play_music_track_when_touched_loop()
+    -- ...
+end
+
+--- Behavior init function for the lighting engine point light. Takes the first 3 behavior parameter bytes for RGB color and the last for radius
+function bhv_point_light_init()
+    -- ...
+end
+
+--- Behavior loop function for the lighting engine point light
+function bhv_point_light_loop()
     -- ...
 end
 
@@ -4817,6 +4832,87 @@ end
 --- @param arg integer
 --- Special warps to arg (`SPECIAL_WARP_*`)
 function warp_special(arg)
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param radius number
+--- @param intensity number
+--- @return integer
+--- Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and `radius` with `intensity`
+function le_add_light(x, y, z, r, g, b, radius, intensity)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param out Color
+--- @param lightIntensityScalar number
+--- Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
+function le_calculate_lighting_color(pos, out, lightIntensityScalar)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param out Vec3f
+--- Calculates the lighting direction from a position and outputs the result in `out`
+function le_calculate_lighting_dir(pos, out)
+    -- ...
+end
+
+--- @return integer
+--- Gets the total number of lights currently loaded in the lighting engine
+function le_get_light_count()
+    -- ...
+end
+
+--- @param id integer
+--- Removes a lighting engine point light corresponding to `id`
+function le_remove_light(id)
+    -- ...
+end
+
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- Sets the lighting engine ambient color
+function le_set_ambient_color(r, g, b)
+    -- ...
+end
+
+--- @param id integer
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- Sets a lighting engine point light's color to `r`, `g`, `b`
+function le_set_light_color(id, r, g, b)
+    -- ...
+end
+
+--- @param id integer
+--- @param intensity number
+--- Sets a lighting engine point light's `intensity`
+function le_set_light_intensity(id, intensity)
+    -- ...
+end
+
+--- @param id integer
+--- @param x number
+--- @param y number
+--- @param z number
+--- Sets a lighting engine point light's position to `x`, `y`, `z`
+function le_set_light_pos(id, x, y, z)
+    -- ...
+end
+
+--- @param id integer
+--- @param radius number
+--- Sets a lighting engine point light's `radius`
+function le_set_light_radius(id, radius)
     -- ...
 end
 
@@ -9216,14 +9312,21 @@ end
 --- @param gfx Pointer_Gfx
 --- @param offset integer
 --- @return Pointer_Vtx
---- Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`.
+--- Gets a vertex from a display list command if it has the correct op. Intended to be used with `gfx_parse`
 function gfx_get_vtx(gfx, offset)
     -- ...
 end
 
 --- @param cmd Pointer_Gfx
+--- @return integer
+--- Gets the number of vertices from a display list command if it has the correct op
+function gfx_get_vtx_count(cmd)
+    -- ...
+end
+
+--- @param cmd Pointer_Gfx
 --- @param func function
---- Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`.
+--- Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`
 function gfx_parse(cmd, func)
     -- ...
 end
@@ -9245,7 +9348,7 @@ end
 --- @param Ab1 integer
 --- @param Ac1 integer
 --- @param Ad1 integer
---- Sets the display list combine mode.
+--- Sets the display list combine mode
 function gfx_set_combine_lerp(gfx, a0, b0, c0, d0, Aa0, Ab0, Ac0, Ad0, a1, b1, c1, d1, Aa1, Ab1, Ac1, Ad1)
     -- ...
 end
@@ -9743,7 +9846,7 @@ end
 
 --- @param index integer
 --- @return integer
---- Gets the water level in an area
+--- Gets the water level in an area corresponding to `index` (0-indexed)
 function get_water_level(index)
     -- ...
 end
@@ -9944,7 +10047,7 @@ end
 --- @param index integer
 --- @param height integer
 --- @param sync boolean
---- Sets the water level in an area
+--- Sets the water level in an area corresponding to `index` (0-indexed)
 function set_water_level(index, height, sync)
     -- ...
 end

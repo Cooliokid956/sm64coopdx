@@ -2760,6 +2760,7 @@
 | oYoshiChosenHome | `integer` |  |
 | oYoshiTargetYaw | `integer` |  |
 | oBreakableWallForce | `integer` |  |
+| oLightID | `integer` |  |
 
 [:arrow_up_small:](#)
 

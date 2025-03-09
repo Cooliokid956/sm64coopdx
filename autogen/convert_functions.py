@@ -70,7 +70,8 @@ in_files = [
     "src/game/ingame_menu.h",
     "src/game/first_person_cam.h",
     "src/engine/behavior_script.h",
-    "src/audio/seqplayer.h"
+    "src/audio/seqplayer.h",
+    "src/engine/lighting_engine.h"
 ]
 
 override_allowed_functions = {
@@ -126,7 +127,8 @@ override_disallowed_functions = {
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
-    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ]
+    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
+    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ]
 }
 
 override_hide_functions = {

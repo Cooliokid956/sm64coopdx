@@ -1977,7 +1977,13 @@ id_bhvBlueCoinNumber = 537
 id_bhvStarNumber = 538
 
 --- @type BehaviorId
-id_bhv_max_count = 539
+id_bhvAmbientLight = 539
+
+--- @type BehaviorId
+id_bhvPointLight = 540
+
+--- @type BehaviorId
+id_bhv_max_count = 541
 
 --- @type integer
 CAMERA_MODE_8_DIRECTIONS = 0x0E
