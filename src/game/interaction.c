@@ -166,7 +166,8 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
     if ((interaction == 0 || interaction & INT_LUA) && action & ACT_FLAG_ATTACKING) {
         u32 flags = (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING);
-        if (m->flags & flags) {
+        if ((action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) ||
+            ((m->flags & flags) && (interaction & INT_LUA))) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
             if (m->flags & MARIO_PUNCHING) {
@@ -1310,6 +1311,11 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
             mario_stop_riding_and_holding(m);
             set_mario_action(m, (m->specialTripleJump && m->playerIndex == 0) ? ACT_SPECIAL_TRIPLE_JUMP : m->flags & MARIO_WING_CAP ? ACT_FLYING_TRIPLE_JUMP : ACT_TRIPLE_JUMP, 0);
             velY = fmax(fmin(60.0f, 20.0f + fabs(m->vel[1])), 40.0f);
+        } else if (m->action == ACT_LONG_JUMP) {
+            velY = fmax(fmin(40.0f, 5.0f + fabs(m->vel[1])), 30.0f);
+        } else if (m->action == ACT_HOLD_JUMP || m->action == ACT_HOLD_FREEFALL) {
+            set_mario_action(m, ACT_HOLD_JUMP, 0);
+            velY = fmax(fmin(40.0f, 15.0f + fabs(m->vel[1])), 25.0f);
         } else {
             mario_stop_riding_and_holding(m);
             set_mario_action(m, ACT_JUMP, 0);
@@ -1321,10 +1327,12 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
         return TRUE;
     }
 
-    //! If this function pushes Mario out of bounds, it will trigger Mario's
-    //  oob failsafe
-    m->pos[0] += (radius - marioDist) / radius * marioRelX;
-    m->pos[2] += (radius - marioDist) / radius * marioRelZ;
+    f32 posX = m->pos[0] + (radius - marioDist) / radius * marioRelX;
+    f32 posZ = m->pos[2] + (radius - marioDist) / radius * marioRelZ;
+    // Prevent a push into out of bounds
+    if (find_floor_height(posX, m->pos[1], posZ) == gLevelValues.floorLowerLimit) { return FALSE; }
+    m->pos[0] = posX;
+    m->pos[2] = posZ;
     m->marioBodyState->torsoPos[0] += (radius - marioDist) / radius * marioRelX;
     m->marioBodyState->torsoPos[2] += (radius - marioDist) / radius * marioRelZ;
     return FALSE;
@@ -1466,12 +1474,14 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         return FALSE;
     }
 
+#define PLAYER_IN_ROLLOUT_FLIP(m) ((m->action == ACT_FORWARD_ROLLOUT || m->action == ACT_BACKWARD_ROLLOUT) && m->actionState == 1)
+
     // see if it was an attack
     u32 interaction = determine_interaction(attacker, cVictim->marioObj);
     // Specfically override jump kicks to prevent low damage and low knockback kicks
     if (interaction & INT_HIT_FROM_BELOW && attacker->action == ACT_JUMP_KICK) { interaction = INT_KICK; }
     // Allow rollouts to attack
-    else if ((attacker->action == ACT_FORWARD_ROLLOUT || attacker->action == ACT_BACKWARD_ROLLOUT) && attacker->actionState == 1) { interaction = INT_HIT_FROM_BELOW; }
+    else if (PLAYER_IN_ROLLOUT_FLIP(attacker)) { interaction = INT_HIT_FROM_BELOW; }
     if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, cVictim)) {
         return FALSE;
     }
@@ -1504,12 +1514,12 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
             u8 forceAllowAttack = FALSE;
             if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED) {
                 // Give slidekicks trade immunity by making them (almost) invincible
-                // Also give rollouts immunity to dives
+                // Also give rollout flips immunity to dives
                 if ((cVictim->action == ACT_SLIDE_KICK && attacker->action != ACT_SLIDE_KICK) ||
-                    ((cVictim->action == ACT_FORWARD_ROLLOUT || cVictim->action == ACT_BACKWARD_ROLLOUT) && attacker->action == ACT_DIVE)) {
+                    (PLAYER_IN_ROLLOUT_FLIP(cVictim) && attacker->action == ACT_DIVE)) {
                     return FALSE;
                 } else if ((attacker->action == ACT_SLIDE_KICK) ||
-                           ((attacker->action == ACT_FORWARD_ROLLOUT || attacker->action == ACT_BACKWARD_ROLLOUT) && cVictim->action == ACT_DIVE)) {
+                           (PLAYER_IN_ROLLOUT_FLIP(cVictim) && cVictim->action == ACT_DIVE)) {
                     forceAllowAttack = TRUE;
                 }
             }
@@ -1519,6 +1529,8 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
             }
         }
     }
+
+#undef PLAYER_IN_ROLLOUT_FLIP
 
     // determine if ground pound should be ignored
     if (attacker->action == ACT_GROUND_POUND) {

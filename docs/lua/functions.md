@@ -27,6 +27,8 @@
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [cast_graph_node](#cast_graph_node)
+   - [get_uncolored_string](#get_uncolored_string)
+   - [gfx_set_command](#gfx_set_command)
 
 <br />
 
@@ -686,7 +688,6 @@
    - [random_vec3s](functions-3.md#random_vec3s)
    - [reset_camera](functions-3.md#reset_camera)
    - [resolve_geometry_collisions](functions-3.md#resolve_geometry_collisions)
-   - [rom_hack_cam_set_collisions](functions-3.md#rom_hack_cam_set_collisions)
    - [rotate_camera_around_walls](functions-3.md#rotate_camera_around_walls)
    - [rotate_in_xz](functions-3.md#rotate_in_xz)
    - [rotate_in_yz](functions-3.md#rotate_in_yz)
@@ -715,6 +716,7 @@
    - [shake_camera_roll](functions-3.md#shake_camera_roll)
    - [shake_camera_yaw](functions-3.md#shake_camera_yaw)
    - [skip_camera_interpolation](functions-3.md#skip_camera_interpolation)
+   - [snap_to_45_degrees](functions-3.md#snap_to_45_degrees)
    - [soft_reset_camera](functions-3.md#soft_reset_camera)
    - [start_cutscene](functions-3.md#start_cutscene)
    - [start_object_cutscene_without_focus](functions-3.md#start_object_cutscene_without_focus)
@@ -1222,6 +1224,14 @@
 <br />
 
 - misc.h
+   - [clock_elapsed](functions-4.md#clock_elapsed)
+   - [clock_elapsed_f64](functions-4.md#clock_elapsed_f64)
+   - [clock_elapsed_ticks](functions-4.md#clock_elapsed_ticks)
+   - [delta_interpolate_f32](functions-4.md#delta_interpolate_f32)
+   - [delta_interpolate_s32](functions-4.md#delta_interpolate_s32)
+   - [delta_interpolate_vec3f](functions-4.md#delta_interpolate_vec3f)
+   - [delta_interpolate_vec3s](functions-4.md#delta_interpolate_vec3s)
+   - [smooth_step](functions-4.md#smooth_step)
    - [update_all_mario_stars](functions-4.md#update_all_mario_stars)
 
 <br />
@@ -1665,9 +1675,13 @@
 - smlua_camera_utils.h
    - [camera_allow_toxic_gas_camera](functions-5.md#camera_allow_toxic_gas_camera)
    - [camera_config_enable_analog_cam](functions-5.md#camera_config_enable_analog_cam)
+   - [camera_config_enable_centering](functions-5.md#camera_config_enable_centering)
+   - [camera_config_enable_collisions](functions-5.md#camera_config_enable_collisions)
+   - [camera_config_enable_dpad](functions-5.md#camera_config_enable_dpad)
    - [camera_config_enable_free_cam](functions-5.md#camera_config_enable_free_cam)
    - [camera_config_enable_mouse_look](functions-5.md#camera_config_enable_mouse_look)
    - [camera_config_get_aggression](functions-5.md#camera_config_get_aggression)
+   - [camera_config_get_centering](functions-5.md#camera_config_get_centering)
    - [camera_config_get_deceleration](functions-5.md#camera_config_get_deceleration)
    - [camera_config_get_pan_level](functions-5.md#camera_config_get_pan_level)
    - [camera_config_get_x_sensitivity](functions-5.md#camera_config_get_x_sensitivity)
@@ -1675,6 +1689,8 @@
    - [camera_config_invert_x](functions-5.md#camera_config_invert_x)
    - [camera_config_invert_y](functions-5.md#camera_config_invert_y)
    - [camera_config_is_analog_cam_enabled](functions-5.md#camera_config_is_analog_cam_enabled)
+   - [camera_config_is_collision_enabled](functions-5.md#camera_config_is_collision_enabled)
+   - [camera_config_is_dpad_enabled](functions-5.md#camera_config_is_dpad_enabled)
    - [camera_config_is_free_cam_enabled](functions-5.md#camera_config_is_free_cam_enabled)
    - [camera_config_is_mouse_look_enabled](functions-5.md#camera_config_is_mouse_look_enabled)
    - [camera_config_is_x_inverted](functions-5.md#camera_config_is_x_inverted)
@@ -1685,14 +1701,29 @@
    - [camera_config_set_x_sensitivity](functions-5.md#camera_config_set_x_sensitivity)
    - [camera_config_set_y_sensitivity](functions-5.md#camera_config_set_y_sensitivity)
    - [camera_freeze](functions-5.md#camera_freeze)
+   - [camera_get_allow_toxic_gas_camera](functions-5.md#camera_get_allow_toxic_gas_camera)
    - [camera_get_checking_surfaces](functions-5.md#camera_get_checking_surfaces)
+   - [camera_get_romhack_override](functions-5.md#camera_get_romhack_override)
    - [camera_is_frozen](functions-5.md#camera_is_frozen)
    - [camera_reset_overrides](functions-5.md#camera_reset_overrides)
    - [camera_romhack_allow_centering](functions-5.md#camera_romhack_allow_centering)
    - [camera_romhack_allow_dpad_usage](functions-5.md#camera_romhack_allow_dpad_usage)
+   - [camera_romhack_allow_only_mods](functions-5.md#camera_romhack_allow_only_mods)
+   - [camera_romhack_get_allow_centering](functions-5.md#camera_romhack_get_allow_centering)
+   - [camera_romhack_get_allow_dpad_usage](functions-5.md#camera_romhack_get_allow_dpad_usage)
+   - [camera_romhack_get_collisions](functions-5.md#camera_romhack_get_collisions)
+   - [camera_romhack_get_zoomed_in_dist](functions-5.md#camera_romhack_get_zoomed_in_dist)
+   - [camera_romhack_get_zoomed_in_height](functions-5.md#camera_romhack_get_zoomed_in_height)
+   - [camera_romhack_get_zoomed_out_dist](functions-5.md#camera_romhack_get_zoomed_out_dist)
+   - [camera_romhack_get_zoomed_out_height](functions-5.md#camera_romhack_get_zoomed_out_height)
+   - [camera_romhack_set_zoomed_in_dist](functions-5.md#camera_romhack_set_zoomed_in_dist)
+   - [camera_romhack_set_zoomed_in_height](functions-5.md#camera_romhack_set_zoomed_in_height)
+   - [camera_romhack_set_zoomed_out_dist](functions-5.md#camera_romhack_set_zoomed_out_dist)
+   - [camera_romhack_set_zoomed_out_height](functions-5.md#camera_romhack_set_zoomed_out_height)
    - [camera_set_checking_surfaces](functions-5.md#camera_set_checking_surfaces)
    - [camera_set_romhack_override](functions-5.md#camera_set_romhack_override)
    - [camera_unfreeze](functions-5.md#camera_unfreeze)
+   - [rom_hack_cam_set_collisions](functions-5.md#rom_hack_cam_set_collisions)
 
 <br />
 
@@ -1714,45 +1745,45 @@
 <br />
 
 - smlua_gfx_utils.h
-   - [get_fog_color](functions-5.md#get_fog_color)
-   - [get_fog_intensity](functions-5.md#get_fog_intensity)
-   - [get_lighting_color](functions-5.md#get_lighting_color)
-   - [get_lighting_color_ambient](functions-5.md#get_lighting_color_ambient)
-   - [get_lighting_dir](functions-5.md#get_lighting_dir)
-   - [get_skybox](functions-5.md#get_skybox)
-   - [get_skybox_color](functions-5.md#get_skybox_color)
-   - [get_vertex_color](functions-5.md#get_vertex_color)
-   - [gfx_get_vtx](functions-5.md#gfx_get_vtx)
-   - [gfx_get_vtx_count](functions-5.md#gfx_get_vtx_count)
-   - [gfx_parse](functions-5.md#gfx_parse)
-   - [gfx_set_combine_lerp](functions-5.md#gfx_set_combine_lerp)
-   - [set_fog_color](functions-5.md#set_fog_color)
-   - [set_fog_intensity](functions-5.md#set_fog_intensity)
-   - [set_lighting_color](functions-5.md#set_lighting_color)
-   - [set_lighting_color_ambient](functions-5.md#set_lighting_color_ambient)
-   - [set_lighting_dir](functions-5.md#set_lighting_dir)
-   - [set_override_far](functions-5.md#set_override_far)
-   - [set_override_fov](functions-5.md#set_override_fov)
-   - [set_override_near](functions-5.md#set_override_near)
-   - [set_override_skybox](functions-5.md#set_override_skybox)
-   - [set_skybox_color](functions-5.md#set_skybox_color)
-   - [set_vertex_color](functions-5.md#set_vertex_color)
+   - [get_fog_color](functions-6.md#get_fog_color)
+   - [get_fog_intensity](functions-6.md#get_fog_intensity)
+   - [get_lighting_color](functions-6.md#get_lighting_color)
+   - [get_lighting_color_ambient](functions-6.md#get_lighting_color_ambient)
+   - [get_lighting_dir](functions-6.md#get_lighting_dir)
+   - [get_skybox](functions-6.md#get_skybox)
+   - [get_skybox_color](functions-6.md#get_skybox_color)
+   - [get_vertex_color](functions-6.md#get_vertex_color)
+   - [gfx_get_vtx](functions-6.md#gfx_get_vtx)
+   - [gfx_parse](functions-6.md#gfx_parse)
+   - [gfx_set_combine_lerp](functions-6.md#gfx_set_combine_lerp)
+   - [gfx_set_texture_image](functions-6.md#gfx_set_texture_image)
+   - [set_fog_color](functions-6.md#set_fog_color)
+   - [set_fog_intensity](functions-6.md#set_fog_intensity)
+   - [set_lighting_color](functions-6.md#set_lighting_color)
+   - [set_lighting_color_ambient](functions-6.md#set_lighting_color_ambient)
+   - [set_lighting_dir](functions-6.md#set_lighting_dir)
+   - [set_override_far](functions-6.md#set_override_far)
+   - [set_override_fov](functions-6.md#set_override_fov)
+   - [set_override_near](functions-6.md#set_override_near)
+   - [set_override_skybox](functions-6.md#set_override_skybox)
+   - [set_skybox_color](functions-6.md#set_skybox_color)
+   - [set_vertex_color](functions-6.md#set_vertex_color)
 
 <br />
 
 - smlua_level_utils.h
-   - [level_is_vanilla_level](functions-5.md#level_is_vanilla_level)
-   - [level_register](functions-5.md#level_register)
-   - [smlua_level_util_change_area](functions-5.md#smlua_level_util_change_area)
-   - [smlua_level_util_get_info](functions-5.md#smlua_level_util_get_info)
-   - [smlua_level_util_get_info_from_course_num](functions-5.md#smlua_level_util_get_info_from_course_num)
-   - [smlua_level_util_get_info_from_short_name](functions-5.md#smlua_level_util_get_info_from_short_name)
-   - [warp_exit_level](functions-5.md#warp_exit_level)
-   - [warp_restart_level](functions-5.md#warp_restart_level)
-   - [warp_to_castle](functions-5.md#warp_to_castle)
-   - [warp_to_level](functions-5.md#warp_to_level)
-   - [warp_to_start_level](functions-5.md#warp_to_start_level)
-   - [warp_to_warpnode](functions-5.md#warp_to_warpnode)
+   - [level_is_vanilla_level](functions-6.md#level_is_vanilla_level)
+   - [level_register](functions-6.md#level_register)
+   - [smlua_level_util_change_area](functions-6.md#smlua_level_util_change_area)
+   - [smlua_level_util_get_info](functions-6.md#smlua_level_util_get_info)
+   - [smlua_level_util_get_info_from_course_num](functions-6.md#smlua_level_util_get_info_from_course_num)
+   - [smlua_level_util_get_info_from_short_name](functions-6.md#smlua_level_util_get_info_from_short_name)
+   - [warp_exit_level](functions-6.md#warp_exit_level)
+   - [warp_restart_level](functions-6.md#warp_restart_level)
+   - [warp_to_castle](functions-6.md#warp_to_castle)
+   - [warp_to_level](functions-6.md#warp_to_level)
+   - [warp_to_start_level](functions-6.md#warp_to_start_level)
+   - [warp_to_warpnode](functions-6.md#warp_to_warpnode)
 
 <br />
 
@@ -2467,6 +2498,56 @@ print(marioGfx == cast_graph_node(node)) -- true
 
 ### Returns
 - GraphNode(...)
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_uncolored_string](#get_uncolored_string)
+
+Removes color codes from a string.
+
+### Lua Example
+```lua
+print(get_uncolored_string("\#210059\Colored \#FF086F\String")) -- "Colored String"
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| str   | 'string' |
+
+### Returns
+- `string`
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_set_command](#gfx_set_command)
+
+Sets the specified display list command on the display list given.
+
+### Lua Example
+```lua
+gfx_set_command(gfx, "gsDPSetEnvColor", 0x00, 0xFF, 0x00, 0xFF)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx   | [Gfx](structs.md#Gfx) |
+| command | `string` |
+| (Any number of arguments) | `integer` |
+
+### Returns
+- None
 
 ### C Prototype
 N/A
