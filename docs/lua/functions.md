@@ -1754,6 +1754,7 @@
    - [get_skybox_color](functions-6.md#get_skybox_color)
    - [get_vertex_color](functions-6.md#get_vertex_color)
    - [gfx_get_vtx](functions-6.md#gfx_get_vtx)
+   - [gfx_get_vtx_count](functions-6.md#gfx_get_vtx_count)
    - [gfx_parse](functions-6.md#gfx_parse)
    - [gfx_set_combine_lerp](functions-6.md#gfx_set_combine_lerp)
    - [gfx_set_texture_image](functions-6.md#gfx_set_texture_image)
