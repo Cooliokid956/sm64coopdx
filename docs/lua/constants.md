@@ -10,6 +10,7 @@
 - [characters.h](#charactersh)
     - [enum CharacterSound](#enum-CharacterSound)
     - [enum CharacterType](#enum-CharacterType)
+- [controller_mouse.h](#controller_mouseh)
 - [dialog_ids.h](#dialog_idsh)
     - [enum DialogId](#enum-DialogId)
 - [djui_console.h](#djui_consoleh)
@@ -921,6 +922,20 @@
 | CT_WALUIGI | 3 |
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [controller_mouse.h](#controller_mouse.h)
+- L_MOUSE
+- MOUSE_1
+- MOUSE_2
+- MOUSE_3
+- MOUSE_4
+- MOUSE_5
+- M_MOUSE
+- R_MOUSE
 
 [:arrow_up_small:](#)
 
@@ -4704,10 +4719,10 @@
 <br />
 
 ## [surface_terrains.h](#surface_terrains.h)
+- HAZARD_TYPE_HORIZONTAL_WIND
 - HAZARD_TYPE_LAVA_FLOOR
 - HAZARD_TYPE_LAVA_WALL
 - HAZARD_TYPE_QUICKSAND
-- HAZARD_TYPE_HORIZONTAL_WIND
 - HAZARD_TYPE_VERTICAL_WIND
 - SURFACE_0004
 - SURFACE_BOSS_FIGHT_CAMERA
