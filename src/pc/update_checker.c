@@ -131,6 +131,7 @@ void get_version_remote(void) {
 }
 
 void check_for_updates(void) {
+#ifdef UPDATE_CHECKER
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
 
     get_version_remote();
@@ -146,4 +147,5 @@ void check_for_updates(void) {
         );
         gUpdateMessage = true;
     }
+#endif
 }
