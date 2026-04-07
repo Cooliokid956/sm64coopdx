@@ -647,32 +647,32 @@ static Mtx *allocate_dl_translation_matrix() {
 static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func, struct InterpHud *interp) {
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSFORM);
 
-    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+    // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // translate
     djui_hud_size_translate(&x); djui_hud_size_translate(&y);
     create_dl_translation_matrix(DJUI_MTX_PUSH, x, -y, 0);
 
-    gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
-    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+    // gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
+    // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // rotate
     if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
-        f32 offset = 240 - y;
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, 0, offset, 0);
+        // f32 offset = 240 - y;
+        // create_dl_translation_matrix(DJUI_MTX_NOPUSH, 0, offset, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, 0, -offset, 0);
-        gDPSetEnvColor(gDisplayListHead++, 0, 255, 0, 255);
-        gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+        // create_dl_translation_matrix(DJUI_MTX_NOPUSH, 0, -offset, 0);
+        // gDPSetEnvColor(gDisplayListHead++, 0, 255, 0, 255);
+        // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
     }
     
     // scale
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, scaleX, scaleY, 1.0f);
-    gDPSetEnvColor(gDisplayListHead++, 0, 0, 255, 255);
-    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+    // gDPSetEnvColor(gDisplayListHead++, 0, 0, 255, 255);
+    // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // render
-    gDPSetEnvColor(gDisplayListHead++, sHudUtilsState.color.r, sHudUtilsState.color.g, sHudUtilsState.color.b, sHudUtilsState.color.a);
+    // gDPSetEnvColor(gDisplayListHead++, sHudUtilsState.color.r, sHudUtilsState.color.g, sHudUtilsState.color.b, sHudUtilsState.color.a);
     lua_State *L = gLuaState;
     lua_rawgeti(L, LUA_REGISTRYINDEX, func);
     if (smlua_pcall(L, 0, 0, 0) != 0) {
