@@ -790,6 +790,8 @@
    - [djui_hud_reset_viewport](functions-3.md#djui_hud_reset_viewport)
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
+   - [djui_hud_transform](functions-3.md#djui_hud_transform)
+   - [djui_hud_transform_interpolated](functions-3.md#djui_hud_transform_interpolated)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
    - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
    - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)

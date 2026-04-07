@@ -4067,6 +4067,30 @@ function djui_hud_reset_scissor()
     -- ...
 end
 
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- @param func function
+--- Applies a transformation to DJUI HUD elements within (translate, rotate, scale)
+function djui_hud_transform(x, y, scaleX, scaleY, func)
+    -- ...
+end
+
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleX number
+--- @param prevScaleY number
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- @param func function
+--- Applies an interpolated transformation to DJUI HUD elements within (translate, rotate, scale)
+function djui_hud_transform_interpolated(prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY, func)
+    -- ...
+end
+
 --- @param message string
 --- @return number width
 --- @return number height

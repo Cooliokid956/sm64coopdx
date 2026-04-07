@@ -153,6 +153,7 @@ enum InterpHudType {
     INTERP_HUD_TRANSLATION,
     INTERP_HUD_ROTATION,
     INTERP_HUD_SCALE,
+    INTERP_HUD_TRANSFORM,
     INTERP_HUD_HALIGN,
     INTERP_HUD_VALIGN,
     INTERP_HUD_NEW_LINE,
@@ -245,6 +246,33 @@ void patch_djui_hud(f32 delta) {
                     djui_hud_size_translate(&translatedW);
                     djui_hud_size_translate(&translatedH);
                     create_dl_scale_matrix(DJUI_MTX_NOPUSH, interp->width * translatedW, interp->height * translatedH, 1.0f);
+                } break;
+
+                case INTERP_HUD_TRANSFORM: {
+                    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+                    f32 transX = x, transY = y;
+                    djui_hud_size_translate(&transX); djui_hud_size_translate(&transY);
+                    create_dl_translation_matrix(DJUI_MTX_PUSH, transX, -transY, 0);
+                    gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
+                    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+
+                    if (sHudUtilsState.rotation.degrees.prev != 0 || sHudUtilsState.rotation.degrees.curr != 0) {
+                        djui_hud_position_translate(&x, &y);
+                        // f32 offset = 240 - y;
+                        s16 rotPrev = degrees_to_sm64(sHudUtilsState.rotation.degrees.prev);
+                        s16 rotCurr = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
+                        s32 normalizedDiff = (((s32) rotCurr - (s32) rotPrev + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
+                        s32 rotation = delta_interpolate_s32(rotCurr - normalizedDiff, rotCurr, delta);
+                        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -x, y, 0);
+                        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, 1);
+                        create_dl_translation_matrix(DJUI_MTX_NOPUSH, x, -y, 0);
+                        gDPSetEnvColor(gDisplayListHead++, 0, 255, 0, 255);
+                        gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+                    }
+                    
+                    create_dl_scale_matrix(DJUI_MTX_NOPUSH, scaleW, scaleH, 1.0f);
+                    gDPSetEnvColor(gDisplayListHead++, 0, 0, 255, 255);
+                    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
                 } break;
 
                 case INTERP_HUD_HALIGN: {
@@ -440,6 +468,9 @@ void djui_hud_set_rotation(s16 rotation, OPTIONAL f32 pivotX, OPTIONAL f32 pivot
 }
 
 void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY) {
+    // lua_State *L = gLuaState;
+    // if (L) printf("%i", lua_gettop(L));
+
     INTERP_SET(sHudUtilsState.rotation.degrees, sm64_to_degrees(prevRotation), sm64_to_degrees(rotation));
     INTERP_SET(sHudUtilsState.rotation.pivotX, prevPivotX, pivotX);
     INTERP_SET(sHudUtilsState.rotation.pivotY, prevPivotY, pivotY);
@@ -611,6 +642,61 @@ static Mtx *allocate_dl_translation_matrix() {
     if (matrix == NULL) { return NULL; }
     gSPMatrix(gDisplayListHead++, matrix, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
     return matrix;
+}
+
+static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func, struct InterpHud *interp) {
+    djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSFORM);
+
+    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+
+    // translate
+    djui_hud_size_translate(&x); djui_hud_size_translate(&y);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, x, -y, 0);
+
+    gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
+    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+
+    // rotate
+    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
+        f32 offset = 240 - y;
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, 0, offset, 0);
+        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, 0, -offset, 0);
+        gDPSetEnvColor(gDisplayListHead++, 0, 255, 0, 255);
+        gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+    }
+    
+    // scale
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, scaleX, scaleY, 1.0f);
+    gDPSetEnvColor(gDisplayListHead++, 0, 0, 255, 255);
+    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+
+    // render
+    gDPSetEnvColor(gDisplayListHead++, sHudUtilsState.color.r, sHudUtilsState.color.g, sHudUtilsState.color.b, sHudUtilsState.color.a);
+    lua_State *L = gLuaState;
+    lua_rawgeti(L, LUA_REGISTRYINDEX, func);
+    if (smlua_pcall(L, 0, 0, 0) != 0) {
+        LOG_LUA("Failed to call the transform callback: %u", func);
+    }
+
+    // pop
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+}
+
+void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func) {
+    djui_hud_transform_internal(x, y, scaleX, scaleY, func, NULL);
+}
+
+void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func) {
+    struct InterpHud *interp = djui_hud_create_interp();
+    if (interp) {
+        INTERP_SET(interp->posX, prevX, x);
+        INTERP_SET(interp->posY, prevY, y);
+        INTERP_SET(interp->scaleX, prevScaleX, scaleX);
+        INTERP_SET(interp->scaleY, prevScaleY, scaleY);
+    }
+
+    djui_hud_transform_internal(prevX, prevY, scaleX, scaleY, func, interp);
 }
 
 static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 scale, struct InterpHud *interp) {

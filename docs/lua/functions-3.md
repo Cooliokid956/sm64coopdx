@@ -3610,6 +3610,64 @@ Resets the scissor rectangle to a fullscreen state
 
 <br />
 
+## [djui_hud_transform](#djui_hud_transform)
+
+### Description
+Applies a transformation to DJUI HUD elements within (translate, rotate, scale)
+
+### Lua Example
+`djui_hud_transform(x, y, scaleX, scaleY, func)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+| func | `Lua Function` () |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_transform_interpolated](#djui_hud_transform_interpolated)
+
+### Description
+Applies an interpolated transformation to DJUI HUD elements within (translate, rotate, scale)
+
+### Lua Example
+`djui_hud_transform_interpolated(prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY, func)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleX | `number` |
+| prevScaleY | `number` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+| func | `Lua Function` () |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Description

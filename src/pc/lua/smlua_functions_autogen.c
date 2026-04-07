@@ -12886,6 +12886,64 @@ int smlua_func_djui_hud_reset_scissor(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_transform(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_transform", 5, top);
+        return 0;
+    }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_transform"); return 0; }
+    f32 y = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_transform"); return 0; }
+    f32 scaleX = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_transform"); return 0; }
+    f32 scaleY = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_transform"); return 0; }
+    LuaFunction func = smlua_to_lua_function(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_transform"); return 0; }
+
+    djui_hud_transform(x, y, scaleX, scaleY, func);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_transform_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 9) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_transform_interpolated", 9, top);
+        return 0;
+    }
+
+    f32 prevX = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_transform_interpolated"); return 0; }
+    f32 prevY = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_transform_interpolated"); return 0; }
+    f32 prevScaleX = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_transform_interpolated"); return 0; }
+    f32 prevScaleY = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_transform_interpolated"); return 0; }
+    f32 x = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_transform_interpolated"); return 0; }
+    f32 y = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_transform_interpolated"); return 0; }
+    f32 scaleX = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_transform_interpolated"); return 0; }
+    f32 scaleY = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_transform_interpolated"); return 0; }
+    LuaFunction func = smlua_to_lua_function(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_transform_interpolated"); return 0; }
+
+    djui_hud_transform_interpolated(prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY, func);
+
+    return 1;
+}
+
 int smlua_func_djui_hud_measure_text(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37709,6 +37767,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_reset_viewport", smlua_func_djui_hud_reset_viewport);
     smlua_bind_function(L, "djui_hud_set_scissor", smlua_func_djui_hud_set_scissor);
     smlua_bind_function(L, "djui_hud_reset_scissor", smlua_func_djui_hud_reset_scissor);
+    smlua_bind_function(L, "djui_hud_transform", smlua_func_djui_hud_transform);
+    smlua_bind_function(L, "djui_hud_transform_interpolated", smlua_func_djui_hud_transform_interpolated);
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
     smlua_bind_function(L, "djui_hud_print_text_interpolated", smlua_func_djui_hud_print_text_interpolated);
