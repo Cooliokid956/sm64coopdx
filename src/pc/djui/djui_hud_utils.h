@@ -150,10 +150,12 @@ void djui_hud_reset_viewport(void);
 void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);
 /* |description|Resets the scissor rectangle to a fullscreen state|descriptionEnd| */
 void djui_hud_reset_scissor(void);
-/* |description|Applies a transformation to DJUI HUD elements within (translate, rotate, scale)|descriptionEnd| */
-void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func);
-/* |description|Applies an interpolated transformation to DJUI HUD elements within (translate, rotate, scale)|descriptionEnd| */
-void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func);
+/* |description|Applies a transformation (translate, rotate, scale) to subsequent DJUI HUD elements until closed|descriptionEnd| */
+void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY);
+/* |description|Applies an interpolated transformation (translate, rotate, scale) to subsequent DJUI HUD elements until closed|descriptionEnd| */
+void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);
+/* |description|Closes the previous transformation|descriptionEnd| */
+void djui_hud_close_transform(void);
 
 /* |description|Measures the width and height of `message` in the current font|descriptionEnd| */
 void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height);

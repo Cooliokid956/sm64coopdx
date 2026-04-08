@@ -644,7 +644,9 @@ static Mtx *allocate_dl_translation_matrix() {
     return matrix;
 }
 
-static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func, struct InterpHud *interp) {
+static u16 sTransformDepth = 0;
+
+static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, struct InterpHud *interp) {
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSFORM);
 
     // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
@@ -671,23 +673,14 @@ static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, Lu
     // gDPSetEnvColor(gDisplayListHead++, 0, 0, 255, 255);
     // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
-    // render
-    // gDPSetEnvColor(gDisplayListHead++, sHudUtilsState.color.r, sHudUtilsState.color.g, sHudUtilsState.color.b, sHudUtilsState.color.a);
-    lua_State *L = gLuaState;
-    lua_rawgeti(L, LUA_REGISTRYINDEX, func);
-    if (smlua_pcall(L, 0, 0, 0) != 0) {
-        LOG_LUA("Failed to call the transform callback: %u", func);
-    }
-
-    // pop
-    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    sTransformDepth++;
 }
 
-void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func) {
-    djui_hud_transform_internal(x, y, scaleX, scaleY, func, NULL);
+void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY) {
+    djui_hud_transform_internal(x, y, scaleX, scaleY, NULL);
 }
 
-void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func) {
+void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY) {
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {
         INTERP_SET(interp->posX, prevX, x);
@@ -696,7 +689,22 @@ void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 p
         INTERP_SET(interp->scaleY, prevScaleY, scaleY);
     }
 
-    djui_hud_transform_internal(prevX, prevY, scaleX, scaleY, func, interp);
+    djui_hud_transform_internal(prevX, prevY, scaleX, scaleY, interp);
+}
+
+void djui_hud_close_transform(void) {
+    if (sTransformDepth) {
+        // pop
+        gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+        sTransformDepth--;
+    }
+}
+
+void djui_hud_reset_transform(void) {
+    while (sTransformDepth) {
+        gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+        sTransformDepth--;
+    }
 }
 
 static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 scale, struct InterpHud *interp) {

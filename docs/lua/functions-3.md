@@ -3613,10 +3613,10 @@ Resets the scissor rectangle to a fullscreen state
 ## [djui_hud_transform](#djui_hud_transform)
 
 ### Description
-Applies a transformation to DJUI HUD elements within (translate, rotate, scale)
+Applies a transformation (translate, rotate, scale) to subsequent DJUI HUD elements until closed
 
 ### Lua Example
-`djui_hud_transform(x, y, scaleX, scaleY, func)`
+`djui_hud_transform(x, y, scaleX, scaleY)`
 
 ### Parameters
 | Field | Type |
@@ -3625,13 +3625,12 @@ Applies a transformation to DJUI HUD elements within (translate, rotate, scale)
 | y | `number` |
 | scaleX | `number` |
 | scaleY | `number` |
-| func | `Lua Function` () |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func);`
+`void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY);`
 
 [:arrow_up_small:](#)
 
@@ -3640,10 +3639,10 @@ Applies a transformation to DJUI HUD elements within (translate, rotate, scale)
 ## [djui_hud_transform_interpolated](#djui_hud_transform_interpolated)
 
 ### Description
-Applies an interpolated transformation to DJUI HUD elements within (translate, rotate, scale)
+Applies an interpolated transformation (translate, rotate, scale) to subsequent DJUI HUD elements until closed
 
 ### Lua Example
-`djui_hud_transform_interpolated(prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY, func)`
+`djui_hud_transform_interpolated(prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
 
 ### Parameters
 | Field | Type |
@@ -3656,13 +3655,33 @@ Applies an interpolated transformation to DJUI HUD elements within (translate, r
 | y | `number` |
 | scaleX | `number` |
 | scaleY | `number` |
-| func | `Lua Function` () |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY, LuaFunction func);`
+`void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_close_transform](#djui_hud_close_transform)
+
+### Description
+Closes the previous transformation
+
+### Lua Example
+`djui_hud_close_transform()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_close_transform(void);`
 
 [:arrow_up_small:](#)
 

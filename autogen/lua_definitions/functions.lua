@@ -4071,9 +4071,8 @@ end
 --- @param y number
 --- @param scaleX number
 --- @param scaleY number
---- @param func function
---- Applies a transformation to DJUI HUD elements within (translate, rotate, scale)
-function djui_hud_transform(x, y, scaleX, scaleY, func)
+--- Applies a transformation (translate, rotate, scale) to subsequent DJUI HUD elements until closed
+function djui_hud_transform(x, y, scaleX, scaleY)
     -- ...
 end
 
@@ -4085,9 +4084,13 @@ end
 --- @param y number
 --- @param scaleX number
 --- @param scaleY number
---- @param func function
---- Applies an interpolated transformation to DJUI HUD elements within (translate, rotate, scale)
-function djui_hud_transform_interpolated(prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY, func)
+--- Applies an interpolated transformation (translate, rotate, scale) to subsequent DJUI HUD elements until closed
+function djui_hud_transform_interpolated(prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- Closes the previous transformation
+function djui_hud_close_transform()
     -- ...
 end
 
