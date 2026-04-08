@@ -249,30 +249,30 @@ void patch_djui_hud(f32 delta) {
                 } break;
 
                 case INTERP_HUD_TRANSFORM: {
-                    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+                    // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
                     f32 transX = x, transY = y;
                     djui_hud_size_translate(&transX); djui_hud_size_translate(&transY);
                     create_dl_translation_matrix(DJUI_MTX_PUSH, transX, -transY, 0);
-                    gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
-                    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+                    // gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
+                    // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
                     if (sHudUtilsState.rotation.degrees.prev != 0 || sHudUtilsState.rotation.degrees.curr != 0) {
-                        djui_hud_position_translate(&x, &y);
+                        // djui_hud_position_translate(&x, &y);
                         // f32 offset = 240 - y;
                         s16 rotPrev = degrees_to_sm64(sHudUtilsState.rotation.degrees.prev);
                         s16 rotCurr = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
                         s32 normalizedDiff = (((s32) rotCurr - (s32) rotPrev + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
                         s32 rotation = delta_interpolate_s32(rotCurr - normalizedDiff, rotCurr, delta);
-                        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -x, y, 0);
+                        // create_dl_translation_matrix(DJUI_MTX_NOPUSH, -x, y, 0);
                         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, 1);
-                        create_dl_translation_matrix(DJUI_MTX_NOPUSH, x, -y, 0);
-                        gDPSetEnvColor(gDisplayListHead++, 0, 255, 0, 255);
-                        gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+                        // create_dl_translation_matrix(DJUI_MTX_NOPUSH, x, -y, 0);
+                        // gDPSetEnvColor(gDisplayListHead++, 0, 255, 0, 255);
+                        // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
                     }
                     
                     create_dl_scale_matrix(DJUI_MTX_NOPUSH, scaleW, scaleH, 1.0f);
-                    gDPSetEnvColor(gDisplayListHead++, 0, 0, 255, 255);
-                    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+                    // gDPSetEnvColor(gDisplayListHead++, 0, 0, 255, 255);
+                    // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
                 } break;
 
                 case INTERP_HUD_HALIGN: {
