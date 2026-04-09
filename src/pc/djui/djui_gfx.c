@@ -32,7 +32,7 @@ void djui_gfx_displaylist_begin(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_begin);
 
     // translate to DJUI coordinate system
-
+    sDjuiCoordinateMtx[3][0] = GFX_DIMENSIONS_FROM_LEFT_EDGE(0);
     gSPMatrix(gDisplayListHead++, (Mtx*) &sDjuiCoordinateMtx, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
 }
 
@@ -116,34 +116,36 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
 }
 
 static const Vtx vertex_djui_menu_rect[] = {
-    {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
-    {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
-    {{{ 1,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
+    {{{ 1, 1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
+    {{{ 1, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 static const Vtx vertex_djui_simple_rect[] = {
-    {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, 1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_menu_rect[] = {
     gsDPPipeSync(),
-    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BOTH),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPVertexNonGlobal(vertex_djui_menu_rect, 4, 0),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
 const Gfx dl_djui_simple_rect[] = {
     gsDPPipeSync(),
-    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BOTH),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPVertexNonGlobal(vertex_djui_simple_rect, 4, 0),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
@@ -170,10 +172,10 @@ f32 djui_gfx_get_scale(void) {
 /////////////////////////////////////////////
 
 static const Vtx vertex_djui_image[] = {
-    {{{ 0, -1, 0 }, 0, {   0,  2048 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, -1, 0 }, 0, { 2048, 2048 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1,  0, 0 }, 0, { 2048,    0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0 }, 0, { 0,       0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 1, 0 }, 0, {   0,  2048 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, 1, 0 }, 0, { 2048, 2048 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, 0, 0 }, 0, { 2048,    0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 0, 0 }, 0, { 0,       0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_image[] = {
@@ -222,10 +224,10 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
 
     f32 aspect = tileH ? ((f32)tileW / (f32)tileH) : 1;
 
-    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ((tileY + tileH) * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + 1, ((tileY + tileH) * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[0] = (Vtx) {{{ 0,          1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ((tileY + tileH) * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[2] = (Vtx) {{{ 1 * aspect, 0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[1] = (Vtx) {{{ 1 * aspect, 1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + 1, ((tileY + tileH) * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[3] = (Vtx) {{{ 0,          0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
 
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
     djui_gfx_update_combine_mode(CS_TEXTURE);
@@ -312,10 +314,10 @@ void djui_gfx_render_texture_tile_font(const Texture* texture, u32 w, u32 h, u8 
     // this should be tested carefully. it definitely fixes some stuff, but what does it break?
     f32 offsetX = (-1024.0f / (f32)w) + 1;
     f32 offsetY = (-1024.0f / (f32)h) + 1;
-    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[0] = (Vtx) {{{ 0,          1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[2] = (Vtx) {{{ 1 * aspect, 0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[1] = (Vtx) {{{ 1 * aspect, 1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[3] = (Vtx) {{{ 0,          0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
 
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), fmt, siz);
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXOVERRIDE_DJUI);
@@ -335,23 +337,23 @@ void djui_gfx_render_texture_tile_font_end() {
 void djui_gfx_position_translate(f32* x, f32* y) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
-    *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
-    *y = SCREEN_HEIGHT - *y * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *x *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *y *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 void djui_gfx_scale_translate(f32* width, f32* height) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
 
-    *width  = *width * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
-    *height = *height * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *width  *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *height *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 void djui_gfx_size_translate(f32* size) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
 
-    *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *size *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 bool djui_gfx_add_clipping_specific(struct DjuiBase* base, f32 dX, f32 dY, f32 dW, f32 dH) {

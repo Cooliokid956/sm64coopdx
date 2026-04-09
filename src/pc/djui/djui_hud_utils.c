@@ -115,9 +115,6 @@ static inline bool djui_hud_text_font_is_legacy() {
 static void djui_hud_position_translate(f32* x, f32* y) {
     if (sHudUtilsState.resolution == RESOLUTION_DJUI) {
         djui_gfx_position_translate(x, y);
-    } else {
-        *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x;
-        *y = SCREEN_HEIGHT - *y;
     }
 }
 
@@ -131,8 +128,6 @@ static void djui_hud_size_translate(f32* size) {
 static void djui_hud_translate_positions(f32 *outX, f32 *outY, f32 *outW, f32 *outH) {
     // translate position
     djui_hud_position_translate(outX, outY);
-    *outX -= GFX_DIMENSIONS_FROM_LEFT_EDGE(0);
-    *outY -= SCREEN_HEIGHT;
 
     // translate scale
     if (sHudUtilsState.resolution == RESOLUTION_DJUI) {
@@ -251,8 +246,8 @@ void patch_djui_hud(f32 delta) {
                 case INTERP_HUD_TRANSFORM: {
                     // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
                     f32 transX = x, transY = y;
-                    djui_hud_size_translate(&transX); djui_hud_size_translate(&transY);
-                    create_dl_translation_matrix(DJUI_MTX_PUSH, transX, -transY, 0);
+                    djui_hud_position_translate(&transX, &transY);
+                    create_dl_translation_matrix(DJUI_MTX_PUSH, transX, transY, 0);
                     // gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
                     // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
@@ -284,14 +279,14 @@ void patch_djui_hud(f32 delta) {
                 case INTERP_HUD_VALIGN: {
                     f32 textVAlign = delta_interpolate_f32(sHudUtilsState.textAlignment.v.prev, sHudUtilsState.textAlignment.v.curr, delta);
                     f32 textHeight = gfx->params[0];
-                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, 0, textHeight * textVAlign, 0);
+                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, 0, -textHeight * textVAlign, 0);
                 } break;
 
                 case INTERP_HUD_NEW_LINE: {
                     const struct DjuiFont *font = djui_hud_get_text_font();
                     f32 textHAlign = delta_interpolate_f32(sHudUtilsState.textAlignment.h.prev, sHudUtilsState.textAlignment.h.curr, delta);
                     f32 lineWidth = gfx->params[0];
-                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, -lineWidth * (1.f - textHAlign), -font->lineHeight, 0);
+                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, -lineWidth * (1.f - textHAlign), font->lineHeight, 0);
                 } break;
 
                 case INTERP_HUD_COLOR: {
@@ -600,8 +595,8 @@ static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, st
     // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // translate
-    djui_hud_size_translate(&x); djui_hud_size_translate(&y);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, x, -y, 0);
+    djui_hud_position_translate(&x, &y);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, 0);
 
     // gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
     // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
