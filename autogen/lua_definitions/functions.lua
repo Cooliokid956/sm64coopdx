@@ -4094,6 +4094,11 @@ function djui_hud_close_transform()
     -- ...
 end
 
+--- Resets the transformation to a fullscreen state
+function djui_hud_reset_transform()
+    -- ...
+end
+
 --- @param message string
 --- @return number width
 --- @return number height

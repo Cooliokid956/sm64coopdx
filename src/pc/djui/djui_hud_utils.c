@@ -590,63 +590,11 @@ void djui_hud_reset_scissor(void) {
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 }
 
-void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height) {
-    if (message == NULL) { return; }
-    const struct DjuiFont* font = djui_hud_get_text_font();
-
-    f32 maxWidth = 0.f;
-    *width = 0.f;
-    *height = font->charHeight;
-
-    char *c = (char *) message;
-    const char *end = message + strlen(message);
-    while (*c != '\0') {
-
-        // check color code
-        if (djui_text_parse_color(c, end, false, NULL, &c, NULL)) {
-            continue;
-        }
-
-        // new line
-        if (*c == '\n') {
-            maxWidth = max(*width, maxWidth);
-            *width = 0;
-            *height += font->lineHeight;
-        }
-
-        // tab: align to the next (4 x space width)
-        else if (*c == '\t') {
-            f32 tabWidth = 4 * font->char_width(" ") * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
-            *width += tabWidth - fmodf(*width, tabWidth);
-        }
-
-        // unprintable chars
-        else if (!djui_text_is_printable(c)) {
-            // treat them as empty
-        }
-
-        // regular chars
-        else {
-            *width += font->char_width(c) * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
-        }
-
-        c = djui_unicode_next_char(c);
-    }
-
-    *width = max(*width, maxWidth) * font->defaultFontScale;
-    *height *= font->defaultFontScale * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
-}
-
-static Mtx *allocate_dl_translation_matrix() {
-    Mtx *matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
-    if (matrix == NULL) { return NULL; }
-    gSPMatrix(gDisplayListHead++, matrix, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
-    return matrix;
-}
-
-static u16 sTransformDepth = 0;
+static u8 sTransformDepth = 0;
 
 static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, struct InterpHud *interp) {
+    if (sTransformDepth == UINT8_MAX) { return; }
+
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSFORM);
 
     // gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
@@ -705,6 +653,60 @@ void djui_hud_reset_transform(void) {
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
         sTransformDepth--;
     }
+}
+
+void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height) {
+    if (message == NULL) { return; }
+    const struct DjuiFont* font = djui_hud_get_text_font();
+
+    f32 maxWidth = 0.f;
+    *width = 0.f;
+    *height = font->charHeight;
+
+    char *c = (char *) message;
+    const char *end = message + strlen(message);
+    while (*c != '\0') {
+
+        // check color code
+        if (djui_text_parse_color(c, end, false, NULL, &c, NULL)) {
+            continue;
+        }
+
+        // new line
+        if (*c == '\n') {
+            maxWidth = max(*width, maxWidth);
+            *width = 0;
+            *height += font->lineHeight;
+        }
+
+        // tab: align to the next (4 x space width)
+        else if (*c == '\t') {
+            f32 tabWidth = 4 * font->char_width(" ") * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
+            *width += tabWidth - fmodf(*width, tabWidth);
+        }
+
+        // unprintable chars
+        else if (!djui_text_is_printable(c)) {
+            // treat them as empty
+        }
+
+        // regular chars
+        else {
+            *width += font->char_width(c) * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
+        }
+
+        c = djui_unicode_next_char(c);
+    }
+
+    *width = max(*width, maxWidth) * font->defaultFontScale;
+    *height *= font->defaultFontScale * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
+}
+
+static Mtx *allocate_dl_translation_matrix() {
+    Mtx *matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+    if (matrix == NULL) { return NULL; }
+    gSPMatrix(gDisplayListHead++, matrix, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
+    return matrix;
 }
 
 static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 scale, struct InterpHud *interp) {

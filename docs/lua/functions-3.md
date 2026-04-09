@@ -3687,6 +3687,27 @@ Closes the previous transformation
 
 <br />
 
+## [djui_hud_reset_transform](#djui_hud_reset_transform)
+
+### Description
+Resets the transformation to a fullscreen state
+
+### Lua Example
+`djui_hud_reset_transform()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_transform(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Description

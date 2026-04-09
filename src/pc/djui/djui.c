@@ -176,6 +176,7 @@ void djui_reset_hud_params(void) {
     djui_hud_set_filter(FILTER_NEAREST);
     djui_hud_reset_viewport();
     djui_hud_reset_scissor();
+    djui_hud_reset_transform();
 }
 
 void djui_render(void) {
