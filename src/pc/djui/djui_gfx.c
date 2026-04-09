@@ -21,12 +21,24 @@ const Gfx dl_djui_display_list_end[] = {
     gsSPEndDisplayList(),
 };
 
+static Mat4 sDjuiCoordinateMtx = {
+    { 1,   0, 0, 0 },
+    { 0,  -1, 0, 0 },
+    { 0,   0, 1, 0 },
+    { 0, 240, 0, 1 },
+};
+
 void djui_gfx_displaylist_begin(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_begin);
+
+    // translate to DJUI coordinate system
+
+    gSPMatrix(gDisplayListHead++, (Mtx*) &sDjuiCoordinateMtx, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
 }
 
 void djui_gfx_displaylist_end(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
 struct CombinerState gCombinerState = { .cycles = 1 };
