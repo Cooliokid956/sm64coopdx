@@ -230,9 +230,9 @@ void patch_djui_hud(f32 delta) {
                     f32 pivotY = delta_interpolate_f32(sHudUtilsState.rotation.pivotY.prev, sHudUtilsState.rotation.pivotY.curr, delta);
                     f32 pivotTranslationX = interp->width * translatedW * pivotX;
                     f32 pivotTranslationY = interp->height * translatedH * pivotY;
-                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, +pivotTranslationY, 0);
                     create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, 1);
-                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
+                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
                 } break;
 
                 case INTERP_HUD_SCALE: {
@@ -729,9 +729,9 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         f32 pivotTranslationX = font->defaultFontScale * translatedFontSize * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = font->defaultFontScale * translatedFontSize * sHudUtilsState.rotation.pivotY.curr;
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, +pivotTranslationY, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
     }
 
     // compute font size
@@ -896,9 +896,9 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         f32 pivotTranslationX = width * scaleW * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = height * scaleH * sHudUtilsState.rotation.pivotY.curr;
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, +pivotTranslationY, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
     }
 
     // scale
@@ -932,9 +932,9 @@ static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, 
         f32 aspect = tileH ? ((f32) tileW / (f32) tileH) : 1.f;
         f32 pivotTranslationX = width * scaleW * aspect * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = height * scaleH * sHudUtilsState.rotation.pivotY.curr;
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, +pivotTranslationY, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
     }
 
     // scale
@@ -1015,9 +1015,9 @@ static void djui_hud_render_rect_internal(f32 x, f32 y, f32 width, f32 height, s
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         f32 pivotTranslationX = width * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = height * sHudUtilsState.rotation.pivotY.curr;
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, +pivotTranslationY, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
-        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
     }
 
     // scale
