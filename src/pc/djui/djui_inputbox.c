@@ -562,7 +562,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     // translate position
     f32 translatedX = comp->x + inputbox->viewX;
     f32 translatedY = comp->y + DJUI_INPUTBOX_YOFF;
-    djui_gfx_position_translate(&translatedX, &translatedY);
+    djui_gfx_dimension_translate(&translatedX, &translatedY);
     create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
     // compute font size

@@ -334,9 +334,10 @@ void djui_gfx_render_texture_tile_font_end() {
 
 /////////////////////////////////////////////
 
-void djui_gfx_position_translate(f32* x, f32* y) {
+void djui_gfx_dimension_translate(f32* x, f32* y) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
+
     *x *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
     *y *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }

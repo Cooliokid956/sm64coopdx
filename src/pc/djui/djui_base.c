@@ -232,7 +232,7 @@ static f32 djui_base_render_border_piece(struct DjuiBase* base, f32 x1, f32 y1, 
     // translate position
     f32 translatedX = x1;
     f32 translatedY = y1;
-    djui_gfx_position_translate(&translatedX, &translatedY);
+    djui_gfx_dimension_translate(&translatedX, &translatedY);
     create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
     // translate size
