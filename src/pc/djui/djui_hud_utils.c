@@ -34,6 +34,10 @@ typedef struct {
     f32 prev, curr;
 } InterpFieldF32;
 
+typedef struct {
+    s16 prev, curr;
+} InterpFieldS16;
+
 struct HudUtilsState {
     enum HudUtilsResolution resolution;
     enum HudUtilsFilter filter;
@@ -41,7 +45,7 @@ struct HudUtilsState {
     struct DjuiColor color;
     struct DjuiColor textColor;
     struct {
-        InterpFieldF32 degrees;
+        InterpFieldS16 units;
         InterpFieldF32 pivotX;
         InterpFieldF32 pivotY;
     } rotation;
@@ -58,7 +62,7 @@ static struct HudUtilsState sHudUtilsState = {
     .color = { 255, 255, 255, 255 },
     .textColor = { 255, 255, 255, 255 },
     .rotation = {
-        .degrees = INTERP_INIT(0),
+        .units  = INTERP_INIT(0),
         .pivotX = INTERP_INIT(ROTATION_PIVOT_X_LEFT),
         .pivotY = INTERP_INIT(ROTATION_PIVOT_Y_TOP),
     },
@@ -71,7 +75,6 @@ static struct HudUtilsState sHudUtilsState = {
 static struct DjuiColor sRefColor = { 255, 255, 255, 255 };
 static struct DjuiColor sRefTextColor = { 255, 255, 255, 255 };
 
-f32 gDjuiHudUtilsZ = 0;
 bool gDjuiHudLockMouse = false;
 
 extern ALIGNED8 const u8 texture_hud_char_camera[];
@@ -184,7 +187,6 @@ typedef struct {
 } InterpHudGfx;
 
 struct InterpHud {
-    f32 z;
     union {
         struct {
             InterpFieldF32 posX, posY;
@@ -215,7 +217,6 @@ void patch_djui_hud_before(void) {
 }
 
 void patch_djui_hud(f32 delta) {
-    f32 savedZ = gDjuiHudUtilsZ;
     Gfx* savedHeadPos = gDisplayListHead;
     struct HudUtilsState savedState = sHudUtilsState;
 
@@ -227,7 +228,6 @@ void patch_djui_hud(f32 delta) {
         f32 scaleW = delta_interpolate_f32(interp->scaleX.prev, interp->scaleX.curr, delta);
         f32 scaleH = delta_interpolate_f32(interp->scaleY.prev, interp->scaleY.curr, delta);
         sHudUtilsState = interp->state;
-        gDjuiHudUtilsZ = interp->z;
         djui_hud_setup_matrix();
 
         for (u32 j = 0; j != interp->gfx->count; ++j) {
@@ -236,15 +236,15 @@ void patch_djui_hud(f32 delta) {
 
             switch (gfx->type) {
                 case INTERP_HUD_TRANSLATION: {
-                    djui_hud_position_translate(&x, &y);
-                    create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, gDjuiHudUtilsZ);
+                    djui_hud_dimension_translate(&x, &y);
+                    create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, 0);
                 } break;
 
                 case INTERP_HUD_ROTATION: {
                     f32 translatedW = scaleW, translatedH = scaleH;
                     djui_hud_dimension_translate(&translatedW, &translatedH);
-                    s16 rotPrev = degrees_to_sm64(sHudUtilsState.rotation.degrees.prev);
-                    s16 rotCurr = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
+                    s16 rotPrev = sHudUtilsState.rotation.units.prev;
+                    s16 rotCurr = sHudUtilsState.rotation.units.curr;
                     s32 normalizedDiff = (((s32) rotCurr - (s32) rotPrev + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
                     s32 rotation = delta_interpolate_s32(rotCurr - normalizedDiff, rotCurr, delta);
                     f32 pivotX = delta_interpolate_f32(sHudUtilsState.rotation.pivotX.prev, sHudUtilsState.rotation.pivotX.curr, delta);
@@ -252,7 +252,7 @@ void patch_djui_hud(f32 delta) {
                     f32 pivotTranslationX = interp->width * translatedW * pivotX;
                     f32 pivotTranslationY = interp->height * translatedH * pivotY;
                     create_dl_translation_matrix(djui_hud_pass_matrix(), +pivotTranslationX, +pivotTranslationY, 0);
-                    create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, 1);
+                    create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, -1);
                     create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
                 } break;
 
@@ -266,12 +266,12 @@ void patch_djui_hud(f32 delta) {
                     djui_hud_dimension_translate(&x, &y);
                     create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, 0);
 
-                    if (sHudUtilsState.rotation.degrees.prev != 0 || sHudUtilsState.rotation.degrees.curr != 0) {
-                        s16 rotPrev = degrees_to_sm64(sHudUtilsState.rotation.degrees.prev);
-                        s16 rotCurr = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
+                    if (sHudUtilsState.rotation.units.prev != 0 || sHudUtilsState.rotation.units.curr != 0) {
+                        s16 rotPrev = sHudUtilsState.rotation.units.prev;
+                        s16 rotCurr = sHudUtilsState.rotation.units.curr;
                         s32 normalizedDiff = (((s32) rotCurr - (s32) rotPrev + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
                         s32 rotation = delta_interpolate_s32(rotCurr - normalizedDiff, rotCurr, delta);
-                        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, 1);
+                        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, -1);
                     }
                     
                     create_dl_scale_matrix(DJUI_MTX_NOPUSH, scaleW, scaleH, 1.0f);
@@ -305,7 +305,6 @@ void patch_djui_hud(f32 delta) {
 
     sHudUtilsState = savedState;
     gDisplayListHead = savedHeadPos;
-    gDjuiHudUtilsZ = savedZ;
 }
 
 static struct InterpHud *djui_hud_create_interp() {
@@ -316,7 +315,6 @@ static struct InterpHud *djui_hud_create_interp() {
     );
 
     if (interp) {
-        interp->z = gDjuiHudUtilsZ;
         interp->state = sHudUtilsState;
         if (!interp->gfx) {
             interp->gfx = growing_array_init(NULL, 8, malloc, free);
@@ -341,6 +339,43 @@ static InterpHudGfx *djui_hud_create_interp_gfx(struct InterpHud *interp, enum I
 void djui_hud_clear_interp_data() {
     sInterpHuds = growing_array_init(sInterpHuds, 16, malloc, interp_hud_free);
     sInterpHudCount = 0;
+}
+
+static inline void djui_hud_do_translation(struct InterpHud *interp, f32 x, f32 y) {
+    bool doInterp = interp && !(IS_INTERP_SAME(interp->posX) && IS_INTERP_SAME(interp->posY));
+    if (doInterp || x != 0 || y != 0) {
+        if (doInterp) { djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION); }
+        djui_hud_dimension_translate(&x, &y);
+        create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, 0);
+    }
+}
+
+static inline void djui_hud_do_rotation(struct InterpHud *interp, f32 width, f32 height) {
+    if (IS_INTERP_VAL(sHudUtilsState.rotation.units, 0)) { return; }
+
+    bool doInterp = interp && !(
+        IS_INTERP_SAME(sHudUtilsState.rotation.units)
+     && IS_INTERP_SAME(sHudUtilsState.rotation.pivotX)
+     && IS_INTERP_SAME(sHudUtilsState.rotation.pivotY)
+    );
+    bool doPivot = !(
+        IS_INTERP_VAL(sHudUtilsState.rotation.pivotX, 0)
+     && IS_INTERP_VAL(sHudUtilsState.rotation.pivotY, 0)
+    );
+
+    f32 translatedW = width, translatedH = height;
+    djui_hud_dimension_translate(&translatedW, &translatedH);
+
+    if (doInterp || sHudUtilsState.rotation.units.curr != 0) {
+        if (doInterp) { djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION); }
+
+        f32 pivotTranslationX = width * sHudUtilsState.rotation.pivotX.curr;
+        f32 pivotTranslationY = height * sHudUtilsState.rotation.pivotY.curr;
+
+        create_dl_translation_matrix(djui_hud_pass_matrix(), +pivotTranslationX, +pivotTranslationY, 0);
+        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.units.curr, 0, 0, -1);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
+    }
 }
 
   ////////////
@@ -458,22 +493,19 @@ void djui_hud_reset_combiner() {
 }
 
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY) {
-    *rotation = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
+    *rotation = sHudUtilsState.rotation.units.curr;
     *pivotX = sHudUtilsState.rotation.pivotX.curr;
     *pivotY = sHudUtilsState.rotation.pivotY.curr;
 }
 
 void djui_hud_set_rotation(s16 rotation, OPTIONAL f32 pivotX, OPTIONAL f32 pivotY) {
-    INTERP_RESET(sHudUtilsState.rotation.degrees, sm64_to_degrees(rotation));
+    INTERP_RESET(sHudUtilsState.rotation.units, rotation);
     INTERP_RESET(sHudUtilsState.rotation.pivotX, pivotX);
     INTERP_RESET(sHudUtilsState.rotation.pivotY, pivotY);
 }
 
 void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY) {
-    // lua_State *L = gLuaState;
-    // if (L) printf("%i", lua_gettop(L));
-
-    INTERP_SET(sHudUtilsState.rotation.degrees, sm64_to_degrees(prevRotation), sm64_to_degrees(rotation));
+    INTERP_SET(sHudUtilsState.rotation.units, prevRotation, rotation);
     INTERP_SET(sHudUtilsState.rotation.pivotX, prevPivotX, pivotX);
     INTERP_SET(sHudUtilsState.rotation.pivotY, prevPivotY, pivotY);
 }
@@ -600,19 +632,13 @@ static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, st
     // djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSFORM);
 
     // translate
-    bool shouldInterp = interp && (!IS_INTERP_VAL(interp->posX, 0) || !IS_INTERP_VAL(interp->posY, 0));
-    if (shouldInterp || x != 0 || y != 0) {
-        if (shouldInterp) { djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION); }
-
-        djui_hud_dimension_translate(&x, &y);
-        create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, 0);
-    }
+    djui_hud_do_translation(interp, x, y);
 
     // rotate
-    shouldInterp = interp && !IS_INTERP_VAL(sHudUtilsState.rotation.degrees, 0);
-    if (shouldInterp || sHudUtilsState.rotation.degrees.curr != 0) {
+    shouldInterp = interp && !IS_INTERP_VAL(sHudUtilsState.rotation.units, 0);
+    if (shouldInterp || sHudUtilsState.rotation.units.curr != 0) {
         if (shouldInterp) { djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION); }
-        create_dl_rotation_matrix(djui_hud_pass_matrix(), sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
+        create_dl_rotation_matrix(djui_hud_pass_matrix(), sHudUtilsState.rotation.units.curr, 0, 0, -1);
     }
     
     // scale
@@ -632,7 +658,7 @@ void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 p
         INTERP_SET(interp->posY, prevY, y);
         INTERP_SET(interp->scaleX, prevScaleX, scaleX);
         INTERP_SET(interp->scaleY, prevScaleY, scaleY);
-        interp->width
+        // interp->width
     }
 
     djui_hud_transform_internal(prevX, prevY, scaleX, scaleY, interp);
@@ -709,7 +735,6 @@ static Mtx *allocate_dl_translation_matrix() {
 
 static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 scale, struct InterpHud *interp) {
     if (message == NULL) { return; }
-    gDjuiHudUtilsZ += 0.001f;
 
     const struct DjuiFont* font = djui_hud_get_text_font();
     f32 fontScale = font->defaultFontScale * scale;
@@ -726,21 +751,21 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     if ((interp && (interp->posX.prev != 0 || interp->posY.prev != 0)) || x != 0 || y != 0) {
         djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
         djui_hud_dimension_translate(&x, &y);
-        create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, gDjuiHudUtilsZ);
+        create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, 0);
     }
 
     // rotate
     f32 translatedFontSize = fontScale;
     djui_hud_size_translate(&translatedFontSize);
-    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
-        if (sHudUtilsState.rotation.degrees.prev != sHudUtilsState.rotation.degrees.curr) {
+    if ((interp && sHudUtilsState.rotation.units.prev != 0) || sHudUtilsState.rotation.units.curr != 0) {
+        if (sHudUtilsState.rotation.units.prev != sHudUtilsState.rotation.units.curr) {
             djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         }
 
         f32 pivotTranslationX = font->defaultFontScale * translatedFontSize * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = font->defaultFontScale * translatedFontSize * sHudUtilsState.rotation.pivotY.curr;
         create_dl_translation_matrix(djui_hud_pass_matrix(), +pivotTranslationX, +pivotTranslationY, 0);
-        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
+        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.units.curr, 0, 0, -1);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
     }
 
@@ -893,27 +918,26 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
 
     if (!texture) { return; }
 
-    gDjuiHudUtilsZ += 0.001f;
     djui_hud_setup_matrix();
 
     // translate
     if ((interp && (interp->posX.prev != 0 || interp->posY.prev != 0)) || x != 0 || y != 0) {
         djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
         djui_hud_dimension_translate(&x, &y);
-        create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, gDjuiHudUtilsZ);
+        create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, 0);
     }
 
     // rotate
     djui_hud_dimension_translate(&scaleW, &scaleH);
-    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
-        if (sHudUtilsState.rotation.degrees.prev != sHudUtilsState.rotation.degrees.curr) {
+    if ((interp && sHudUtilsState.rotation.units.prev != 0) || sHudUtilsState.rotation.units.curr != 0) {
+        if (sHudUtilsState.rotation.units.prev != sHudUtilsState.rotation.units.curr) {
             djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         }
 
         f32 pivotTranslationX = width * scaleW * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = height * scaleH * sHudUtilsState.rotation.pivotY.curr;
         create_dl_translation_matrix(djui_hud_pass_matrix(), +pivotTranslationX, +pivotTranslationY, 0);
-        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
+        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.units.curr, 0, 0, -1);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
     }
 
@@ -931,7 +955,6 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
 static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH, struct InterpHud *interp) {
     if (!texture) { return; }
 
-    gDjuiHudUtilsZ += 0.001f;
     djui_hud_setup_matrix();
     if (width != 0) { scaleW *= (f32) tileW / (f32) width; }
     if (height != 0) { scaleH *= (f32) tileH / (f32) height; }
@@ -939,17 +962,17 @@ static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, 
     // translate
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
     djui_hud_dimension_translate(&x, &y);
-    create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, gDjuiHudUtilsZ);
+    create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, 0);
 
     // rotate
     djui_hud_dimension_translate(&scaleW, &scaleH);
-    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
+    if ((interp && sHudUtilsState.rotation.units.prev != 0) || sHudUtilsState.rotation.units.curr != 0) {
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         f32 aspect = tileH ? ((f32) tileW / (f32) tileH) : 1.f;
         f32 pivotTranslationX = width * scaleW * aspect * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = height * scaleH * sHudUtilsState.rotation.pivotY.curr;
         create_dl_translation_matrix(djui_hud_pass_matrix(), +pivotTranslationX, +pivotTranslationY, 0);
-        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
+        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.units.curr, 0, 0, -1);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
     }
 
@@ -1017,22 +1040,22 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 }
 
 static void djui_hud_render_rect_internal(f32 x, f32 y, f32 width, f32 height, struct InterpHud *interp) {
-    gDjuiHudUtilsZ += 0.001f;
     djui_hud_setup_matrix();
 
     // translate
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
     djui_hud_dimension_translate(&x, &y);
-    create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, gDjuiHudUtilsZ);
+    create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, 0);
 
     // rotate
     djui_hud_dimension_translate(&width, &height);
-    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
+    if ((interp && sHudUtilsState.rotation.units.prev != 0) || sHudUtilsState.rotation.units.curr != 0) {
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         f32 pivotTranslationX = width * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = height * sHudUtilsState.rotation.pivotY.curr;
+
         create_dl_translation_matrix(djui_hud_pass_matrix(), +pivotTranslationX, +pivotTranslationY, 0);
-        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
+        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.units.curr, 0, 0, -1);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, -pivotTranslationY, 0);
     }
 
