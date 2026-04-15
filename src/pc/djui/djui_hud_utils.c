@@ -27,6 +27,7 @@
 #define INTERP_INIT(v) {v, v}
 #define INTERP_SET(field, p, c) field.prev = p; field.curr = c;
 #define INTERP_RESET(field, c) field.prev = field.curr = c;
+#define INTERP_MUL(field, m) field.prev *= m.prev; field.curr *= m.curr;
 #define IS_INTERP_VAL(field, v) (field.prev == v && field.curr == v)
 #define IS_INTERP_SAME(field) (field.prev == field.curr)
 
@@ -624,7 +625,7 @@ void djui_hud_reset_scissor(void) {
 static u8 sTransformDepth = 0;
 
 static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, struct InterpHud *interp) {
-    if (sTransformDepth == UINT8_MAX) { return; }
+    if (sTransformDepth == MAX_MATRIX_STACK_SIZE - 3) { return; }
     djui_hud_setup_matrix();
 
     // translate
@@ -634,8 +635,8 @@ static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, st
     enum HudUtilsResolution origResolution = sHudUtilsState.resolution;
     sHudUtilsState.resolution = RESOLUTION_N64;
     djui_hud_do_rotation(interp,
-        SCREEN_HEIGHT * GFX_DIMENSIONS_ASPECT_RATIO,
-        SCREEN_HEIGHT);
+        SCREEN_HEIGHT * GFX_DIMENSIONS_ASPECT_RATIO * scaleX,
+        SCREEN_HEIGHT * scaleY);
     sHudUtilsState.resolution = origResolution;
 
     // scale
@@ -656,6 +657,8 @@ void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 p
         INTERP_SET(interp->posY, prevY, y);
         INTERP_SET(interp->scaleX, prevScaleX, scaleX);
         INTERP_SET(interp->scaleY, prevScaleY, scaleY);
+        INTERP_MUL(interp->state.rotation.pivotX, interp->scaleX);
+        INTERP_MUL(interp->state.rotation.pivotY, interp->scaleY);
         interp->state.resolution = RESOLUTION_N64;
         interp->width = SCREEN_HEIGHT * GFX_DIMENSIONS_ASPECT_RATIO;
         interp->height = SCREEN_HEIGHT;
@@ -672,7 +675,7 @@ void djui_hud_close_transform(void) {
 }
 
 void djui_hud_reset_transform(void) {
-    if (sTransformDepth > 0) { printf("\n%i", sTransformDepth); }
+    if (sTransformDepth > 0) { printf("\n%i: %i", gGlobalTimer, sTransformDepth); }
     while (sTransformDepth) {
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
         sTransformDepth--;
