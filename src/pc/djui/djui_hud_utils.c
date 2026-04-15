@@ -145,6 +145,42 @@ static void djui_hud_translate_positions(f32 *outX, f32 *outY, f32 *outW, f32 *o
     }
 }
 
+  ////////////
+ // interp //
+////////////
+
+enum InterpHudType {
+    INTERP_HUD_TRANSLATION,
+    INTERP_HUD_ROTATION,
+    INTERP_HUD_SCALE,
+    INTERP_HUD_HALIGN,
+    INTERP_HUD_VALIGN,
+    INTERP_HUD_NEW_LINE,
+    INTERP_HUD_COLOR,
+};
+
+typedef struct {
+    enum InterpHudType type;
+    Gfx *pos;
+    f32 params[1]; // we don't need more for now
+} InterpHudGfx;
+
+struct InterpHud {
+    bool noMtx;
+    union {
+        struct {
+            InterpFieldF32 posX, posY;
+            InterpFieldF32 scaleX, scaleY;
+        };
+        struct {
+            InterpFieldF32 r, g, b, a;
+        };
+    };
+    f32 width, height;
+    struct HudUtilsState state;
+    struct GrowingArray *gfx;
+};
+
 static bool sDjuiHudMtxPushed = false;
 static inline void djui_hud_setup_matrix() {
     sDjuiHudMtxPushed = false;
@@ -159,47 +195,11 @@ static s8 djui_hud_pass_matrix() {
     }
 }
 
-static inline void djui_hud_pop_matrix() {
+static inline void djui_hud_pop_matrix(struct InterpHud *interp) {
     if (sDjuiHudMtxPushed) {
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
-    }
+    } else if (interp) { gDPNoOp(gDisplayListHead++); }
 }
-
-  ////////////
- // interp //
-////////////
-
-enum InterpHudType {
-    INTERP_HUD_TRANSLATION,
-    INTERP_HUD_ROTATION,
-    INTERP_HUD_SCALE,
-    INTERP_HUD_TRANSFORM,
-    INTERP_HUD_HALIGN,
-    INTERP_HUD_VALIGN,
-    INTERP_HUD_NEW_LINE,
-    INTERP_HUD_COLOR,
-};
-
-typedef struct {
-    enum InterpHudType type;
-    Gfx *pos;
-    f32 params[1]; // we don't need more for now
-} InterpHudGfx;
-
-struct InterpHud {
-    union {
-        struct {
-            InterpFieldF32 posX, posY;
-            InterpFieldF32 scaleX, scaleY;
-        };
-        struct {
-            InterpFieldF32 r, g, b, a;
-        };
-    };
-    f32 width, height;
-    struct HudUtilsState state;
-    struct GrowingArray *gfx;
-};
 
 static struct GrowingArray *sInterpHuds = NULL;
 static u32 sInterpHudCount = 0;
@@ -262,21 +262,6 @@ void patch_djui_hud(f32 delta) {
                     create_dl_scale_matrix(djui_hud_pass_matrix(), interp->width * translatedW, interp->height * translatedH, 1.0f);
                 } break;
 
-                case INTERP_HUD_TRANSFORM: {
-                    djui_hud_dimension_translate(&x, &y);
-                    create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, 0);
-
-                    if (sHudUtilsState.rotation.units.prev != 0 || sHudUtilsState.rotation.units.curr != 0) {
-                        s16 rotPrev = sHudUtilsState.rotation.units.prev;
-                        s16 rotCurr = sHudUtilsState.rotation.units.curr;
-                        s32 normalizedDiff = (((s32) rotCurr - (s32) rotPrev + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
-                        s32 rotation = delta_interpolate_s32(rotCurr - normalizedDiff, rotCurr, delta);
-                        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, -1);
-                    }
-                    
-                    create_dl_scale_matrix(DJUI_MTX_NOPUSH, scaleW, scaleH, 1.0f);
-                } break;
-
                 case INTERP_HUD_HALIGN: {
                     f32 textHAlign = delta_interpolate_f32(sHudUtilsState.textAlignment.h.prev, sHudUtilsState.textAlignment.h.curr, delta);
                     f32 lineWidth = gfx->params[0];
@@ -301,6 +286,8 @@ void patch_djui_hud(f32 delta) {
                 } break;
             }
         }
+
+        if (!interp->noMtx) { djui_hud_pop_matrix(interp); }
     }
 
     sHudUtilsState = savedState;
@@ -439,6 +426,7 @@ void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 
         INTERP_SET(interp->g, prevG, g);
         INTERP_SET(interp->b, prevB, b);
         INTERP_SET(interp->a, prevA, a);
+        interp->noMtx = true;
 
         djui_hud_create_interp_gfx(interp, INTERP_HUD_COLOR);
     }
@@ -653,7 +641,7 @@ static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, st
     // scale
     djui_hud_do_scale(interp, scaleX, scaleY);
 
-    sTransformDepth++;
+    if (sDjuiHudMtxPushed) sTransformDepth++;
 }
 
 void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY) {
@@ -663,6 +651,7 @@ void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY) {
 void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY) {
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {
+        interp->noMtx = true;
         INTERP_SET(interp->posX, prevX, x);
         INTERP_SET(interp->posY, prevY, y);
         INTERP_SET(interp->scaleX, prevScaleX, scaleX);
@@ -677,13 +666,13 @@ void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 p
 
 void djui_hud_close_transform(void) {
     if (sTransformDepth) {
-        // pop
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
         sTransformDepth--;
     }
 }
 
 void djui_hud_reset_transform(void) {
+    if (sTransformDepth > 0) { printf("\n%i", sTransformDepth); }
     while (sTransformDepth) {
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
         sTransformDepth--;
@@ -869,7 +858,7 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     guTranslate(valignMatrix, 0, textHeight * sHudUtilsState.textAlignment.v.curr, 0);
     if (valignGfx) { valignGfx->params[0] = textHeight; }
 
-    djui_hud_pop_matrix();
+    djui_hud_pop_matrix(interp);
 }
 
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
@@ -928,7 +917,7 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
     djui_gfx_render_texture(texture, width, height, fmt, siz, sHudUtilsState.filter);
 
     // pop
-    djui_hud_pop_matrix();
+    djui_hud_pop_matrix(interp);
 }
 
 static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH, struct InterpHud *interp) {
@@ -952,7 +941,7 @@ static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, 
     djui_gfx_render_texture_tile(texture, width, height, fmt, siz, tileX, tileY, tileW, tileH, sHudUtilsState.filter);
 
     // pop
-    djui_hud_pop_matrix();
+    djui_hud_pop_matrix(interp);
 }
 
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
@@ -1024,7 +1013,7 @@ static void djui_hud_render_rect_internal(f32 x, f32 y, f32 width, f32 height, s
     gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // pop
-    djui_hud_pop_matrix();
+    djui_hud_pop_matrix(interp);
 }
 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height) {
