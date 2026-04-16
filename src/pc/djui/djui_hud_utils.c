@@ -631,7 +631,7 @@ static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, st
 
     // translate
     djui_hud_do_translation(interp, x, y);
-    
+
     // rotate
     enum HudUtilsResolution origResolution = sHudUtilsState.resolution;
     sHudUtilsState.resolution = RESOLUTION_N64;
