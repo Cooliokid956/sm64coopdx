@@ -333,6 +333,7 @@ static inline void djui_hud_do_translation(struct InterpHud *interp, f32 x, f32 
     bool doInterp = interp && !(IS_INTERP_SAME(interp->posX) && IS_INTERP_SAME(interp->posY));
     if (doInterp || !(x == 0 && y == 0)) {
         if (doInterp) { djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION); }
+
         djui_hud_dimension_translate(&x, &y);
         create_dl_translation_matrix(djui_hud_pass_matrix(), x, y, 0);
     }
@@ -642,7 +643,7 @@ static void djui_hud_transform_internal(f32 x, f32 y, f32 scaleX, f32 scaleY, st
     // scale
     djui_hud_do_scale(interp, scaleX, scaleY);
 
-    if (sDjuiHudMtxPushed) sTransformDepth++;
+    if (sDjuiHudMtxPushed) { sTransformDepth++; }
 }
 
 void djui_hud_transform(f32 x, f32 y, f32 scaleX, f32 scaleY) {
