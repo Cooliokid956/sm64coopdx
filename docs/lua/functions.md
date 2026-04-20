@@ -760,6 +760,9 @@
    - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
    - [djui_hud_set_color](functions-3.md#djui_hud_set_color)
    - [djui_hud_reset_color](functions-3.md#djui_hud_reset_color)
+   - [djui_hud_get_text_color](functions-3.md#djui_hud_get_text_color)
+   - [djui_hud_set_text_color](functions-3.md#djui_hud_set_text_color)
+   - [djui_hud_reset_text_color](functions-3.md#djui_hud_reset_text_color)
    - [djui_hud_get_rotation](functions-3.md#djui_hud_get_rotation)
    - [djui_hud_set_rotation](functions-3.md#djui_hud_set_rotation)
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
@@ -1396,6 +1399,7 @@
    - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)
    - [mod_fs_file_set_text_mode](functions-5.md#mod_fs_file_set_text_mode)
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
+   - [mod_fs_file_set_compression](functions-5.md#mod_fs_file_set_compression)
    - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
    - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
@@ -1403,9 +1407,11 @@
 
 - mod_storage.h
    - [mod_storage_save](functions-5.md#mod_storage_save)
+   - [mod_storage_save_integer](functions-5.md#mod_storage_save_integer)
    - [mod_storage_save_number](functions-5.md#mod_storage_save_number)
    - [mod_storage_save_bool](functions-5.md#mod_storage_save_bool)
    - [mod_storage_load](functions-5.md#mod_storage_load)
+   - [mod_storage_load_integer](functions-5.md#mod_storage_load_integer)
    - [mod_storage_load_number](functions-5.md#mod_storage_load_number)
    - [mod_storage_load_bool](functions-5.md#mod_storage_load_bool)
    - [mod_storage_load_all](functions-5.md#mod_storage_load_all)
@@ -1609,7 +1615,6 @@
    - [cur_obj_check_if_at_animation_end](functions-6.md#cur_obj_check_if_at_animation_end)
    - [cur_obj_check_anim_frame](functions-6.md#cur_obj_check_anim_frame)
    - [cur_obj_check_anim_frame_in_range](functions-6.md#cur_obj_check_anim_frame_in_range)
-   - [cur_obj_check_frame_prior_current_frame](functions-6.md#cur_obj_check_frame_prior_current_frame)
    - [mario_is_in_air_action](functions-6.md#mario_is_in_air_action)
    - [mario_is_dive_sliding](functions-6.md#mario_is_dive_sliding)
    - [cur_obj_set_y_vel_and_animation](functions-6.md#cur_obj_set_y_vel_and_animation)
