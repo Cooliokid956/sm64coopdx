@@ -1740,11 +1740,11 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oCameraLakituBlinkTimer",                    LVT_S32,                 offsetof(struct Object, oCameraLakituBlinkTimer),                    false, LOT_NONE                                                     },
     { "oCameraLakituCircleRadius",                  LVT_F32,                 offsetof(struct Object, oCameraLakituCircleRadius),                  false, LOT_NONE                                                     },
     { "oCameraLakituFinishedDialog",                LVT_S32,                 offsetof(struct Object, oCameraLakituFinishedDialog),                false, LOT_NONE                                                     },
+#ifndef VERSION_JP
+    { "oCameraLakituMusicPlayed",                   LVT_S32,                 offsetof(struct Object, oCameraLakituMusicPlayed),                   false, LOT_NONE                                                     },
+#endif
     { "oCameraLakituPitchVel",                      LVT_S16,                 offsetof(struct Object, oCameraLakituPitchVel),                      false, LOT_NONE                                                     },
     { "oCameraLakituSpeed",                         LVT_F32,                 offsetof(struct Object, oCameraLakituSpeed),                         false, LOT_NONE                                                     },
-#ifndef VERSION_JP
-    { "oCameraLakituUnk104",                        LVT_S32,                 offsetof(struct Object, oCameraLakituUnk104),                        false, LOT_NONE                                                     },
-#endif
     { "oCameraLakituYawVel",                        LVT_S16,                 offsetof(struct Object, oCameraLakituYawVel),                        false, LOT_NONE                                                     },
     { "oCannonBarrelBubblesUnkF4",                  LVT_F32,                 offsetof(struct Object, oCannonBarrelBubblesUnkF4),                  false, LOT_NONE                                                     },
     { "oCannonPlayerIndex",                         LVT_S32,                 offsetof(struct Object, oCannonPlayerIndex),                         false, LOT_NONE                                                     },
