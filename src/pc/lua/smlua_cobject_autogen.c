@@ -2504,7 +2504,7 @@ static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COU
     { "playerKnockbackStrength",     LVT_U8,  offsetof(struct ServerSettings, playerKnockbackStrength),     false, LOT_NONE },
     { "pvpType",                     LVT_S32, offsetof(struct ServerSettings, pvpType),                     false, LOT_NONE },
     { "skipIntro",                   LVT_U8,  offsetof(struct ServerSettings, skipIntro),                   false, LOT_NONE },
-    { "stayInLevelAfterStar",        LVT_U8,  offsetof(struct ServerSettings, stayInLevelAfterStar),        false, LOT_NONE },
+    { "stayInLevelAfterStar",        LVT_S32, offsetof(struct ServerSettings, stayInLevelAfterStar),        false, LOT_NONE },
 };
 
 #define LUA_SPAWN_INFO_FIELD_COUNT 8

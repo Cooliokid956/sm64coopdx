@@ -5,7 +5,6 @@
 #include "djui_panel_modlist.h"
 #include "djui_panel_playerlist.h"
 
-#include "djui_flow_layout.h"
 #include "pc/controller/controller_sdl.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/controller/controller_keyboard.h"
@@ -23,8 +22,6 @@ static enum PadHoldDirection sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
 static u16 sKeyboardButtons = 0;
 
 static bool sIgnoreInteractableUntilCursorReleased = false;
-static f32 sCursorDownStartY = 0;
-static bool sDragScrollActive = false;
 
 struct DjuiBase* gDjuiHovered = NULL;
 struct DjuiBase* gDjuiCursorDownOn = NULL;
@@ -339,21 +336,10 @@ void djui_interactable_on_text_editing(char* text, int cursorPos) {
 }
 
 void djui_interactable_on_scroll(float x, float y) {
-    // Priority: focused element (e.g. chat input)
-    if (gInteractableFocus && gInteractableFocus->interactable
-        && gInteractableFocus->interactable->on_scroll) {
-        gInteractableFocus->interactable->on_scroll(gInteractableFocus, x, y);
-        return;
-    }
-    // Bubble from hovered element up to ancestors
-    struct DjuiBase* base = gDjuiHovered;
-    while (base) {
-        if (base->interactable && base->interactable->on_scroll) {
-            base->interactable->on_scroll(base, x, y);
-            return;
-        }
-        base = base->parent;
-    }
+    if (gInteractableFocus == NULL) { return; }
+    if (gInteractableFocus->interactable == NULL) { return; }
+    if (gInteractableFocus->interactable->on_scroll == NULL) { return; }
+    gInteractableFocus->interactable->on_scroll(gInteractableFocus, x, y);
 }
 
 void djui_interactable_update_pad(void) {
@@ -468,44 +454,15 @@ void djui_interactable_update(void) {
         if (gDjuiHovered != NULL) {
             gInteractableMouseDown = gDjuiHovered;
             gDjuiHovered = NULL;
-            sCursorDownStartY = gCursorY;
-            sDragScrollActive = false;
             djui_interactable_on_cursor_down_begin(gInteractableMouseDown, !mouseButtons);
-        } else if (sDragScrollActive) {
-            djui_interactable_on_cursor_down(gInteractableMouseDown);
         } else {
-            // check if vertical drag exceeds threshold to steal touch for scrolling
-            f32 dragDist = gCursorY - sCursorDownStartY;
-            if (dragDist < 0) { dragDist = -dragDist; }
-            if (gInteractableMouseDown != NULL && dragDist > 10.0f
-                && gDjuiFlowLayoutScrollRender
-                && (!gInteractableMouseDown->interactable
-                    || !gInteractableMouseDown->interactable->on_cursor_down)) {
-                struct DjuiBase* parent = gInteractableMouseDown->parent;
-                while (parent) {
-                    if (parent->render == gDjuiFlowLayoutScrollRender) {
-                        gDjuiCursorDownOn = NULL;
-                        djui_interactable_update_style(gInteractableMouseDown);
-                        gInteractableMouseDown = parent;
-                        sDragScrollActive = true;
-                        djui_interactable_on_cursor_down_begin(parent, !mouseButtons);
-                        break;
-                    }
-                    parent = parent->parent;
-                }
-                if (!sDragScrollActive) {
-                    djui_interactable_on_cursor_down(gInteractableMouseDown);
-                }
-            } else {
-                djui_interactable_on_cursor_down(gInteractableMouseDown);
-            }
+            djui_interactable_on_cursor_down(gInteractableMouseDown);
         }
     } else {
         // cursor up event
         if (gInteractableMouseDown != NULL) {
             djui_interactable_on_cursor_down_end(gInteractableMouseDown);
             gInteractableMouseDown = NULL;
-            sDragScrollActive = false;
         }
         struct DjuiBase* lastHovered = gDjuiHovered;
         gDjuiHovered = NULL;
