@@ -737,11 +737,12 @@ static Mtx *allocate_dl_translation_matrix() {
     return matrix;
 }
 
-static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 scale, struct InterpHud *interp) {
+static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY, struct InterpHud *interp) {
     if (message == NULL) { return; }
 
     const struct DjuiFont* font = djui_hud_get_text_font();
-    f32 fontScale = font->defaultFontScale * scale;
+    f32 fontScaleX = font->defaultFontScale * scaleX;
+    f32 fontScaleY = font->defaultFontScale * scaleY;
 
     // setup display list
     if (font->textBeginDisplayList != NULL) {
@@ -751,7 +752,7 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     djui_hud_setup_matrix();
 
     // translate
-    x += (font->xOffset * scale); y += (font->yOffset * scale);
+    x += (font->xOffset * scaleX); y += (font->yOffset * scaleY);
     djui_hud_do_translation(interp, x, y);
 
     // rotate
@@ -761,10 +762,10 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
         interp->width = width;
         interp->height = height;
     }
-    djui_hud_do_rotation(interp, width * scale, height * scale);
+    djui_hud_do_rotation(interp, width * scaleX, height * scaleY);
 
     // compute font size
-    djui_hud_do_scale(interp, fontScale, fontScale);
+    djui_hud_do_scale(interp, fontScaleX, fontScaleY);
 
     // allocate the translation matrix for the vertical alignment
     InterpHudGfx *valignGfx = djui_hud_create_interp_gfx(interp, INTERP_HUD_VALIGN);
@@ -865,33 +866,36 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     djui_hud_pop_matrix(interp);
 }
 
-void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
+void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY) {
     if (message == NULL) { return; }
 
     if (djui_hud_text_font_is_legacy()) {
-        scale *= 0.5f;
+        scaleX *= 0.5f;
+        scaleY *= 0.5f;
     }
 
-    djui_hud_print_text_internal(message, x, y, scale, NULL);
+    djui_hud_print_text_internal(message, x, y, scaleX, scaleY, NULL);
 }
 
-void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
+void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY) {
     if (message == NULL) { return; }
 
     if (djui_hud_text_font_is_legacy()) {
-        scale *= 0.5f;
-        prevScale *= 0.5f;
+        scaleX *= 0.5f;
+        scaleY *= 0.5f;
+        prevScaleX *= 0.5f;
+        prevScaleY *= 0.5f;
     }
 
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {
         INTERP_SET(interp->posX, prevX, x);
         INTERP_SET(interp->posY, prevY, y);
-        INTERP_SET(interp->scaleX, prevScale, scale);
-        INTERP_SET(interp->scaleY, prevScale, scale);
+        INTERP_SET(interp->scaleX, prevScaleX, scaleX);
+        INTERP_SET(interp->scaleY, prevScaleY, scaleY);
     }
 
-    djui_hud_print_text_internal(message, x, y, scale, interp);
+    djui_hud_print_text_internal(message, x, y, scaleX, scaleY, interp);
 }
 
 static inline bool is_power_of_two(u32 n) {
