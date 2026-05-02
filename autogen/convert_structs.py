@@ -105,6 +105,7 @@ override_field_invisible = {
 
 override_field_deprecated = {
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
+    "ModAudio": [ "file", "relativePath" ], # compatibility band-aid
 }
 
 override_field_immutable = {
@@ -503,6 +504,9 @@ def get_struct_field_info(struct, field):
     fimmutable = str(lvt == 'LVT_COBJECT' or 'const ' in ftype).lower()
     if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt and 'TRAJECTORY' not in lvt:
         fimmutable = 'true'
+    
+    if field.get('get') and field['set'] == 'NULL':
+        fimmutable = 'true'
 
     if sid in override_field_immutable:
         if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
@@ -569,7 +573,9 @@ def build_struct(struct):
             row.append('.function = "%s"\\' % field['function'])
         elif field.get('get'):
             row.append('.get = "%s", ' % field['get'])
-            row.append('.set = "%s"\\' % field['set'])
+            if fimmutable != 'true':
+                row.append('.set = "%s"\\' % field['set'])
+            else: row[-1] = row[-1][:-2] + "\\"
         else:
             row.append('offsetof(%s%s, %s), ' % (struct_str, name, field['identifier']))
             row.append('%s, '       % fimmutable)

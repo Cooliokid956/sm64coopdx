@@ -644,12 +644,17 @@ static int smlua__set_field(lua_State* L) {
 
     // CObject property
     if (data->valueType == LVT_PROPERTY) {
-        lua_getglobal(L, data->set);
-        lua_pushvalue(L, 1);
-        lua_pushvalue(L, 3);
-        smlua_pcall(L, 2, 1, 0);
-        LUA_STACK_CHECK_END(L);
-        return 1;
+        if (data->set) {
+            lua_getglobal(L, data->set);
+            lua_pushvalue(L, 1);
+            lua_pushvalue(L, 3);
+            smlua_pcall(L, 2, 1, 0);
+            LUA_STACK_CHECK_END(L);
+            return 1;
+        } else {
+            LOG_LUA_LINE("_set_field on immutable key '%s'", key);
+            return 0;
+        }
     }
 
     if (data->immutable || data->valueType == LVT_FUNCTION) {

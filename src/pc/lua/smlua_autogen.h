@@ -23,7 +23,7 @@
 
 // A macro to tell autogen the field `name` is a property member of the struct that calls `get` or `set` accessors
 // - get: fun(self) -> value
-// - set: fun(self, value)
+// - set: fun(self, value) (property immutable if NULL)
 #define PROPERTY(name, get, set)
 
 // A macro to tell autogen the field `name` is a function member of the struct that calls `c_function`

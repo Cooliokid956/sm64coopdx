@@ -24,7 +24,10 @@ struct ModAudioSampleCopies {
 };
 
 struct ModAudio {
-    const char *filepath;
+    union {
+        const char *filepath;
+        const char *relativePath; // compatibility band-aid
+    };
     ma_sound sound;
     ma_decoder decoder;
     void *buffer;
@@ -38,6 +41,8 @@ struct ModAudio {
     PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
     PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
     PROPERTY(volume,    audio_stream_get_volume,    audio_stream_set_volume);
+
+    PROPERTY(file, return_self, NULL); // compatibility band-aid
 };
 
 /* |description|Loads an `audio` stream by `filename` (with extension)|descriptionEnd| */
