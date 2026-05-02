@@ -199,7 +199,7 @@ static s8 djui_hud_pass_matrix() {
 static inline void djui_hud_pop_matrix(struct InterpHud *interp) {
     if (sDjuiHudMtxPushed) {
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
-    } else if (interp) { gDPNoOp(gDisplayListHead++); }
+    } else if (interp) { gSPNoOp(gDisplayListHead++); }
 }
 
 static struct GrowingArray *sInterpHuds = NULL;
