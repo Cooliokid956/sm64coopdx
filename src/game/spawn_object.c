@@ -183,7 +183,7 @@ void clear_object_lists(struct ObjectNode *objLists) {
 /**
  * Delete the leaf graph nodes under obj and obj's siblings.
  */
-static void unused_delete_leaf_nodes(struct Object *obj) {
+UNUSED static void unused_delete_leaf_nodes(struct Object *obj) {
     if (!obj) { return; }
     struct Object *children;
     struct Object *sibling;
@@ -331,6 +331,9 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     vec3s_zero(obj->header.gfx.angle);
     obj->header.gfx.throwMatrix = NULL;
     obj->header.gfx.inited = false;
+    obj->header.gfx.disableAutomaticShadowPos = false;
+    obj->header.gfx.shadowInvisible = false;
+    obj->header.gfx.skipInViewCheck = false;
 
     obj->coopFlags = 0;
     obj->hookRender = 0;

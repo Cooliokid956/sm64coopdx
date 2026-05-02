@@ -236,13 +236,6 @@ s32 geo_switch_peach_eyes(s32 run, struct GraphNode *node, UNUSED s32 a2) {
     return 0;
 }
 
-// unused
-static void stub_is_textbox_active(u16 *a0) {
-    if (get_dialog_id() == DIALOG_NONE) {
-        *a0 = 0;
-    }
-}
-
 /**
  * get_star_collection_dialog: Determine what dialog should show when Mario
  * collects a star.
@@ -693,12 +686,10 @@ s32 act_debug_free_move(struct MarioState *m) {
 
     struct Surface *surf = NULL;
     f32 floorHeight = find_floor(pos[0], pos[1], pos[2], &surf);
-    if (surf != NULL) {
-        if (pos[1] < floorHeight) {
-            pos[1] = floorHeight;
-        }
-        vec3f_copy(m->pos, pos);
+    if (pos[1] < floorHeight) {
+        pos[1] = floorHeight;
     }
+    vec3f_copy(m->pos, pos);
 
     m->faceAngle[1] = m->intendedYaw;
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
@@ -851,7 +842,7 @@ s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWa
             smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return animFrame; }
 
-            if (mario_can_bubble(m)) {
+            if ((mario_can_bubble(m) && m->numLives > 0)) {
                 mario_set_bubbled(m);
             } else {
                 level_trigger_warp(m, WARP_OP_DEATH);
@@ -924,8 +915,7 @@ s32 act_quicksand_death(struct MarioState *m) {
                 bool allowDeath = true;
                 smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                 if (!allowDeath) { return FALSE; }
-
-                if (mario_can_bubble(m)) {
+                if ((mario_can_bubble(m) && m->numLives > 0)) {
                     mario_set_bubbled(m);
                 } else {
                     level_trigger_warp(m, WARP_OP_DEATH);
@@ -949,7 +939,7 @@ s32 act_eaten_by_bubba(struct MarioState *m) {
             smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
-            if (mario_can_bubble(m)) {
+            if ((mario_can_bubble(m) && m->numLives > 0)) {
                 m->health = 0xFF;
                 mario_set_bubbled(m);
             } else {
@@ -1281,6 +1271,7 @@ s32 act_spawn_spin_airborne(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
+        m->freeze = 2;
         return set_water_plunge_action(m);
     }
 
@@ -1313,6 +1304,7 @@ s32 act_spawn_spin_landing(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
+        m->freeze = 2;
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;
@@ -1439,6 +1431,12 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
     return FALSE;
 }
 
+static void lose_life_after_death_exit(struct MarioState *m) {
+    if (sDelayedWarpArg != WARP_ARG_EXIT_COURSE) {
+        m->numLives--;
+    }
+}
+
 s32 act_death_exit(struct MarioState *m) {
     if (!m) { return 0; }
     if (15 < m->actionTimer++
@@ -1449,6 +1447,7 @@ s32 act_death_exit(struct MarioState *m) {
         play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
         queue_rumble_data_mario(m, 5, 80);
+        lose_life_after_death_exit(m);
         // restore 7.75 units of health
         m->healCounter = 31;
     }
@@ -1465,6 +1464,7 @@ s32 act_unused_death_exit(struct MarioState *m) {
 #else
         play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
+        lose_life_after_death_exit(m);
         // restore 7.75 units of health
         m->healCounter = 31;
     }
@@ -1481,6 +1481,7 @@ s32 act_falling_death_exit(struct MarioState *m) {
 #else
         play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
+        lose_life_after_death_exit(m);
         queue_rumble_data_mario(m, 5, 80);
         // restore 7.75 units of health
         m->healCounter = 31;
@@ -1528,6 +1529,7 @@ s32 act_special_death_exit(struct MarioState *m) {
 
     if (launch_mario_until_land(m, ACT_HARD_BACKWARD_GROUND_KB, CHAR_ANIM_BACKWARD_AIR_KB, -24.0f)) {
         queue_rumble_data_mario(m, 5, 80);
+        lose_life_after_death_exit(m);
         m->healCounter = 31;
     }
     // show Mario
@@ -1555,6 +1557,7 @@ s32 act_spawn_no_spin_landing(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
+        m->freeze = 2;
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;
@@ -1827,11 +1830,17 @@ s32 act_squished(struct MarioState *m) {
             if (m->actionTimer >= 15) {
                 // 1 unit of health
                 if (m->health < 0x0100) {
-                    //level_trigger_warp(m, WARP_OP_DEATH);
-                    // woosh, he's gone!
-                    //set_mario_action(m, ACT_DISAPPEARED, 0);
-                    drop_and_set_mario_action(m, ACT_DEATH_ON_BACK, 0);
-                    m->squishTimer = 0;
+                    bool allowDeath = true;
+                    smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
+                    if (!allowDeath) { return FALSE; }
+
+                    if ((mario_can_bubble(m) && m->numLives > 0)) {
+                        mario_set_bubbled(m);
+                    } else {
+                        level_trigger_warp(m, WARP_OP_DEATH);
+                        // woosh, he's gone!
+                        set_mario_action(m, ACT_DISAPPEARED, 0);
+                    }
                 } else if (m->hurtCounter == 0) {
                     // un-squish animation
                     m->squishTimer = 30;
@@ -1876,7 +1885,7 @@ s32 act_squished(struct MarioState *m) {
             smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
-            if (mario_can_bubble(m)) {
+            if ((mario_can_bubble(m) && m->numLives > 0)) {
                 mario_set_bubbled(m);
             } else {
                 // 0 units of health
@@ -2178,7 +2187,7 @@ static s32 act_intro_cutscene(struct MarioState *m) {
     return FALSE;
 }
 
-static void jumbo_star_offset(struct MarioState* m) {
+UNUSED static void jumbo_star_offset(struct MarioState* m) {
     if (!m) { return; }
     m->pos[0] += 300.0f * sins(m->faceAngle[1] + 0x4000 * m->playerIndex);
     m->pos[2] += 300.0f * coss(m->faceAngle[1] + 0x4000 * m->playerIndex);
@@ -3190,9 +3199,9 @@ s32 mario_execute_cutscene_action(struct MarioState *m) {
             case ACT_FEET_STUCK_IN_GROUND:       cancel = act_feet_stuck_in_ground(m);       break;
             case ACT_PUTTING_ON_CAP:             cancel = act_putting_on_cap(m);             break;
             default:
-                LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
+                LOG_ERROR("Attempted to execute unimplemented action '%08X'", m->action);
                 set_mario_action(m, ACT_IDLE, 0);
-                return false;
+                return FALSE;
         }
         /* clang-format on */
     }

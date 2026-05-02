@@ -11,6 +11,8 @@
 // forward declare
 struct Camera;
 struct WarpDest;
+struct WallCollisionData;
+struct Surface;
 
 // ! Hooks must be added at the end
 enum LuaHookedEventType {
@@ -74,6 +76,13 @@ enum LuaHookedEventType {
     HOOK_ON_ADD_SURFACE,
     HOOK_ON_CLEAR_AREAS,
     HOOK_ON_PACKET_BYTESTRING_RECEIVE,
+    HOOK_ON_FIND_WALL_COLLISION,
+    HOOK_ON_FIND_CEIL,
+    HOOK_ON_FIND_FLOOR,
+    HOOK_ON_FIND_WATER_LEVEL,
+    HOOK_ON_FIND_POISON_GAS_LEVEL,
+    HOOK_ON_FIND_SURFACE_ON_RAY,
+    HOOK_ON_DYNOS_PACK_TOGGLED,
     HOOK_MAX,
 };
 
@@ -94,6 +103,8 @@ static const char* LuaActionHookTypeArgName[] = {
     "gravity",
     "max (dummy)",
 };
+
+#define ACTION_HOOK_CONTINUE_EXECUTION -1
 
 #define MAX_HOOKED_MOD_MENU_ELEMENTS 256
 
@@ -125,6 +136,26 @@ extern u32 gLuaMarioActionIndex[];
 extern struct LuaHookedModMenuElement gHookedModMenuElements[];
 extern int gHookedModMenuElementsCount;
 
+#define MAX_HOOKED_BEHAVIORS 1024
+
+struct LuaHookedBehavior {
+    u32 behaviorId;
+    u32 overrideId;
+    u32 originalId;
+    BehaviorScript *behavior;
+    const BehaviorScript* originalBehavior;
+    const char* bhvName;
+    int initReference;
+    int loopReference;
+    bool replace;
+    bool luaBehavior;
+    struct Mod* mod;
+    struct ModFile* modFile;
+};
+
+extern int gHookedBehaviorsCount;
+extern struct LuaHookedBehavior gHookedBehaviors[MAX_HOOKED_BEHAVIORS];
+
 #define OUTPUT
 #define SMLUA_EVENT_HOOK(hookEventType, hookReturn, ...) bool smlua_call_event_hooks_##hookEventType(__VA_ARGS__);
 #include "smlua_hook_events.inl"
@@ -143,7 +174,7 @@ const char* smlua_get_name_from_hooked_behavior_id(enum BehaviorId id);
 bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* object, bool before);
 
 int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod, struct ModFile* activeModFile);
-bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* returnValue);
+bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* cancel);
 u32 smlua_get_action_interaction_type(struct MarioState* m);
 
 bool smlua_call_chat_command_hook(char* command);

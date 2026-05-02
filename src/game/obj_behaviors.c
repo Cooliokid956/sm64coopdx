@@ -73,13 +73,13 @@ static s8 sOrientObjWithFloor = TRUE;
 s16 sPrevCheckMarioRoom = 0;
 
 /**
- * Tracks whether or not Yoshi has walked/jumped off the roof.
+ * Override for whether or not Yoshi has walked/jumped off the roof.
  */
-s8 sYoshiDead = FALSE;
+s8 sOverrideYoshiAlive = FALSE;
 
-/* |description|Resets Yoshi as being alive|descriptionEnd| */
+/* |description|Marks Yoshi as alive|descriptionEnd| */
 void set_yoshi_as_not_dead(void) {
-    sYoshiDead = FALSE;
+    sOverrideYoshiAlive = FALSE;
 }
 
 /**
@@ -251,10 +251,8 @@ void obj_orient_graph(struct Object *obj, f32 normalX, f32 normalY, f32 normalZ)
     obj->header.gfx.throwMatrix = throwMatrix;
 }
 
-/**
- * Determines an object's forward speed multiplier.
- */
-void calc_obj_friction(f32 *objFriction, f32 floor_nY) {
+/* |description|Determines an object's forward speed multiplier.|descriptionEnd| */
+void calc_obj_friction(RET f32 *objFriction, f32 floor_nY) {
     if (!o) { return; }
     if (!objFriction) { return; }
     if (floor_nY < 0.2 && o->oFriction < 0.9999) {
@@ -760,7 +758,7 @@ s8 obj_check_if_facing_toward_angle(u32 base, u32 goal, s16 range) {
 }
 
 /* |description|Finds any wall collisions and returns what the displacement vector would be.|descriptionEnd| */
-s8 obj_find_wall_displacement(OUT Vec3f dist, f32 x, f32 y, f32 z, f32 radius) {
+s8 obj_find_wall_displacement(VEC_OUT Vec3f dist, f32 x, f32 y, f32 z, f32 radius) {
     struct WallCollisionData hitbox;
     UNUSED u8 filler[0x20];
 

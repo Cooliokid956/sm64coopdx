@@ -68,6 +68,7 @@ exclude_constants = {
     "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS", "^HOOK_RETURN_.*", "^ACTION_HOOK_.*", "^MOD_MENU_ELEMENT_.*" ],
     "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
     "src/pc/mods/mod_fs.h": [ "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
+    "src/pc/network/version.h": [ "VERSION_OFFSET" ],
 }
 
 include_constants = {
@@ -535,6 +536,8 @@ def def_constant(fname, processed_constant, skip_constant):
             continue
         if '"' in c[1]:
             s += '\n--- @type string\n'
+        elif "." in c[1]:
+            s += '\n--- @type number\n'
         else:
             s += '\n--- @type integer\n'
         s += '%s = %s\n' % (c[0], c[1])

@@ -97,11 +97,6 @@ gServerSettings = {}
 --- Struct containing the settings for Nametags
 gNametagsSettings = {}
 
---- @type Camera
---- Struct contaning camera fields
---- - This camera is the same as `gMarioStates[i].area.camera` or `gCurrentArea.camera`
-gCamera = {}
-
 -----------
 -- hooks --
 -----------
@@ -132,7 +127,7 @@ function update_chat_command_description(command, description)
 end
 
 --- @param hookEventType LuaHookedEventType When a function should run
---- @param func fun(...: any): any The function to run
+--- @param func fun(...: any): any?, any? The function to run
 --- Different hooks can pass in different parameters and have different return values. Be sure to read the hooks guide for more information.
 function hook_event(hookEventType, func)
     -- ...
@@ -444,5 +439,29 @@ end
 --- Gets a vertex buffer of the current mod from its name.
 --- Returns a pointer to the vertex buffering and its vertex count
 function vtx_get_from_name(name)
+    -- ...
+end
+
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number?
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleX number
+--- @param prevScaleY number
+--- @param x number
+--- @param y number
+--- @param scaleX number?
+--- @param scaleY number?
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)
     -- ...
 end

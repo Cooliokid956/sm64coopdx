@@ -195,6 +195,7 @@
 --- @field public RespawnShellBoxes integer
 --- @field public MultipleCapCollection integer
 --- @field public InfiniteRenderDistance integer
+--- @field public ProcessLODs integer
 --- @field public CourtyardBoosRequirement integer
 --- @field public starsNeededForDialog StarsNeededForDialog
 --- @field public dialogs BehaviorDialogs
@@ -954,14 +955,6 @@
 --- @field public translation Vec3s
 --- @field public rotation Vec3s
 
---- @class HudUtilsRotation
---- @field public rotation number
---- @field public rotationDiff number
---- @field public prevPivotX number
---- @field public prevPivotY number
---- @field public pivotX number
---- @field public pivotY number
-
 --- @class InstantWarp
 --- @field public id integer
 --- @field public area integer
@@ -1085,6 +1078,7 @@
 --- @field public torsoPos Vec3f
 --- @field public heldObjLastPosition Vec3f
 --- @field public animPartsPos Vec3f[]
+--- @field public animPartsRot Vec3s[]
 --- @field public currAnimPart integer
 --- @field public updateTorsoTime integer
 --- @field public updateHeadPosTime integer
@@ -1228,6 +1222,7 @@
 --- @field public filepath string
 --- @field public size integer
 --- @field public offset integer
+--- @field public compressionLevel integer
 --- @field public isText boolean
 --- @field public isPublic boolean
 --- @field public read_bool fun(file: ModFsFile): boolean
@@ -1249,6 +1244,7 @@
 --- @field public erase fun(file: ModFsFile, length: integer): boolean
 --- @field public set_text_mode fun(file: ModFsFile, text: boolean): boolean
 --- @field public set_public fun(file: ModFsFile, pub: boolean): boolean
+--- @field public set_compression fun(file: ModFsFile, level: integer): boolean
 
 --- @class NametagsSettings
 --- @field public showHealth boolean
@@ -1728,7 +1724,7 @@
 --- @field public oCameraLakituSpeed number
 --- @field public oCameraLakituCircleRadius number
 --- @field public oCameraLakituFinishedDialog integer
---- @field public oCameraLakituUnk104 integer
+--- @field public oCameraLakituMusicPlayed integer
 --- @field public oCameraLakituPitchVel integer
 --- @field public oCameraLakituYawVel integer
 --- @field public oEnemyLakituNumSpinies integer
@@ -2162,8 +2158,8 @@
 --- @field public playerInteractions PlayerInteractions
 --- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public pvpType PvpType
+--- @field public stayInLevelAfterStar StarExitType
 --- @field public playerKnockbackStrength integer
---- @field public stayInLevelAfterStar integer
 --- @field public skipIntro integer
 --- @field public bubbleDeath integer
 --- @field public enablePlayersInLevelDisplay integer

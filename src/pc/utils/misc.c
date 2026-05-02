@@ -36,7 +36,7 @@ static void _clock_gettime(struct timespec* clock_time) {
     clock_gettime(CLOCK_MONOTONIC, clock_time);
 #else
     if (clock_gettime(CLOCK_MONOTONIC, clock_time))
-        clock_gettime(CLOCK_REALTIME, clock_time));
+        clock_gettime(CLOCK_REALTIME, clock_time);
 #endif
 
 #ifdef DEVELOPMENT
@@ -155,14 +155,14 @@ s32 delta_interpolate_s32(s32 a, s32 b, f32 delta) {
     return a * (1.0f - delta) + b * delta;
 }
 
-void delta_interpolate_vec3f(OUT Vec3f res, Vec3f a, Vec3f b, f32 delta) {
+void delta_interpolate_vec3f(VEC_OUT Vec3f res, Vec3f a, Vec3f b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));
     res[2] = ((a[2] * antiDelta) + (b[2] * delta));
 }
 
-void delta_interpolate_vec3s(OUT Vec3s res, Vec3s a, Vec3s b, f32 delta) {
+void delta_interpolate_vec3s(VEC_OUT Vec3s res, Vec3s a, Vec3s b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));
@@ -593,19 +593,4 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
             buffer_index += seperator_length;
         }
     }
-}
-
-char *str_remove_color_codes(const char *str) {
-    char *output = strdup(str);
-    char *startColor;
-    while ((startColor = strstr(output, "\\#"))) {
-        char *endColor = strchr(startColor + 2, '\\');
-        if (endColor) {
-            memmove(startColor, endColor + 1, strlen(endColor + 1) + 1);
-        } else {
-            *startColor = 0;
-            break;
-        }
-    }
-    return output;
 }

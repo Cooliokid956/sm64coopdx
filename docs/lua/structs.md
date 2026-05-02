@@ -53,7 +53,6 @@
 - [GraphNodeSwitchCase](#GraphNodeSwitchCase)
 - [GraphNodeTranslation](#GraphNodeTranslation)
 - [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
-- [HudUtilsRotation](#HudUtilsRotation)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
 - [LevelValues](#LevelValues)
@@ -336,6 +335,7 @@
 | RespawnShellBoxes | `integer` |  |
 | MultipleCapCollection | `integer` |  |
 | InfiniteRenderDistance | `integer` |  |
+| ProcessLODs | `integer` |  |
 | CourtyardBoosRequirement | `integer` |  |
 | starsNeededForDialog | [StarsNeededForDialog](structs.md#StarsNeededForDialog) | read-only |
 | dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
@@ -1426,21 +1426,6 @@
 
 <br />
 
-## [HudUtilsRotation](#HudUtilsRotation)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| rotation | `number` |  |
-| rotationDiff | `number` |  |
-| prevPivotX | `number` |  |
-| prevPivotY | `number` |  |
-| pivotX | `number` |  |
-| pivotY | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [InstantWarp](#InstantWarp)
 
 | Field | Type | Access |
@@ -1595,6 +1580,7 @@
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
 | animPartsPos | `Array` <`Vec3f`> | read-only |
+| animPartsRot | `Array` <`Vec3s`> | read-only |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |
@@ -1803,6 +1789,7 @@
 | filepath | `string` | read-only |
 | size | `integer` | read-only |
 | offset | `integer` | read-only |
+| compressionLevel | `integer` | read-only |
 | isText | `boolean` | read-only |
 | isPublic | `boolean` | read-only |
 
@@ -1829,6 +1816,7 @@
 | erase | [`mod_fs_file_erase`](functions-5.md#mod_fs_file_erase) |
 | set_text_mode | [`mod_fs_file_set_text_mode`](functions-5.md#mod_fs_file_set_text_mode) |
 | set_public | [`mod_fs_file_set_public`](functions-5.md#mod_fs_file_set_public) |
+| set_compression | [`mod_fs_file_set_compression`](functions-5.md#mod_fs_file_set_compression) |
 
 [:arrow_up_small:](#)
 
@@ -2334,7 +2322,7 @@
 | oCameraLakituSpeed | `number` |  |
 | oCameraLakituCircleRadius | `number` |  |
 | oCameraLakituFinishedDialog | `integer` |  |
-| oCameraLakituUnk104 | `integer` |  |
+| oCameraLakituMusicPlayed | `integer` |  |
 | oCameraLakituPitchVel | `integer` |  |
 | oCameraLakituYawVel | `integer` |  |
 | oEnemyLakituNumSpinies | `integer` |  |
@@ -2838,8 +2826,8 @@
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | bouncyLevelBounds | [enum BouncyLevelBounds](constants.md#enum-BouncyLevelBounds) |  |
 | pvpType | [enum PvpType](constants.md#enum-PvpType) |  |
+| stayInLevelAfterStar | [enum StarExitType](constants.md#enum-StarExitType) |  |
 | playerKnockbackStrength | `integer` |  |
-| stayInLevelAfterStar | `integer` |  |
 | skipIntro | `integer` |  |
 | bubbleDeath | `integer` |  |
 | enablePlayersInLevelDisplay | `integer` |  |
