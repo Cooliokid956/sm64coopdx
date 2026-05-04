@@ -80,6 +80,8 @@
     - [enum SeqId](#enum-SeqId)
 - [sm64.h](#sm64h)
 - [smlua_audio_utils.h](#smlua_audio_utilsh)
+    - [enum ModAudioChannel](#enum-ModAudioChannel)
+    - [enum ModAudioChannel](#enum-ModAudioChannel)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
     - [enum LuaHookedEventReturn](#enum-LuaHookedEventReturn)
@@ -3488,10 +3490,6 @@
 <br />
 
 ## [smlua_audio_utils.h](#smlua_audio_utils.h)
-- MOD_AUDIO_CHANNEL_MASTER
-- MOD_AUDIO_CHANNEL_MUSIC
-- MOD_AUDIO_CHANNEL_SFX
-- MOD_AUDIO_CHANNEL_ENV
 
 [:arrow_up_small:](#)
 

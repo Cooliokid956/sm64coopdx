@@ -186,8 +186,9 @@ u8 smlua_audio_utils_allocate_sequence(void) {
 #define MA_SOUND_SAMPLE_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_DECODE) // No pitch, pre-decode audio samples
 
 static ma_engine sModAudioEngine;
-static ma_sound_group sModAudioStreamGroup;
-static ma_sound_group sModAudioSampleGroup;
+static ma_sound_group sModAudioMusicGroup;
+static ma_sound_group sModAudioSfxGroup;
+static ma_sound_group sModAudioEnvGroup;
 static struct DynamicPool *sModAudioPool;
 
 static void smlua_audio_custom_init(void) {
@@ -198,12 +199,15 @@ static void smlua_audio_custom_init(void) {
         LOG_ERROR("failed to init Miniaudio: %d", result);
     }
 
-    ma_sound_group_init(&sModAudioEngine, 0, NULL, &sModAudioStreamGroup);
-    ma_sound_group_init(&sModAudioEngine, 0, NULL, &sModAudioSampleGroup);
+    ma_sound_group_init(&sModAudioEngine, MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, &sModAudioMusicGroup);
+    ma_sound_group_init(&sModAudioEngine, MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, &sModAudioSfxGroup);
+    ma_sound_group_init(&sModAudioEngine, MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, &sModAudioEnvGroup);
     f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-    f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;    
-    ma_sound_group_set_volume(&sModAudioStreamGroup, musicVolume);
-    ma_sound_group_set_volume(&sModAudioSampleGroup, sfxVolume);
+    f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
+    f32 envVolume = (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f;
+    ma_sound_group_set_volume(&sModAudioMusicGroup, musicVolume);
+    ma_sound_group_set_volume(&sModAudioSfxGroup, sfxVolume);
+    ma_sound_group_set_volume(&sModAudioEnvGroup, envVolume);
 }
 
 static struct ModAudio* find_mod_audio(const char *filepath) {
@@ -361,7 +365,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     result = ma_sound_init_from_data_source(
         &sModAudioEngine, &audio->decoder,
         isStream ? MA_SOUND_STREAM_FLAGS : MA_SOUND_SAMPLE_FLAGS,
-        isStream ? &sModAudioStreamGroup : &sModAudioSampleGroup, &audio->sound
+        isStream ? &sModAudioMusicGroup : &sModAudioSfxGroup, &audio->sound
     );
     if (result != MA_SUCCESS) {
         free(buffer);
@@ -372,22 +376,9 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     audio->buffer = buffer;
     audio->bufferSize = size;
     audio->isStream = isStream;
-    audio->baseVolume = 1.0f;
-    audio->volChannel = MOD_AUDIO_CHANNEL_MUSIC;
+    audio->volChannel = MA_CHANNEL_MUSIC;
     audio->loaded = true;
     return audio;
-}
-
-static f32 get_audio_volume(struct ModAudio* audio) {
-    f32 volume = audio->baseVolume;
-    if (audio->volChannel == MOD_AUDIO_CHANNEL_MUSIC) {
-        volume *= (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-    } else if (audio->volChannel == MOD_AUDIO_CHANNEL_SFX) {
-        volume *= (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
-    } else if (audio->volChannel == MOD_AUDIO_CHANNEL_ENV) {
-        volume *= (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f;
-    }
-    return gMasterVolume * volume;
 }
 
 struct ModAudio* audio_stream_load(const char* filename) {
@@ -518,13 +509,17 @@ void audio_stream_set_volume_channel(struct ModAudio* audio, u8 channel) {
         return;
     }
 
-    if (channel > MOD_AUDIO_CHANNEL_ENV) {
+    if (channel > MA_CHANNEL_ENV) {
         LOG_LUA_LINE("Tried to set volume channel to invalid value: %d", channel);
         return;
     }
 
     audio->volChannel = channel;
-    ma_sound_set_volume(&audio->sound, get_audio_volume(audio));
+    if (channel == MA_CHANNEL_MASTER) {
+        ma_node_attach_output_bus(&audio->sound, 0, ma_node_graph_get_endpoint(&sModAudioEngine.nodeGraph), 0);
+    } else {
+        ma_node_attach_output_bus(&audio->sound, 0, /* TODO */);
+    }
 }
 
 //////////////////////////////////////
@@ -620,7 +615,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         struct ModAudioSampleCopies* copy = calloc(1, sizeof(struct ModAudioSampleCopies));
         ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
         if (result != MA_SUCCESS) { return; }
-        result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_SAMPLE_FLAGS, &sModAudioSampleGroup, &copy->sound);
+        result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_SAMPLE_FLAGS, &sModAudioSfxGroup, &copy->sound);
         if (result != MA_SUCCESS) { return; }
         ma_sound_set_end_callback(&copy->sound, audio_sample_copy_end_callback, copy);
         copy->parent = audio;
@@ -670,14 +665,20 @@ void audio_custom_update_volume(void) {
 
     // Update music volume
     f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-    if (ma_sound_group_get_volume(&sModAudioStreamGroup) != musicVolume) {
-        ma_sound_group_set_volume(&sModAudioStreamGroup, musicVolume);
+    if (ma_sound_group_get_volume(&sModAudioMusicGroup) != musicVolume) {
+        ma_sound_group_set_volume(&sModAudioMusicGroup, musicVolume);
     }
 
     // Update sound volume
     f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
-    if (ma_sound_group_get_volume(&sModAudioSampleGroup) != sfxVolume) {
-        ma_sound_group_set_volume(&sModAudioSampleGroup, sfxVolume);
+    if (ma_sound_group_get_volume(&sModAudioSfxGroup) != sfxVolume) {
+        ma_sound_group_set_volume(&sModAudioSfxGroup, sfxVolume);
+    }
+
+    // Update env volume
+    f32 envVolume = (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f;
+    if (ma_sound_group_get_volume(&sModAudioEnvGroup) != envVolume) {
+        ma_sound_group_set_volume(&sModAudioEnvGroup, envVolume);
     }
 }
 
@@ -704,8 +705,9 @@ void smlua_audio_custom_deinit(void) {
     if (sModAudioPool) {
         audio_custom_shutdown();
         free(sModAudioPool);
-        ma_sound_group_uninit(&sModAudioStreamGroup);
-        ma_sound_group_uninit(&sModAudioSampleGroup);
+        ma_sound_group_uninit(&sModAudioMusicGroup);
+        ma_sound_group_uninit(&sModAudioSfxGroup);
+        ma_sound_group_uninit(&sModAudioEnvGroup);
         ma_engine_uninit(&sModAudioEngine);
         sModAudioPool = NULL;
     }

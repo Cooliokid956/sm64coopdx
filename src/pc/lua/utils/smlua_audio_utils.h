@@ -20,10 +20,19 @@ u8 smlua_audio_utils_allocate_sequence(void);
  // mod sounds //
 ////////////////
 
-#define MOD_AUDIO_CHANNEL_MASTER 0
-#define MOD_AUDIO_CHANNEL_MUSIC 1
-#define MOD_AUDIO_CHANNEL_SFX 2
-#define MOD_AUDIO_CHANNEL_ENV 3
+#define MA_TYPE_MASK 0x3
+
+enum ModAudioChannel {
+    MA_TYPE_SAMPLE,
+    MA_TYPE_STREAM
+};
+
+enum ModAudioChannel {
+    MA_CHANNEL_MASTER,
+    MA_CHANNEL_MUSIC,
+    MA_CHANNEL_SFX,
+    MA_CHANNEL_ENV
+};
 
 struct ModAudioSampleCopies {
     ma_sound sound;
@@ -47,11 +56,11 @@ struct ModAudio {
     u8 volChannel;
     bool loaded;
 
-    PROPERTY(position,  audio_stream_get_position,  audio_stream_set_position);
-    PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
-    PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
-    PROPERTY(volume,    audio_stream_get_volume,    audio_stream_set_volume);
-    PROPERTY(channel, audio_stream_get_volume_channel, audio_stream_set_volume_channel);
+    PROPERTY(position,  audio_stream_get_position,       audio_stream_set_position);
+    PROPERTY(looping,   audio_stream_get_looping,        audio_stream_set_looping);
+    PROPERTY(frequency, audio_stream_get_frequency,      audio_stream_set_frequency);
+    PROPERTY(volume,    audio_stream_get_volume,         audio_stream_set_volume);
+    PROPERTY(channel,   audio_stream_get_volume_channel, audio_stream_set_volume_channel);
 
     PROPERTY(file, return_self, NULL); // compatibility band-aid
 };

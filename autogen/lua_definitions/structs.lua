@@ -1206,6 +1206,7 @@
 --- @class ModAudio
 --- @field public filepath string
 --- @field public isStream boolean
+--- @field public channel integer
 --- @field public loaded boolean
 --- @field public position number
 --- @field public looping boolean
