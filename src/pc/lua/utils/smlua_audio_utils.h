@@ -21,10 +21,14 @@ u8 smlua_audio_utils_allocate_sequence(void);
 ////////////////
 
 #define MA_TYPE_MASK 0x3
-
+#define MA_GET_TYPE(audio) (audio->flags & MA_TYPE_MASK)
 enum ModAudioType {
     MA_TYPE_SAMPLE,
     MA_TYPE_STREAM
+};
+
+enum ModAudioFlags {
+    MA_FLAGS_LOADED = (1 << 2)
 };
 
 enum ModAudioChannel {
@@ -52,9 +56,8 @@ struct ModAudio {
     void *buffer;
     u32 bufferSize;
     struct ModAudioSampleCopies* sampleCopiesTail;
-    bool isStream;
+    u8 flags;
     u8 volChannel;
-    bool loaded;
 
     PROPERTY(position,  audio_stream_get_position,       audio_stream_set_position);
     PROPERTY(looping,   audio_stream_get_looping,        audio_stream_set_looping);

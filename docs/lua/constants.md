@@ -81,6 +81,7 @@
 - [sm64.h](#sm64h)
 - [smlua_audio_utils.h](#smlua_audio_utilsh)
     - [enum ModAudioType](#enum-ModAudioType)
+    - [enum ModAudioFlags](#enum-ModAudioFlags)
     - [enum ModAudioChannel](#enum-ModAudioChannel)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
@@ -3497,6 +3498,11 @@
 | :--------- | :---- |
 | MA_TYPE_SAMPLE | 0 |
 | MA_TYPE_STREAM | 1 |
+
+### [enum ModAudioFlags](#ModAudioFlags)
+| Identifier | Value |
+| :--------- | :---- |
+| MA_FLAGS_LOADED | (1 << 2) |
 
 ### [enum ModAudioChannel](#ModAudioChannel)
 | Identifier | Value |

@@ -1761,8 +1761,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | filepath | `string` | read-only |
-| isStream | `boolean` | read-only |
-| loaded | `boolean` | read-only |
+| flags | `integer` | read-only |
 | position | `number` |  |
 | looping | `boolean` |  |
 | frequency | `number` |  |

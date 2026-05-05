@@ -143,7 +143,7 @@ override_field_immutable = {
     "AnimationTable": [ "*" ],
     "Controller": [ "controllerData", "statusData" ],
     "FirstPersonCamera": [ "enabled" ],
-    "ModAudio": [ "isStream", "loaded" ],
+    "ModAudio": [ "flags" ],
     "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
     "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text", "replaced"],
     "ModFsFile": [ "*" ],
