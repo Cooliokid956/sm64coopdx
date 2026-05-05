@@ -22,16 +22,16 @@ u8 smlua_audio_utils_allocate_sequence(void);
 
 #define MA_TYPE_MASK 0x3
 
-enum ModAudioChannel {
+enum ModAudioType {
     MA_TYPE_SAMPLE,
     MA_TYPE_STREAM
 };
 
 enum ModAudioChannel {
-    MA_CHANNEL_MASTER,
     MA_CHANNEL_MUSIC,
     MA_CHANNEL_SFX,
-    MA_CHANNEL_ENV
+    MA_CHANNEL_ENV,
+    MA_CHANNEL_MASTER
 };
 
 struct ModAudioSampleCopies {

@@ -1762,7 +1762,6 @@
 | ----- | ---- | ------ |
 | filepath | `string` | read-only |
 | isStream | `boolean` | read-only |
-| channel | `integer` |  |
 | loaded | `boolean` | read-only |
 | position | `number` |  |
 | looping | `boolean` |  |

@@ -8171,6 +8171,27 @@ VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD |
 --- @type integer
 C_BUTTONS = (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
+--- @type integer
+MA_TYPE_MASK = 0x3
+
+MA_TYPE_SAMPLE = 0 --- @type ModAudioType
+MA_TYPE_STREAM = 1 --- @type ModAudioType
+
+--- @alias ModAudioType
+--- | `MA_TYPE_SAMPLE`
+--- | `MA_TYPE_STREAM`
+
+MA_CHANNEL_MUSIC  = 0 --- @type ModAudioChannel
+MA_CHANNEL_SFX    = 1 --- @type ModAudioChannel
+MA_CHANNEL_ENV    = 2 --- @type ModAudioChannel
+MA_CHANNEL_MASTER = 3 --- @type ModAudioChannel
+
+--- @alias ModAudioChannel
+--- | `MA_CHANNEL_MUSIC`
+--- | `MA_CHANNEL_SFX`
+--- | `MA_CHANNEL_ENV`
+--- | `MA_CHANNEL_MASTER`
+
 HOOK_UPDATE                                 =  0 --- @type LuaHookedEventType
 HOOK_MARIO_UPDATE                           =  1 --- @type LuaHookedEventType
 HOOK_BEFORE_MARIO_UPDATE                    =  2 --- @type LuaHookedEventType

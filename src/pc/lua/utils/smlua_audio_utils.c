@@ -364,7 +364,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     result = ma_sound_init_from_data_source(
         &sModAudioEngine, &audio->decoder,
         isStream ? MA_SOUND_STREAM_FLAGS : MA_SOUND_SAMPLE_FLAGS,
-        isStream ? &sModAudioChannels[MA_CHANNEL_MUSIC] : &sModAudioChannels[MA_CHANNEL_SFX], &audio->sound
+        &sModAudioChannels[isStream ? MA_CHANNEL_MUSIC : MA_CHANNEL_SFX], &audio->sound
     );
     if (result != MA_SUCCESS) {
         free(buffer);
@@ -508,7 +508,7 @@ void audio_stream_set_volume_channel(struct ModAudio* audio, u8 channel) {
         return;
     }
 
-    if (channel > MA_CHANNEL_ENV) {
+    if (channel > MA_CHANNEL_MASTER) {
         LOG_LUA_LINE("Tried to set volume channel to invalid value: %d", channel);
         return;
     }
@@ -517,7 +517,7 @@ void audio_stream_set_volume_channel(struct ModAudio* audio, u8 channel) {
     if (channel == MA_CHANNEL_MASTER) {
         ma_node_attach_output_bus(&audio->sound, 0, ma_node_graph_get_endpoint(&sModAudioEngine.nodeGraph), 0);
     } else {
-        ma_node_attach_output_bus(&audio->sound, 0, &sModAudioChannels[channel-1], 0);
+        ma_node_attach_output_bus(&audio->sound, 0, &sModAudioChannels[channel], 0);
     }
 }
 
