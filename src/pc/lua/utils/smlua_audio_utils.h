@@ -20,6 +20,13 @@ u8 smlua_audio_utils_allocate_sequence(void);
  // mod sounds //
 ////////////////
 
+// flags
+// XXCCPLTT
+// CC - Channel
+// P - Copy
+// L - Loaded
+// TT - Type
+
 #define MA_TYPE_MASK 0x3
 #define MA_GET_TYPE(audio) (audio->flags & MA_TYPE_MASK)
 enum ModAudioType {
@@ -28,7 +35,8 @@ enum ModAudioType {
 };
 
 enum ModAudioFlags {
-    MA_FLAGS_LOADED = (1 << 2)
+    MA_FLAGS_LOADED = (1 << 2),
+    MA_FLAGS_COPY   = (1 << 3)
 };
 
 enum ModAudioChannel {
@@ -38,26 +46,34 @@ enum ModAudioChannel {
     MA_CHANNEL_MASTER
 };
 
-struct ModAudioSampleCopies {
-    ma_sound sound;
-    ma_decoder decoder;
-    struct ModAudioSampleCopies *next;
-    struct ModAudioSampleCopies *prev;
-    struct ModAudio *parent;
-};
-
 struct ModAudio {
-    union {
-        const char *filepath;
-        const char *relativePath; // compatibility band-aid
-    };
     ma_sound sound;
     ma_decoder decoder;
-    void *buffer;
-    u32 bufferSize;
-    struct ModAudioSampleCopies* sampleCopiesTail;
-    u8 flags;
-    u8 volChannel;
+    union {
+        struct {
+            u8 type    : 2;
+            u8 loaded  : 1;
+            u8 copy    : 1;
+            u8 channel : 2;
+        };
+        u8 flags;
+    };
+    union {
+        struct {
+            union {
+                const char *filepath;
+                const char *relativePath; // compatibility band-aid
+            };
+            void *buffer;
+            u32 bufferSize;
+            struct ModAudio* copiesTail;
+        };
+        struct {
+            struct ModAudio *next;
+            struct ModAudio *prev;
+            struct ModAudio *parent;
+        };
+    };
 
     PROPERTY(position,  audio_stream_get_position,       audio_stream_set_position);
     PROPERTY(looping,   audio_stream_get_looping,        audio_stream_set_looping);
@@ -103,7 +119,7 @@ u8 audio_stream_get_volume_channel(struct ModAudio *audio);
 /* |description|Sets the volume channel of an `audio` stream|descriptionEnd| */
 void audio_stream_set_volume_channel(struct ModAudio *audio, u8 channel);
 
-void audio_sample_destroy_pending_copies(void);
+void audio_destroy_pending_copies(void);
 /* |description|Loads an `audio` sample|descriptionEnd| */
 struct ModAudio* audio_sample_load(const char* filename);
 /* |description|Destroys an `audio` sample|descriptionEnd| */

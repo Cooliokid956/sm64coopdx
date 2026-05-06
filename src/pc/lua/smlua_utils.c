@@ -869,7 +869,7 @@ void smlua_logline(void) {
     }
 }
 
-static void smlua_cobject_invalidate_internal(void *ptr, u16 lot) {
+void smlua_cobject_invalidate(void *ptr, u16 lot) {
     if (ptr && gLuaState) {
         lua_State *L = gLuaState;
         LUA_STACK_CHECK_BEGIN(L);
@@ -893,10 +893,6 @@ static void smlua_cobject_invalidate_internal(void *ptr, u16 lot) {
 }
 
 void smlua_free(void *ptr, u16 lot) {
-    smlua_cobject_invalidate_internal(ptr, lot);
+    smlua_cobject_invalidate(ptr, lot);
     free(ptr);
-}
-
-void smlua_cobject_invalidate(void *ptr, u16 lot) {
-    smlua_cobject_invalidate_internal(ptr, lot);
 }

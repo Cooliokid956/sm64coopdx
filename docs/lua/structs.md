@@ -1760,8 +1760,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| filepath | `string` | read-only |
 | flags | `integer` | read-only |
+| filepath | `string` | read-only |
 | position | `number` |  |
 | looping | `boolean` |  |
 | frequency | `number` |  |

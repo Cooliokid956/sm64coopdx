@@ -35,7 +35,7 @@ exclude_structs = [
     'HandheldShakePoint',
     'LinearTransitionPoint',
     'MarioAnimDmaRelatedThing',
-    'ModAudioSampleCopies',
+    'ModAudioCopy',
     'ModFile',
     'ModeTransitionInfo',
     'OffsetSizePair',

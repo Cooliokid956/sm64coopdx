@@ -8182,9 +8182,11 @@ MA_TYPE_STREAM = 1 --- @type ModAudioType
 --- | `MA_TYPE_STREAM`
 
 MA_FLAGS_LOADED = (1 << 2) --- @type ModAudioFlags
+MA_FLAGS_COPY   = (1 << 3) --- @type ModAudioFlags
 
 --- @alias ModAudioFlags
 --- | `MA_FLAGS_LOADED`
+--- | `MA_FLAGS_COPY`
 
 MA_CHANNEL_MUSIC  = 0 --- @type ModAudioChannel
 MA_CHANNEL_SFX    = 1 --- @type ModAudioChannel
