@@ -317,6 +317,8 @@ def parse_struct(struct_str, sortFields = False):
     for field_str in field_strs:
         if len(field_str.strip()) == 0:
             continue
+        if ':' in field_str:
+            continue
 
         if '*' in field_str:
             field_type, field_id = field_str.strip().rsplit('*', 1)
@@ -749,8 +751,7 @@ def doc_struct_field(struct, field):
         return '| %s | [`%s`](%s) |\n' % (fid, field['function'], flink), True
 
     if ftype == cobject_property_identifier:
-        ftype = get_function_signature(field['get'])
-        ftype = f"`{ftype[ftype.rfind(':')+2:]}`"
+        ftype = get_return_signature(field['get'])
 
     restrictions = ('', 'read-only')[fimmutable == 'true']
 
@@ -856,6 +857,9 @@ def get_function_signature(function):
                 function_return = None
     return function_signatures.get(function, 'function')
 
+def get_return_signature(function):
+    return f"`{'): '.join(get_function_signature(function).split('): ')[1:])}`"
+
 def def_struct(struct):
     sid = struct['identifier']
 
@@ -885,8 +889,7 @@ def def_struct(struct):
         if ftype == cobject_function_identifier:
             ftype = get_function_signature(field['function'])
         elif ftype == cobject_property_identifier:
-            ftype = get_function_signature(field['get'])
-            ftype = f"{ftype[ftype.rfind(':')+2:]}"
+            ftype = get_return_signature(field['get'])
         else:
             ftype = translate_to_def(ftype)
 
