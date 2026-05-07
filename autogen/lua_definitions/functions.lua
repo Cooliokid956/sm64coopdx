@@ -10344,15 +10344,15 @@ end
 
 --- @param audio ModAudio
 --- @return integer
---- Gets the volume channel of an `audio` stream
-function audio_stream_get_volume_channel(audio)
+--- Gets the volume channel of an `audio`
+function audio_get_volume_channel(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param channel integer
---- Sets the volume channel of an `audio` stream
-function audio_stream_set_volume_channel(audio, channel)
+--- Sets the volume channel of an `audio`
+function audio_set_volume_channel(audio, channel)
     -- ...
 end
 
@@ -10378,6 +10378,7 @@ end
 --- @param audio ModAudio
 --- @param position Vec3f
 --- @param volume number
+--- @return ModAudio
 --- Plays an `audio` sample at `position` with `volume`
 function audio_sample_play(audio, position, volume)
     -- ...

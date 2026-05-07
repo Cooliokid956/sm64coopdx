@@ -75,11 +75,11 @@ struct ModAudio {
         };
     };
 
-    PROPERTY(position,  audio_stream_get_position,       audio_stream_set_position);
-    PROPERTY(looping,   audio_stream_get_looping,        audio_stream_set_looping);
-    PROPERTY(frequency, audio_stream_get_frequency,      audio_stream_set_frequency);
-    PROPERTY(volume,    audio_stream_get_volume,         audio_stream_set_volume);
-    PROPERTY(channel,   audio_stream_get_volume_channel, audio_stream_set_volume_channel);
+    PROPERTY(position,  audio_stream_get_position,  audio_stream_set_position);
+    PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
+    PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
+    PROPERTY(volume,    audio_stream_get_volume,    audio_stream_set_volume);
+    PROPERTY(channel,   audio_get_volume_channel,   audio_set_volume_channel);
 
     PROPERTY(file, return_self, NULL); // compatibility band-aid
 };
@@ -114,10 +114,10 @@ void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);
 f32 audio_stream_get_volume(struct ModAudio* audio);
 /* |description|Sets the volume of an `audio` stream|descriptionEnd| */
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume);
-/* |description|Gets the volume channel of an `audio` stream|descriptionEnd| */
-u8 audio_stream_get_volume_channel(struct ModAudio *audio);
-/* |description|Sets the volume channel of an `audio` stream|descriptionEnd| */
-void audio_stream_set_volume_channel(struct ModAudio *audio, u8 channel);
+/* |description|Gets the volume channel of an `audio`|descriptionEnd| */
+u8 audio_get_volume_channel(struct ModAudio *audio);
+/* |description|Sets the volume channel of an `audio`|descriptionEnd| */
+void audio_set_volume_channel(struct ModAudio *audio, u8 channel);
 
 void audio_destroy_pending_copies(void);
 /* |description|Loads an `audio` sample|descriptionEnd| */
@@ -127,7 +127,7 @@ void audio_sample_destroy(struct ModAudio* audio);
 /* |description|Stops an `audio` sample|descriptionEnd| */
 void audio_sample_stop(struct ModAudio* audio);
 /* |description|Plays an `audio` sample at `position` with `volume`|descriptionEnd| */
-void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);
+struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);
 
 void audio_custom_update_volume(void);
 void audio_custom_shutdown(void);

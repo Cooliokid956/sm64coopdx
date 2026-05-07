@@ -1496,15 +1496,15 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
 
 #define LUA_MOD_AUDIO_FIELD_COUNT 9
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
-    { "channel",      LVT_PROPERTY, .get = "audio_stream_get_volume_channel", .set = "audio_stream_set_volume_channel" },
-    { "file",         LVT_PROPERTY, .get = "return_self"                                     },
-    { "filepath",     LVT_STRING_P, offsetof(struct ModAudio, filepath),      true, LOT_NONE },
-    { "flags",        LVT_U8,       offsetof(struct ModAudio, flags),         true, LOT_NONE },
-    { "frequency",    LVT_PROPERTY, .get = "audio_stream_get_frequency",      .set = "audio_stream_set_frequency" },
-    { "looping",      LVT_PROPERTY, .get = "audio_stream_get_looping",        .set = "audio_stream_set_looping" },
-    { "position",     LVT_PROPERTY, .get = "audio_stream_get_position",       .set = "audio_stream_set_position" },
-    { "relativePath", LVT_STRING_P, offsetof(struct ModAudio, relativePath),  true, LOT_NONE },
-    { "volume",       LVT_PROPERTY, .get = "audio_stream_get_volume",         .set = "audio_stream_set_volume" },
+    { "channel",      LVT_PROPERTY, .get = "audio_get_volume_channel",       .set = "audio_set_volume_channel" },
+    { "file",         LVT_PROPERTY, .get = "return_self"                                    },
+    { "filepath",     LVT_STRING_P, offsetof(struct ModAudio, filepath),     true, LOT_NONE },
+    { "flags",        LVT_U8,       offsetof(struct ModAudio, flags),        true, LOT_NONE },
+    { "frequency",    LVT_PROPERTY, .get = "audio_stream_get_frequency",     .set = "audio_stream_set_frequency" },
+    { "looping",      LVT_PROPERTY, .get = "audio_stream_get_looping",       .set = "audio_stream_set_looping" },
+    { "position",     LVT_PROPERTY, .get = "audio_stream_get_position",      .set = "audio_stream_set_position" },
+    { "relativePath", LVT_STRING_P, offsetof(struct ModAudio, relativePath), true, LOT_NONE },
+    { "volume",       LVT_PROPERTY, .get = "audio_stream_get_volume",        .set = "audio_stream_set_volume" },
 };
 
 #define LUA_MOD_FS_FIELD_COUNT 15

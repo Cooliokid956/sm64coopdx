@@ -97,7 +97,7 @@ override_field_invisible = {
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "Animation": [ "unusedBoneCount" ],
-    "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "copiesTail", "volChannel" ],
+    "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "copiesTail", "next", "prev", "parent" ],
     "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],

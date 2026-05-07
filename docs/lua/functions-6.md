@@ -5971,13 +5971,13 @@ Sets the volume of an `audio` stream
 
 <br />
 
-## [audio_stream_get_volume_channel](#audio_stream_get_volume_channel)
+## [audio_get_volume_channel](#audio_get_volume_channel)
 
 ### Description
-Gets the volume channel of an `audio` stream
+Gets the volume channel of an `audio`
 
 ### Lua Example
-`local integerValue = audio_stream_get_volume_channel(audio)`
+`local integerValue = audio_get_volume_channel(audio)`
 
 ### Parameters
 | Field | Type |
@@ -5988,19 +5988,19 @@ Gets the volume channel of an `audio` stream
 - `integer`
 
 ### C Prototype
-`u8 audio_stream_get_volume_channel(struct ModAudio *audio);`
+`u8 audio_get_volume_channel(struct ModAudio *audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_volume_channel](#audio_stream_set_volume_channel)
+## [audio_set_volume_channel](#audio_set_volume_channel)
 
 ### Description
-Sets the volume channel of an `audio` stream
+Sets the volume channel of an `audio`
 
 ### Lua Example
-`audio_stream_set_volume_channel(audio, channel)`
+`audio_set_volume_channel(audio, channel)`
 
 ### Parameters
 | Field | Type |
@@ -6012,7 +6012,7 @@ Sets the volume channel of an `audio` stream
 - None
 
 ### C Prototype
-`void audio_stream_set_volume_channel(struct ModAudio *audio, u8 channel);`
+`void audio_set_volume_channel(struct ModAudio *audio, u8 channel);`
 
 [:arrow_up_small:](#)
 
@@ -6093,7 +6093,7 @@ Stops an `audio` sample
 Plays an `audio` sample at `position` with `volume`
 
 ### Lua Example
-`audio_sample_play(audio, position, volume)`
+`local modAudioValue = audio_sample_play(audio, position, volume)`
 
 ### Parameters
 | Field | Type |
@@ -6103,10 +6103,10 @@ Plays an `audio` sample at `position` with `volume`
 | volume | `number` |
 
 ### Returns
-- None
+- [ModAudio](structs.md#ModAudio)
 
 ### C Prototype
-`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+`struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
 
 [:arrow_up_small:](#)
 
