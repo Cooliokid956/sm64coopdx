@@ -235,7 +235,7 @@ static bool audio_sanity_check(struct ModAudio* audio, u8 type, const char* acti
     return true;
 }
 
-struct ModAudio* audio_load_internal(const char* filename, u8 type) {
+struct ModAudio* audio_load_internal(const char* filename, enum ModAudioType type) {
     if (!sModAudioPool) { smlua_audio_custom_init(); }
 
     // check file type
@@ -578,7 +578,7 @@ void audio_sample_destroy(struct ModAudio* audio) {
     if (audio->copiesTail) {
         audio_destroy_copies_now(audio);
     }
-    ma_sound_stop(&audio->sound);
+    // ma_sound_stop(&audio->sound);
     ma_sound_uninit(&audio->sound);
     audio->loaded = false;
 }

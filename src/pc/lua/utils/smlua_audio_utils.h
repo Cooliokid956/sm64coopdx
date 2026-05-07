@@ -75,6 +75,11 @@ struct ModAudio {
         };
     };
 
+    FUNCTION(play, audio_stream_play);
+    FUNCTION(pause, audio_stream_pause);
+    FUNCTION(stop, audio_stream_stop);
+    FUNCTION(destroy, audio_stream_destroy);
+
     PROPERTY(position,  audio_stream_get_position,  audio_stream_set_position);
     PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
     PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
