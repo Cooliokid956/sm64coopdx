@@ -1206,11 +1206,16 @@
 --- @class ModAudio
 --- @field public flags integer
 --- @field public filepath string
---- @field public position `number`
---- @field public looping `boolean`
---- @field public frequency `number`
+--- @field public play fun(audio: ModAudio, restart: boolean, volume: number)
+--- @field public pause fun(audio: ModAudio)
+--- @field public stop fun(audio: ModAudio)
+--- @field public destroy fun(audio: ModAudio)
 --- @field public volume `number`
+--- @field public position `number`
+--- @field public frequency `number`
+--- @field public looping `boolean`
 --- @field public channel `integer`
+--- @field public sampleRate `integer`
 
 --- @class ModFs
 --- @field public mod Mod

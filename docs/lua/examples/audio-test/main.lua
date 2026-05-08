@@ -23,7 +23,7 @@ function on_stream_play(msg)
     end
 
     if(msg == "pause") then
-        audio_stream_pause(audioStream);
+        audio_pause(audioStream);
         djui_chat_message_create("pausing audio");
     end
 

@@ -10237,6 +10237,24 @@ function smlua_audio_utils_allocate_sequence()
     -- ...
 end
 
+--- @param audio ModAudio
+--- Pauses an `audio`
+function audio_pause(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Stops an `audio`
+function audio_stop(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Destroys an `audio`
+function audio_destroy(audio)
+    -- ...
+end
+
 --- @param filename string
 --- @return ModAudio
 --- Loads an `audio` stream by `filename` (with extension)
@@ -10245,28 +10263,10 @@ function audio_stream_load(filename)
 end
 
 --- @param audio ModAudio
---- Destroys an `audio` stream
-function audio_stream_destroy(audio)
-    -- ...
-end
-
---- @param audio ModAudio
 --- @param restart boolean
 --- @param volume number
 --- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
 function audio_stream_play(audio, restart, volume)
-    -- ...
-end
-
---- @param audio ModAudio
---- Pauses an `audio` stream
-function audio_stream_pause(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- Stops an `audio` stream
-function audio_stream_stop(audio)
     -- ...
 end
 
@@ -10359,7 +10359,7 @@ end
 --- @param audio ModAudio
 --- @return integer
 --- Gets the sample rate of an `audio` stream
-function audio_stream_get_sample_rate(audio)
+function audio_get_sample_rate(audio)
     -- ...
 end
 
@@ -10367,18 +10367,6 @@ end
 --- @return ModAudio
 --- Loads an `audio` sample
 function audio_sample_load(filename)
-    -- ...
-end
-
---- @param audio ModAudio
---- Destroys an `audio` sample
-function audio_sample_destroy(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- Stops an `audio` sample
-function audio_sample_stop(audio)
     -- ...
 end
 

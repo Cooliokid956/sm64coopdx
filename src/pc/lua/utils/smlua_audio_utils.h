@@ -76,30 +76,31 @@ struct ModAudio {
     };
 
     FUNCTION(play, audio_stream_play);
-    FUNCTION(pause, audio_stream_pause);
+    FUNCTION(pause, audio_pause);
     FUNCTION(stop, audio_stop);
     FUNCTION(destroy, audio_destroy);
 
-    PROPERTY(position,   audio_stream_get_position,    audio_stream_set_position);
-    PROPERTY(looping,    audio_stream_get_looping,     audio_stream_set_looping);
-    PROPERTY(frequency,  audio_stream_get_frequency,   audio_stream_set_frequency);
     PROPERTY(volume,     audio_stream_get_volume,      audio_stream_set_volume);
+    PROPERTY(position,   audio_stream_get_position,    audio_stream_set_position);
+    PROPERTY(frequency,  audio_stream_get_frequency,   audio_stream_set_frequency);
+    PROPERTY(looping,    audio_stream_get_looping,     audio_stream_set_looping);
     PROPERTY(channel,    audio_get_volume_channel,     audio_set_volume_channel);
-    PROPERTY(sampleRate, audio_stream_get_sample_rate, NULL);
+    PROPERTY(sampleRate, audio_get_sample_rate, NULL);
 
     PROPERTY(file, return_self, NULL); // compatibility band-aid
 };
 
+/* |description|Pauses an `audio`|descriptionEnd| */
+void audio_pause(struct ModAudio* audio);
+/* |description|Stops an `audio`|descriptionEnd| */
+void audio_stop(struct ModAudio* audio);
+/* |description|Destroys an `audio`|descriptionEnd| */
+void audio_destroy(struct ModAudio* audio);
+
 /* |description|Loads an `audio` stream by `filename` (with extension)|descriptionEnd| */
 struct ModAudio* audio_stream_load(const char* filename);
-/* |description|Destroys an `audio` stream|descriptionEnd| */
-void audio_stream_destroy(struct ModAudio* audio);
 /* |description|Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.|descriptionEnd| */
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);
-/* |description|Pauses an `audio` stream|descriptionEnd| */
-void audio_stream_pause(struct ModAudio* audio);
-/* |description|Stops an `audio` stream|descriptionEnd| */
-void audio_stream_stop(struct ModAudio* audio);
 /* |description|Gets the position of an `audio` stream in seconds|descriptionEnd| */
 f32 audio_stream_get_position(struct ModAudio* audio);
 /* |description|Sets the position of an `audio` stream in seconds|descriptionEnd| */
@@ -125,15 +126,11 @@ u8 audio_get_volume_channel(struct ModAudio *audio);
 /* |description|Sets the volume channel of an `audio`|descriptionEnd| */
 void audio_set_volume_channel(struct ModAudio *audio, u8 channel);
 /* |description|Gets the sample rate of an `audio` stream|descriptionEnd| */
-u32 audio_stream_get_sample_rate(struct ModAudio* audio);
+u32 audio_get_sample_rate(struct ModAudio* audio);
 
 void audio_destroy_pending_copies(void);
 /* |description|Loads an `audio` sample|descriptionEnd| */
 struct ModAudio* audio_sample_load(const char* filename);
-/* |description|Destroys an `audio` sample|descriptionEnd| */
-void audio_sample_destroy(struct ModAudio* audio);
-/* |description|Stops an `audio` sample|descriptionEnd| */
-void audio_sample_stop(struct ModAudio* audio);
 /* |description|Plays an `audio` sample at `position` with `volume`|descriptionEnd| */
 struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);
 

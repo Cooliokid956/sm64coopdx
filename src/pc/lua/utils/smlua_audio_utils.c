@@ -386,20 +386,18 @@ void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     ma_sound_start(&audio->sound);
 }
 
-void audio_stream_pause(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, MA_TYPE_STREAM, "pause")) { return; }
-    
+void audio_pause(struct ModAudio* audio) {
     ma_sound_stop(&audio->sound);
 }
 
-void audio_stream_stop(struct ModAudio* audio) {
+void audio_stop(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "stop")) { return; }
     
     ma_sound_stop(&audio->sound);
     ma_sound_seek_to_pcm_frame(&audio->sound, 0);
 }
 
-u32 audio_stream_get_sample_rate(struct ModAudio* audio) {
+u32 audio_get_sample_rate(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "get sample rate from")) { return 0; }
 
     return audio->sound.engineNode.sampleRate;
@@ -575,8 +573,9 @@ struct ModAudio* audio_sample_load(const char* filename) {
 }
 
 void audio_destroy(struct ModAudio* audio) {
-    if (audio->copy) { return audio_destroy_copy(audio, NULL); }
-    else if (audio->copiesTail) {
+    if (audio->copy) {
+        return audio_destroy_copy(audio, NULL);
+    } else if (audio->copiesTail) {
         audio_destroy_copies_now(audio);
     }
     // ma_sound_stop(&audio->sound);

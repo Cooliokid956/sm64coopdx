@@ -1762,11 +1762,21 @@
 | ----- | ---- | ------ |
 | flags | `integer` | read-only |
 | filepath | `string` | read-only |
-| position | `number` |  |
-| looping | `boolean` |  |
-| frequency | `number` |  |
 | volume | `number` |  |
+| position | `number` |  |
+| frequency | `number` |  |
+| looping | `boolean` |  |
 | channel | `integer` |  |
+| sampleRate | `integer` | read-only |
+
+**Functions:**
+
+| Name | Reference |
+| ---- | --------- |
+| play | [`audio_stream_play`](functions-6.md#audio_stream_play) |
+| pause | [`audio_pause`](functions-6.md#audio_pause) |
+| stop | [`audio_stop`](functions-6.md#audio_stop) |
+| destroy | [`audio_destroy`](functions-6.md#audio_destroy) |
 
 [:arrow_up_small:](#)
 
