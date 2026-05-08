@@ -49,7 +49,6 @@ enum ModAudioChannel {
 struct ModAudio {
     ma_sound sound;
     ma_decoder decoder;
-    ma_uint32 sampleRate;
     union {
         struct {
             u8 type    : 2;
@@ -78,14 +77,14 @@ struct ModAudio {
 
     FUNCTION(play, audio_stream_play);
     FUNCTION(pause, audio_stream_pause);
-    FUNCTION(stop, audio_stream_stop);
-    FUNCTION(destroy, audio_stream_destroy);
+    FUNCTION(stop, audio_stop);
+    FUNCTION(destroy, audio_destroy);
 
-    PROPERTY(position,  audio_stream_get_position,  audio_stream_set_position);
-    PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
-    PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
-    PROPERTY(volume,    audio_stream_get_volume,    audio_stream_set_volume);
-    PROPERTY(channel,   audio_get_volume_channel,   audio_set_volume_channel);
+    PROPERTY(position,   audio_stream_get_position,    audio_stream_set_position);
+    PROPERTY(looping,    audio_stream_get_looping,     audio_stream_set_looping);
+    PROPERTY(frequency,  audio_stream_get_frequency,   audio_stream_set_frequency);
+    PROPERTY(volume,     audio_stream_get_volume,      audio_stream_set_volume);
+    PROPERTY(channel,    audio_get_volume_channel,     audio_set_volume_channel);
     PROPERTY(sampleRate, audio_stream_get_sample_rate, NULL);
 
     PROPERTY(file, return_self, NULL); // compatibility band-aid

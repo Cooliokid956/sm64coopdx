@@ -223,7 +223,7 @@ static struct ModAudio* find_mod_audio(const char *filepath) {
 
 static bool audio_sanity_check(struct ModAudio* audio, u8 type, const char* action) {
     if (!audio || !audio->loaded) {
-        LOG_LUA_LINE("Tried to %s unloaded audio %s", action, audio ? GET_TYPE_NAME(audio) : "(NULL)");
+        LOG_LUA_LINE("Tried to %s an unloaded audio %s", action, audio ? GET_TYPE_NAME(audio) : "(NULL)");
         return false;
     }
     if (type != MA_GET_TYPE(audio)) {
@@ -364,11 +364,6 @@ struct ModAudio* audio_load_internal(const char* filename, enum ModAudioType typ
         return NULL;
     }
 
-    ma_uint32 sampleRate = 0;
-
-    ma_data_source_get_data_format(&audio->decoder, NULL, NULL, &sampleRate, NULL, 0);
-
-    audio->sampleRate = sampleRate;
     audio->buffer = buffer;
     audio->bufferSize = size;
     audio->type = type;
@@ -381,13 +376,6 @@ struct ModAudio* audio_load_internal(const char* filename, enum ModAudioType typ
 
 struct ModAudio* audio_stream_load(const char* filename) {
     return audio_load_internal(filename, MA_TYPE_STREAM);
-}
-
-void audio_stream_destroy(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, MA_TYPE_STREAM, "destroy")) { return; }
-
-    ma_sound_uninit(&audio->sound);
-    audio->loaded = false;
 }
 
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
@@ -414,7 +402,7 @@ void audio_stream_stop(struct ModAudio* audio) {
 u32 audio_stream_get_sample_rate(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "get sample rate from")) { return 0; }
 
-    return audio->sampleRate;
+    return audio->sound.engineNode.sampleRate;
 }
 
 f32 audio_stream_get_position(struct ModAudio* audio) {
@@ -423,13 +411,13 @@ f32 audio_stream_get_position(struct ModAudio* audio) {
     u64 cursor;
     ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
 
-    return (f32)cursor / (f32)audio->sampleRate;
+    return (f32)cursor / audio->sound.engineNode.sampleRate;
 }
 
 void audio_stream_set_position(struct ModAudio* audio, f32 pos) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "set stream position for")) { return; }
 
-    ma_uint64 frame = (ma_uint64)(pos * audio->sampleRate);
+    ma_uint64 frame = (ma_uint64)(pos * audio->sound.engineNode.sampleRate);
 
     ma_sound_seek_to_pcm_frame(&audio->sound, frame);
 }
@@ -586,11 +574,9 @@ struct ModAudio* audio_sample_load(const char* filename) {
     return audio_load_internal(filename, MA_TYPE_SAMPLE);
 }
 
-void audio_sample_destroy(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, MA_TYPE_SAMPLE, "destroy")) { return; }
+void audio_destroy(struct ModAudio* audio) {
     if (audio->copy) { return audio_destroy_copy(audio, NULL); }
-
-    if (audio->copiesTail) {
+    else if (audio->copiesTail) {
         audio_destroy_copies_now(audio);
     }
     // ma_sound_stop(&audio->sound);
@@ -598,11 +584,10 @@ void audio_sample_destroy(struct ModAudio* audio) {
     audio->loaded = false;
 }
 
-void audio_sample_stop(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, MA_TYPE_SAMPLE, "stop")) { return; }
-    if (audio->copy) { return audio_destroy_copy(audio, NULL); }
-
-    if (audio->copiesTail) {
+void audio_stop(struct ModAudio* audio) {
+    if (audio->copy && audio->type == MA_TYPE_SAMPLE) {
+        return audio_destroy_copy(audio, NULL);
+    } else if (audio->copiesTail) {
         audio_destroy_copies_now(audio);
     }
     ma_sound_stop(&audio->sound);
