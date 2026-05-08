@@ -10356,6 +10356,13 @@ function audio_set_volume_channel(audio, channel)
     -- ...
 end
 
+--- @param audio ModAudio
+--- @return integer
+--- Gets the sample rate of an `audio` stream
+function audio_stream_get_sample_rate(audio)
+    -- ...
+end
+
 --- @param filename string
 --- @return ModAudio
 --- Loads an `audio` sample

@@ -364,6 +364,11 @@ struct ModAudio* audio_load_internal(const char* filename, enum ModAudioType typ
         return NULL;
     }
 
+    ma_uint32 sampleRate = 0;
+
+    ma_data_source_get_data_format(&audio->decoder, NULL, NULL, &sampleRate, NULL, 0);
+
+    audio->sampleRate = sampleRate;
     audio->buffer = buffer;
     audio->bufferSize = size;
     audio->type = type;
@@ -406,17 +411,27 @@ void audio_stream_stop(struct ModAudio* audio) {
     ma_sound_seek_to_pcm_frame(&audio->sound, 0);
 }
 
+u32 audio_stream_get_sample_rate(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_STREAM, "get sample rate from")) { return 0; }
+
+    return audio->sampleRate;
+}
+
 f32 audio_stream_get_position(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "get stream position from")) { return 0; }
 
-    u64 cursor; ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
-    return (f32)cursor / ma_engine_get_sample_rate(&sModAudioEngine);
+    u64 cursor;
+    ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
+
+    return (f32)cursor / (f32)audio->sampleRate;
 }
 
 void audio_stream_set_position(struct ModAudio* audio, f32 pos) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "set stream position for")) { return; }
-    
-    ma_sound_seek_to_pcm_frame(&audio->sound, pos * ma_engine_get_sample_rate(&sModAudioEngine));
+
+    ma_uint64 frame = (ma_uint64)(pos * audio->sampleRate);
+
+    ma_sound_seek_to_pcm_frame(&audio->sound, frame);
 }
 
 bool audio_stream_get_looping(struct ModAudio* audio) {

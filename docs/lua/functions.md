@@ -1852,6 +1852,7 @@
    - [audio_stream_set_volume](functions-6.md#audio_stream_set_volume)
    - [audio_get_volume_channel](functions-6.md#audio_get_volume_channel)
    - [audio_set_volume_channel](functions-6.md#audio_set_volume_channel)
+   - [audio_stream_get_sample_rate](functions-6.md#audio_stream_get_sample_rate)
    - [audio_sample_load](functions-6.md#audio_sample_load)
    - [audio_sample_destroy](functions-6.md#audio_sample_destroy)
    - [audio_sample_stop](functions-6.md#audio_sample_stop)
