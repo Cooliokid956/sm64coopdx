@@ -6018,6 +6018,29 @@ Sets the volume channel of an `audio`
 
 <br />
 
+## [audio_stream_get_sample_rate](#audio_stream_get_sample_rate)
+
+### Description
+Gets the sample rate of an `audio` stream
+
+### Lua Example
+`local integerValue = audio_stream_get_sample_rate(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 audio_stream_get_sample_rate(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_sample_load](#audio_sample_load)
 
 ### Description

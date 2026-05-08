@@ -49,6 +49,7 @@ enum ModAudioChannel {
 struct ModAudio {
     ma_sound sound;
     ma_decoder decoder;
+    ma_uint32 sampleRate;
     union {
         struct {
             u8 type    : 2;
@@ -85,6 +86,7 @@ struct ModAudio {
     PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
     PROPERTY(volume,    audio_stream_get_volume,    audio_stream_set_volume);
     PROPERTY(channel,   audio_get_volume_channel,   audio_set_volume_channel);
+    PROPERTY(sampleRate, audio_stream_get_sample_rate, NULL);
 
     PROPERTY(file, return_self, NULL); // compatibility band-aid
 };
@@ -123,6 +125,8 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume);
 u8 audio_get_volume_channel(struct ModAudio *audio);
 /* |description|Sets the volume channel of an `audio`|descriptionEnd| */
 void audio_set_volume_channel(struct ModAudio *audio, u8 channel);
+/* |description|Gets the sample rate of an `audio` stream|descriptionEnd| */
+u32 audio_stream_get_sample_rate(struct ModAudio* audio);
 
 void audio_destroy_pending_copies(void);
 /* |description|Loads an `audio` sample|descriptionEnd| */
