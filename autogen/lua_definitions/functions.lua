@@ -10237,6 +10237,37 @@ function smlua_audio_utils_allocate_sequence()
     -- ...
 end
 
+--- @param filename string
+--- @return ModAudio
+--- Loads an `audio` stream by `filename` (with extension)
+function audio_stream_load(filename)
+    -- ...
+end
+
+--- @param filename string
+--- @return ModAudio
+--- Loads an `audio` sample
+function audio_sample_load(filename)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param restart boolean
+--- @param volume number
+--- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
+function audio_stream_play(audio, restart, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param position Vec3f
+--- @param volume number
+--- @return ModAudio
+--- Plays an `audio` sample at `position` with `volume`
+function audio_sample_play(audio, position, volume)
+    -- ...
+end
+
 --- @param audio ModAudio
 --- Pauses an `audio`
 function audio_pause(audio)
@@ -10255,90 +10286,89 @@ function audio_destroy(audio)
     -- ...
 end
 
---- @param filename string
---- @return ModAudio
---- Loads an `audio` stream by `filename` (with extension)
-function audio_stream_load(filename)
-    -- ...
-end
-
 --- @param audio ModAudio
---- @param restart boolean
---- @param volume number
---- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
-function audio_stream_play(audio, restart, volume)
+--- @return ModAudio
+--- Copies an `audio`
+function audio_copy(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return number
---- Gets the position of an `audio` stream in seconds
-function audio_stream_get_position(audio)
+--- Gets the volume of an `audio`
+function audio_get_volume(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param volume number
+--- Sets the volume of an `audio`
+function audio_set_volume(audio, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the position of an `audio` in seconds
+function audio_get_position(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param pos number
---- Sets the position of an `audio` stream in seconds
-function audio_stream_set_position(audio, pos)
+--- Sets the position of an `audio` in seconds
+function audio_set_position(audio, pos)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return boolean
---- Gets if an `audio` stream is looping or not
-function audio_stream_get_looping(audio)
+--- Gets if an `audio` is looping or not
+function audio_get_looping(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param looping boolean
---- Sets if an `audio` stream is looping or not
-function audio_stream_set_looping(audio, looping)
+--- Sets if an `audio` is looping or not
+function audio_set_looping(audio, looping)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer
+--- Gets the sample rate of an `audio`
+function audio_get_sample_rate(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return integer loopStart
 --- @return integer loopEnd
---- Gets an `audio` stream's loop points in samples
-function audio_stream_get_loop_points(audio)
+--- Gets an `audio`'s loop points in samples
+function audio_get_loop_points(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param loopStart integer
 --- @param loopEnd? integer
---- Sets an `audio` stream's loop points in samples
-function audio_stream_set_loop_points(audio, loopStart, loopEnd)
+--- Sets an `audio`'s loop points in samples
+function audio_set_loop_points(audio, loopStart, loopEnd)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @return number
---- Gets the frequency of an `audio` stream
-function audio_stream_get_frequency(audio)
+--- Gets the frequency of an `audio`
+function audio_get_frequency(audio)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param freq number
---- Sets the frequency of an `audio` stream
-function audio_stream_set_frequency(audio, freq)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the volume of an `audio` stream
-function audio_stream_get_volume(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param volume number
---- Sets the volume of an `audio` stream
-function audio_stream_set_volume(audio, volume)
+--- Sets the frequency of an `audio`
+function audio_set_frequency(audio, freq)
     -- ...
 end
 
@@ -10353,29 +10383,6 @@ end
 --- @param channel integer
 --- Sets the volume channel of an `audio`
 function audio_set_volume_channel(audio, channel)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return integer
---- Gets the sample rate of an `audio` stream
-function audio_get_sample_rate(audio)
-    -- ...
-end
-
---- @param filename string
---- @return ModAudio
---- Loads an `audio` sample
-function audio_sample_load(filename)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param position Vec3f
---- @param volume number
---- @return ModAudio
---- Plays an `audio` sample at `position` with `volume`
-function audio_sample_play(audio, position, volume)
     -- ...
 end
 

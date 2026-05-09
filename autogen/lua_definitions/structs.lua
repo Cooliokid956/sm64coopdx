@@ -1210,12 +1210,13 @@
 --- @field public pause fun(audio: ModAudio)
 --- @field public stop fun(audio: ModAudio)
 --- @field public destroy fun(audio: ModAudio)
---- @field public volume `number`
---- @field public position `number`
---- @field public frequency `number`
---- @field public looping `boolean`
---- @field public channel `integer`
---- @field public sampleRate `integer`
+--- @field public copy fun(audio: ModAudio): ModAudio
+--- @field public volume number
+--- @field public position number
+--- @field public frequency number
+--- @field public looping boolean
+--- @field public channel integer
+--- @field public sampleRate integer
 
 --- @class ModFs
 --- @field public mod Mod

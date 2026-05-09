@@ -5617,6 +5617,102 @@ Allocates a new sequence ID
 
 <br />
 
+## [audio_stream_load](#audio_stream_load)
+
+### Description
+Loads an `audio` stream by `filename` (with extension)
+
+### Lua Example
+`local modAudioValue = audio_stream_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+- [ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_stream_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_load](#audio_sample_load)
+
+### Description
+Loads an `audio` sample
+
+### Lua Example
+`local modAudioValue = audio_sample_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+- [ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_sample_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_play](#audio_stream_play)
+
+### Description
+Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
+
+### Lua Example
+`audio_stream_play(audio, restart, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| restart | `boolean` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_play](#audio_sample_play)
+
+### Description
+Plays an `audio` sample at `position` with `volume`
+
+### Lua Example
+`local modAudioValue = audio_sample_play(audio, position, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| position | [Vec3f](structs.md#Vec3f) |
+| volume | `number` |
+
+### Returns
+- [ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_pause](#audio_pause)
 
 ### Description
@@ -5686,61 +5782,36 @@ Destroys an `audio`
 
 <br />
 
-## [audio_stream_load](#audio_stream_load)
+## [audio_copy](#audio_copy)
 
 ### Description
-Loads an `audio` stream by `filename` (with extension)
+Copies an `audio`
 
 ### Lua Example
-`local modAudioValue = audio_stream_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-- [ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_stream_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_play](#audio_stream_play)
-
-### Description
-Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
-
-### Lua Example
-`audio_stream_play(audio, restart, volume)`
+`local modAudioValue = audio_copy(audio)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | audio | [ModAudio](structs.md#ModAudio) |
-| restart | `boolean` |
-| volume | `number` |
 
 ### Returns
-- None
+- [ModAudio](structs.md#ModAudio)
 
 ### C Prototype
-`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
+`struct ModAudio* audio_copy(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_get_position](#audio_stream_get_position)
+## [audio_get_volume](#audio_get_volume)
 
 ### Description
-Gets the position of an `audio` stream in seconds
+Gets the volume of an `audio`
 
 ### Lua Example
-`local numberValue = audio_stream_get_position(audio)`
+`local numberValue = audio_get_volume(audio)`
 
 ### Parameters
 | Field | Type |
@@ -5751,19 +5822,66 @@ Gets the position of an `audio` stream in seconds
 - `number`
 
 ### C Prototype
-`f32 audio_stream_get_position(struct ModAudio* audio);`
+`f32 audio_get_volume(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_position](#audio_stream_set_position)
+## [audio_set_volume](#audio_set_volume)
 
 ### Description
-Sets the position of an `audio` stream in seconds
+Sets the volume of an `audio`
 
 ### Lua Example
-`audio_stream_set_position(audio, pos)`
+`audio_set_volume(audio, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_set_volume(struct ModAudio* audio, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_position](#audio_get_position)
+
+### Description
+Gets the position of an `audio` in seconds
+
+### Lua Example
+`local numberValue = audio_get_position(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_get_position(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_set_position](#audio_set_position)
+
+### Description
+Sets the position of an `audio` in seconds
+
+### Lua Example
+`audio_set_position(audio, pos)`
 
 ### Parameters
 | Field | Type |
@@ -5775,19 +5893,19 @@ Sets the position of an `audio` stream in seconds
 - None
 
 ### C Prototype
-`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
+`void audio_set_position(struct ModAudio* audio, f32 pos);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_get_looping](#audio_stream_get_looping)
+## [audio_get_looping](#audio_get_looping)
 
 ### Description
-Gets if an `audio` stream is looping or not
+Gets if an `audio` is looping or not
 
 ### Lua Example
-`local booleanValue = audio_stream_get_looping(audio)`
+`local booleanValue = audio_get_looping(audio)`
 
 ### Parameters
 | Field | Type |
@@ -5798,19 +5916,19 @@ Gets if an `audio` stream is looping or not
 - `boolean`
 
 ### C Prototype
-`bool audio_stream_get_looping(struct ModAudio* audio);`
+`bool audio_get_looping(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_looping](#audio_stream_set_looping)
+## [audio_set_looping](#audio_set_looping)
 
 ### Description
-Sets if an `audio` stream is looping or not
+Sets if an `audio` is looping or not
 
 ### Lua Example
-`audio_stream_set_looping(audio, looping)`
+`audio_set_looping(audio, looping)`
 
 ### Parameters
 | Field | Type |
@@ -5822,19 +5940,42 @@ Sets if an `audio` stream is looping or not
 - None
 
 ### C Prototype
-`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
+`void audio_set_looping(struct ModAudio* audio, bool looping);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_get_loop_points](#audio_stream_get_loop_points)
+## [audio_get_sample_rate](#audio_get_sample_rate)
 
 ### Description
-Gets an `audio` stream's loop points in samples
+Gets the sample rate of an `audio`
 
 ### Lua Example
-`local loopStart, loopEnd = audio_stream_get_loop_points(audio)`
+`local integerValue = audio_get_sample_rate(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 audio_get_sample_rate(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_loop_points](#audio_get_loop_points)
+
+### Description
+Gets an `audio`'s loop points in samples
+
+### Lua Example
+`local loopStart, loopEnd = audio_get_loop_points(audio)`
 
 ### Parameters
 | Field | Type |
@@ -5846,19 +5987,19 @@ Gets an `audio` stream's loop points in samples
 - `integer`
 
 ### C Prototype
-`void audio_stream_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd);`
+`void audio_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_loop_points](#audio_stream_set_loop_points)
+## [audio_set_loop_points](#audio_set_loop_points)
 
 ### Description
-Sets an `audio` stream's loop points in samples
+Sets an `audio`'s loop points in samples
 
 ### Lua Example
-`audio_stream_set_loop_points(audio, loopStart, loopEnd)`
+`audio_set_loop_points(audio, loopStart, loopEnd)`
 
 ### Parameters
 | Field | Type |
@@ -5871,19 +6012,19 @@ Sets an `audio` stream's loop points in samples
 - None
 
 ### C Prototype
-`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 loopEnd);`
+`void audio_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 loopEnd);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_get_frequency](#audio_stream_get_frequency)
+## [audio_get_frequency](#audio_get_frequency)
 
 ### Description
-Gets the frequency of an `audio` stream
+Gets the frequency of an `audio`
 
 ### Lua Example
-`local numberValue = audio_stream_get_frequency(audio)`
+`local numberValue = audio_get_frequency(audio)`
 
 ### Parameters
 | Field | Type |
@@ -5894,19 +6035,19 @@ Gets the frequency of an `audio` stream
 - `number`
 
 ### C Prototype
-`f32 audio_stream_get_frequency(struct ModAudio* audio);`
+`f32 audio_get_frequency(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_frequency](#audio_stream_set_frequency)
+## [audio_set_frequency](#audio_set_frequency)
 
 ### Description
-Sets the frequency of an `audio` stream
+Sets the frequency of an `audio`
 
 ### Lua Example
-`audio_stream_set_frequency(audio, freq)`
+`audio_set_frequency(audio, freq)`
 
 ### Parameters
 | Field | Type |
@@ -5918,54 +6059,7 @@ Sets the frequency of an `audio` stream
 - None
 
 ### C Prototype
-`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_volume](#audio_stream_get_volume)
-
-### Description
-Gets the volume of an `audio` stream
-
-### Lua Example
-`local numberValue = audio_stream_get_volume(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_volume(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_volume](#audio_stream_set_volume)
-
-### Description
-Sets the volume of an `audio` stream
-
-### Lua Example
-`audio_stream_set_volume(audio, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
+`void audio_set_frequency(struct ModAudio* audio, f32 freq);`
 
 [:arrow_up_small:](#)
 
@@ -6013,77 +6107,6 @@ Sets the volume channel of an `audio`
 
 ### C Prototype
 `void audio_set_volume_channel(struct ModAudio *audio, u8 channel);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_get_sample_rate](#audio_get_sample_rate)
-
-### Description
-Gets the sample rate of an `audio` stream
-
-### Lua Example
-`local integerValue = audio_get_sample_rate(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 audio_get_sample_rate(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_load](#audio_sample_load)
-
-### Description
-Loads an `audio` sample
-
-### Lua Example
-`local modAudioValue = audio_sample_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-- [ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_sample_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_play](#audio_sample_play)
-
-### Description
-Plays an `audio` sample at `position` with `volume`
-
-### Lua Example
-`local modAudioValue = audio_sample_play(audio, position, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| position | [Vec3f](structs.md#Vec3f) |
-| volume | `number` |
-
-### Returns
-- [ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
 
 [:arrow_up_small:](#)
 

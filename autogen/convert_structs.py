@@ -858,7 +858,7 @@ def get_function_signature(function):
     return function_signatures.get(function, 'function')
 
 def get_return_signature(function):
-    return f"`{'): '.join(get_function_signature(function).split('): ')[1:])}`"
+    return f"{'): '.join(get_function_signature(function).split('): ')[1:])}"
 
 def def_struct(struct):
     sid = struct['identifier']
