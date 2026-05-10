@@ -182,14 +182,13 @@ u8 smlua_audio_utils_allocate_sequence(void) {
 ///////////////
 
 // Optimization: disable spatialization for everything as it's not used
-#define MA_SOUND_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT | MA_SOUND_FLAG_NO_PITCH) // Avoid resampling if possible
+#define MA_SOUND_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT)
 
 static ma_engine sModAudioEngine;
 static const char* sModAudioTypes[] = { "sample", "stream" };
 #define GET_TYPE_NAME(audio) (sModAudioTypes[MA_GET_TYPE(audio)])
 static ma_sound_group sModAudioChannels[3];
 static struct DynamicPool *sModAudioPool;
-
 
 // MA calls the end callback from its audio thread
 // Use mutexes to be sure we don't try to delete the same memory at the same time
