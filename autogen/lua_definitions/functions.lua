@@ -10336,6 +10336,20 @@ function audio_set_looping(audio, looping)
 end
 
 --- @param audio ModAudio
+--- @return boolean
+--- Gets if an `audio` is playing
+function audio_get_playing(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param playing boolean
+--- Sets if an `audio` is playing
+function audio_set_playing(audio, playing)
+    -- ...
+end
+
+--- @param audio ModAudio
 --- @return integer
 --- Gets the sample rate of an `audio`
 function audio_get_sample_rate(audio)

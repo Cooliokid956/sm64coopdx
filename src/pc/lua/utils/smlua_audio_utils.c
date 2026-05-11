@@ -319,7 +319,7 @@ static bool audio_sanity_check(struct ModAudio* audio, u8 type, const char* acti
     return true;
 }
 
-struct ModAudio* audio_load_internal(const char* filename, enum ModAudioType type) {
+struct ModAudio* audio_load(const char* filename, enum ModAudioType type) {
     if (!sModAudioPool) { smlua_audio_custom_init(); }
 
     // check file type
@@ -459,11 +459,11 @@ struct ModAudio* audio_load_internal(const char* filename, enum ModAudioType typ
 }
 
 struct ModAudio* audio_stream_load(const char* filename) {
-    return audio_load_internal(filename, MA_TYPE_STREAM);
+    return audio_load(filename, MA_TYPE_STREAM);
 }
 
 struct ModAudio* audio_sample_load(const char* filename) {
-    return audio_load_internal(filename, MA_TYPE_SAMPLE);
+    return audio_load(filename, MA_TYPE_SAMPLE);
 }
 
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
@@ -555,6 +555,15 @@ bool audio_get_looping(struct ModAudio* audio) {
 
 void audio_set_looping(struct ModAudio* audio, bool looping) {
     ma_sound_set_looping(&audio->sound, looping);
+}
+
+bool audio_get_playing(struct ModAudio* audio) {
+    return ma_sound_is_playing(&audio->sound);
+}
+
+void audio_set_playing(struct ModAudio* audio, bool playing) {
+    if (playing) { ma_sound_start(&audio->sound); }
+    else { ma_sound_stop(&audio->sound); }
 }
 
 void audio_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd) {

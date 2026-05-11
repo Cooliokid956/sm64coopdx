@@ -1494,7 +1494,7 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "size",                 LVT_U64,      offsetof(struct Mod, size),                 true, LOT_NONE },
 };
 
-#define LUA_MOD_AUDIO_FIELD_COUNT 15
+#define LUA_MOD_AUDIO_FIELD_COUNT 16
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
     { "channel",      LVT_PROPERTY, .get = "audio_get_volume_channel",       .set = "audio_set_volume_channel" },
     { "copy",         LVT_FUNCTION, .function = "audio_copy"                                },
@@ -1506,6 +1506,7 @@ static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
     { "looping",      LVT_PROPERTY, .get = "audio_get_looping",              .set = "audio_set_looping" },
     { "pause",        LVT_FUNCTION, .function = "audio_pause"                               },
     { "play",         LVT_FUNCTION, .function = "audio_stream_play"                         },
+    { "playing",      LVT_PROPERTY, .get = "audio_get_playing",              .set = "audio_set_playing" },
     { "position",     LVT_PROPERTY, .get = "audio_get_position",             .set = "audio_set_position" },
     { "relativePath", LVT_STRING_P, offsetof(struct ModAudio, relativePath), true, LOT_NONE },
     { "sampleRate",   LVT_PROPERTY, .get = "audio_get_sample_rate"                          },

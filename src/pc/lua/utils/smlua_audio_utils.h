@@ -85,6 +85,7 @@ struct ModAudio {
     PROPERTY(position,   audio_get_position,       audio_set_position);
     PROPERTY(frequency,  audio_get_frequency,      audio_set_frequency);
     PROPERTY(looping,    audio_get_looping,        audio_set_looping);
+    PROPERTY(playing,    audio_get_playing,        audio_set_playing);
     PROPERTY(channel,    audio_get_volume_channel, audio_set_volume_channel);
     PROPERTY(sampleRate, audio_get_sample_rate,    NULL);
 
@@ -121,6 +122,10 @@ void audio_set_position(struct ModAudio* audio, f32 pos);
 bool audio_get_looping(struct ModAudio* audio);
 /* |description|Sets if an `audio` is looping or not|descriptionEnd| */
 void audio_set_looping(struct ModAudio* audio, bool looping);
+/* |description|Gets if an `audio` is playing|descriptionEnd| */
+bool audio_get_playing(struct ModAudio* audio);
+/* |description|Sets if an `audio` is playing|descriptionEnd| */
+void audio_set_playing(struct ModAudio* audio, bool playing);
 /* |description|Gets the sample rate of an `audio`|descriptionEnd| */
 u32 audio_get_sample_rate(struct ModAudio* audio);
 /* |description|Gets an `audio`'s loop points in samples|descriptionEnd| */

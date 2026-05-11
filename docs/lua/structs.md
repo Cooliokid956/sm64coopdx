@@ -1766,6 +1766,7 @@
 | position | number |  |
 | frequency | number |  |
 | looping | boolean |  |
+| playing | boolean |  |
 | channel | integer |  |
 | sampleRate | integer | read-only |
 

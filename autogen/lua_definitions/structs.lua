@@ -1215,6 +1215,7 @@
 --- @field public position number
 --- @field public frequency number
 --- @field public looping boolean
+--- @field public playing boolean
 --- @field public channel integer
 --- @field public sampleRate integer
 
