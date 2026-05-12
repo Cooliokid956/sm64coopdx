@@ -78,6 +78,7 @@ def extract_functions(filename):
 
     # handle overloads
     txt = re.sub(f'{cobject_overload_identifier}\\((.*),(.*)\\)', f'{cobject_overload_identifier} \\1\\2', txt)
+    if cobject_overload_identifier in txt: print(txt)
 
     # strip macros
     txt = re.sub(r'[^a-zA-Z0-9_][A-Z0-9_]+\(.*\)', '', txt)
@@ -85,29 +86,30 @@ def extract_functions(filename):
     # strip blocks
     tmp = txt
     txt = ''
-    inside = 0
+    depth = 0
     for character in tmp:
-        if inside == 0:
+        if depth == 0:
             txt += character
         if character == '{':
             txt += '\n'
-            inside += 1
+            depth += 1
         if character == '}':
-            inside -= 1
+            depth -= 1
 
     # cull obvious non-functions, statics, and externs
     tmp = txt
     txt = ''
     functions = []
-    descriptions = {}
 
+    descriptions = {}
     # use raw lines to find descriptions for identified functions
     for line in tmp.splitlines():
         line = line.strip()
-        if '(' not in line or ')' not in line or '=' in line:
-            continue
-        if line.startswith('static ') or line.startswith('extern '):
-            continue
+        if cobject_overload_identifier not in line:
+            if '(' not in line or ')' not in line or '=' in line:
+                continue
+            if line.startswith('static ') or line.startswith('extern '):
+                continue
 
         # add function
         functions.append(line)
@@ -158,6 +160,7 @@ def extract_functions(filename):
 
     # normalize function ending
     txt = '\n'.join(functions).replace(' {', ';')
+    if cobject_overload_identifier in txt: print(txt)
     return txt, descriptions
 
 if __name__ == "__main__":
