@@ -1763,6 +1763,7 @@
 | flags | `integer` | read-only |
 | filepath | `string` | read-only |
 | volume | number |  |
+| pan | number |  |
 | position | number |  |
 | frequency | number |  |
 | looping | boolean |  |

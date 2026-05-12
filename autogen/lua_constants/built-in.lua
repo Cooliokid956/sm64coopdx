@@ -144,6 +144,24 @@ COURSE_COUNT = 25
 --- @type integer
 COURSE_MIN = 1
 
+-------------------------
+-- old audio functions --
+-------------------------
+
+audio_stream_destroy = audio_destroy
+audio_stream_pause = audio_pause
+audio_stream_stop = audio_stop
+audio_stream_get_position = audio_get_position
+audio_stream_set_position = audio_set_position
+audio_stream_get_looping = audio_get_looping
+audio_stream_set_looping = audio_set_looping
+audio_stream_set_loop_points = audio_set_loop_points
+audio_stream_get_frequency = audio_get_frequency
+audio_stream_set_frequency = audio_set_frequency
+audio_stream_get_volume = audio_get_volume
+audio_stream_set_volume = audio_set_volume
+audio_sample_destroy = audio_destroy
+audio_sample_stop = audio_stop
 
 ------------------------------
 -- player palette functions --

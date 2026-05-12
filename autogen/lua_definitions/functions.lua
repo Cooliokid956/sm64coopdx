@@ -10309,6 +10309,20 @@ end
 
 --- @param audio ModAudio
 --- @return number
+--- Gets the pan of an `audio`
+function audio_get_pan(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param pan number
+--- Sets the pan of an `audio`
+function audio_set_pan(audio, pan)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
 --- Gets the position of an `audio` in seconds
 function audio_get_position(audio)
     -- ...
@@ -10346,13 +10360,6 @@ end
 --- @param playing boolean
 --- Sets if an `audio` is playing
 function audio_set_playing(audio, playing)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return integer
---- Gets the sample rate of an `audio`
-function audio_get_sample_rate(audio)
     -- ...
 end
 
@@ -10397,6 +10404,13 @@ end
 --- @param channel integer
 --- Sets the volume channel of an `audio`
 function audio_set_volume_channel(audio, channel)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer
+--- Gets the sample rate of an `audio`
+function audio_get_sample_rate(audio)
     -- ...
 end
 

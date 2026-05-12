@@ -1845,19 +1845,21 @@
    - [audio_copy](functions-6.md#audio_copy)
    - [audio_get_volume](functions-6.md#audio_get_volume)
    - [audio_set_volume](functions-6.md#audio_set_volume)
+   - [audio_get_pan](functions-6.md#audio_get_pan)
+   - [audio_set_pan](functions-6.md#audio_set_pan)
    - [audio_get_position](functions-6.md#audio_get_position)
    - [audio_set_position](functions-6.md#audio_set_position)
    - [audio_get_looping](functions-6.md#audio_get_looping)
    - [audio_set_looping](functions-6.md#audio_set_looping)
    - [audio_get_playing](functions-6.md#audio_get_playing)
    - [audio_set_playing](functions-6.md#audio_set_playing)
-   - [audio_get_sample_rate](functions-6.md#audio_get_sample_rate)
    - [audio_get_loop_points](functions-6.md#audio_get_loop_points)
    - [audio_set_loop_points](functions-6.md#audio_set_loop_points)
    - [audio_get_frequency](functions-6.md#audio_get_frequency)
    - [audio_set_frequency](functions-6.md#audio_set_frequency)
    - [audio_get_volume_channel](functions-6.md#audio_get_volume_channel)
    - [audio_set_volume_channel](functions-6.md#audio_set_volume_channel)
+   - [audio_get_sample_rate](functions-6.md#audio_get_sample_rate)
 
 <br />
 

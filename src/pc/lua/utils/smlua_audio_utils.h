@@ -61,8 +61,8 @@ struct ModAudio {
     union {
         struct {
             union {
-                const char *filepath;
-                const char *relativePath; // compatibility band-aid
+                char *filepath;
+                char *relativePath; // compatibility band-aid
             };
             void *buffer;
             u32 bufferSize;
@@ -82,6 +82,7 @@ struct ModAudio {
     FUNCTION(copy,    audio_copy);
 
     PROPERTY(volume,     audio_get_volume,         audio_set_volume);
+    PROPERTY(pan,        audio_get_pan,            audio_set_pan);
     PROPERTY(position,   audio_get_position,       audio_set_position);
     PROPERTY(frequency,  audio_get_frequency,      audio_set_frequency);
     PROPERTY(looping,    audio_get_looping,        audio_set_looping);
@@ -114,6 +115,10 @@ struct ModAudio* audio_copy(struct ModAudio* audio);
 f32 audio_get_volume(struct ModAudio* audio);
 /* |description|Sets the volume of an `audio`|descriptionEnd| */
 void audio_set_volume(struct ModAudio* audio, f32 volume);
+/* |description|Gets the pan of an `audio`|descriptionEnd| */
+f32 audio_get_pan(struct ModAudio* audio);
+/* |description|Sets the pan of an `audio`|descriptionEnd| */
+void audio_set_pan(struct ModAudio* audio, f32 pan);
 /* |description|Gets the position of an `audio` in seconds|descriptionEnd| */
 f32 audio_get_position(struct ModAudio* audio);
 /* |description|Sets the position of an `audio` in seconds|descriptionEnd| */
@@ -126,8 +131,6 @@ void audio_set_looping(struct ModAudio* audio, bool looping);
 bool audio_get_playing(struct ModAudio* audio);
 /* |description|Sets if an `audio` is playing|descriptionEnd| */
 void audio_set_playing(struct ModAudio* audio, bool playing);
-/* |description|Gets the sample rate of an `audio`|descriptionEnd| */
-u32 audio_get_sample_rate(struct ModAudio* audio);
 /* |description|Gets an `audio`'s loop points in samples|descriptionEnd| */
 void audio_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd);
 /* |description|Sets an `audio`'s loop points in samples|descriptionEnd| */
@@ -140,6 +143,8 @@ void audio_set_frequency(struct ModAudio* audio, f32 freq);
 u8 audio_get_volume_channel(struct ModAudio *audio);
 /* |description|Sets the volume channel of an `audio`|descriptionEnd| */
 void audio_set_volume_channel(struct ModAudio *audio, u8 channel);
+/* |description|Gets the sample rate of an `audio`|descriptionEnd| */
+u32 audio_get_sample_rate(struct ModAudio* audio);
 
 void audio_destroy_pending_copies(void);
 

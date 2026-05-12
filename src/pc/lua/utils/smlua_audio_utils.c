@@ -228,6 +228,7 @@ void audio_destroy_copies(struct ModAudio* node) {
     while (node) {
         struct ModAudio* prev = node->prev;
         ma_sound_uninit(&node->sound);
+        ma_decoder_uninit(&node->decoder);
         smlua_free_audio_copy(node);
         node = prev;
     }
@@ -256,9 +257,16 @@ struct ModAudio* audio_copy(struct ModAudio* audio) {
 
     struct ModAudio* copy = calloc(1, sizeof(struct ModAudio)); copy->copy = true;
     ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
-    if (result != MA_SUCCESS) { return NULL; }
+    if (result != MA_SUCCESS) {
+        ma_decoder_uninit(&copy->decoder);
+        free(copy); return NULL;
+    }
     result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_FLAGS, NULL, &copy->sound);
-    if (result != MA_SUCCESS) { return NULL; }
+    if (result != MA_SUCCESS) {
+        ma_sound_uninit(&copy->sound);
+        ma_decoder_uninit(&copy->decoder);
+        free(copy); return NULL;
+    }
     ma_sound_set_end_callback(&copy->sound, audio_destroy_copy_callback, copy);
     copy->parent = audio;
     copy->flags |= audio->flags;
@@ -436,6 +444,7 @@ struct ModAudio* audio_load(const char* filename, enum ModAudioType type) {
     // decode the audio buffer
     ma_result result = ma_decoder_init_memory(buffer, size, NULL, &audio->decoder);
     if (result != MA_SUCCESS) {
+        ma_decoder_uninit(&audio->decoder);
         free(buffer);
         LOG_ERROR("failed to load audio file '%s': failed to decode raw audio: %d", filename, result);
         return NULL;
@@ -443,6 +452,8 @@ struct ModAudio* audio_load(const char* filename, enum ModAudioType type) {
 
     result = ma_sound_init_from_data_source(&sModAudioEngine, &audio->decoder, MA_SOUND_FLAGS, NULL, &audio->sound);
     if (result != MA_SUCCESS) {
+        ma_sound_uninit(&audio->sound);
+        ma_decoder_uninit(&audio->decoder);
         free(buffer);
         LOG_ERROR("failed to load audio file '%s': %d", filename, result);
         return NULL;
@@ -513,12 +524,10 @@ void audio_pause(struct ModAudio* audio) {
 }
 
 void audio_stop(struct ModAudio* audio) {
+    ma_sound_stop(&audio->sound);
     if (audio->copy && audio->type == MA_TYPE_SAMPLE) {
         return audio_destroy_copy(audio);
-    } else if (audio->copiesTail) {
-        audio_destroy_all_copies(audio);
     }
-    ma_sound_stop(&audio->sound);
     ma_sound_seek_to_pcm_frame(&audio->sound, 0);
 }
 
@@ -529,11 +538,24 @@ void audio_destroy(struct ModAudio* audio) {
         audio_destroy_all_copies(audio);
     }
     ma_sound_uninit(&audio->sound);
+    ma_decoder_uninit(&audio->decoder);
     audio->loaded = false;
 }
 
-u32 audio_get_sample_rate(struct ModAudio* audio) {
-    return audio->sound.engineNode.sampleRate;
+f32 audio_get_volume(struct ModAudio* audio) {
+    return ma_sound_get_volume(&audio->sound);
+}
+
+void audio_set_volume(struct ModAudio* audio, f32 volume) {
+    ma_sound_set_volume(&audio->sound, volume);
+}
+
+f32 audio_get_pan(struct ModAudio* audio) {
+    return ma_sound_get_pan(&audio->sound);
+}
+
+void audio_set_pan(struct ModAudio* audio, f32 pan) {
+    ma_sound_set_pan(&audio->sound, pan);
 }
 
 f32 audio_get_position(struct ModAudio* audio) {
@@ -602,14 +624,6 @@ void audio_set_frequency(struct ModAudio* audio, f32 freq) {
 //     bassh_set_tempo(audio->handle, tempo);
 // }
 
-f32 audio_get_volume(struct ModAudio* audio) {
-    return ma_sound_get_volume(&audio->sound);
-}
-
-void audio_set_volume(struct ModAudio* audio, f32 volume) {
-    ma_sound_set_volume(&audio->sound, volume);
-}
-
 // void audio_stream_set_speed(struct ModAudio* audio, f32 initial_freq, f32 speed, bool pitch) {
 //     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "set stream speed for")) { return; }
 //
@@ -634,36 +648,33 @@ void audio_set_volume_channel(struct ModAudio* audio, u8 channel) {
     }
 }
 
+u32 audio_get_sample_rate(struct ModAudio* audio) {
+    return audio->sound.engineNode.sampleRate;
+}
+
 //////////////////////////////////////
 
 void audio_custom_update_volume(void) {
     bool shouldMute = (configMuteFocusLoss && !WAPI.has_focus());
 
     // Update master volume
-    f32 masterVolume = shouldMute ? 0 : ((f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f);
-    gMasterVolume = masterVolume;
+    gMasterVolume = shouldMute ? 0 : ((f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f);
     if (!sModAudioPool) { return; }
-    if (ma_engine_get_volume(&sModAudioEngine) != masterVolume) {
-        ma_engine_set_volume(&sModAudioEngine, masterVolume);
+    if (ma_engine_get_volume(&sModAudioEngine) != gMasterVolume) {
+        ma_engine_set_volume(&sModAudioEngine, gMasterVolume);
     }
 
     // Update music volume
     f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-    if (ma_sound_group_get_volume(&sModAudioChannels[MA_CHANNEL_MUSIC]) != musicVolume) {
-        ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_MUSIC], musicVolume);
-    }
+    ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_MUSIC], musicVolume);
 
     // Update sound volume
     f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
-    if (ma_sound_group_get_volume(&sModAudioChannels[MA_CHANNEL_SFX]) != sfxVolume) {
-        ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_SFX], sfxVolume);
-    }
+    ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_SFX], sfxVolume);
 
     // Update env volume
     f32 envVolume = (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f;
-    if (ma_sound_group_get_volume(&sModAudioChannels[MA_CHANNEL_ENV]) != envVolume) {
-        ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_ENV], envVolume);
-    }
+    ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_ENV], envVolume);
 }
 
 void audio_custom_shutdown(void) {
@@ -677,9 +688,10 @@ void audio_custom_shutdown(void) {
                 audio_destroy_all_copies(audio);
             }
             ma_sound_uninit(&audio->sound);
-            free(audio->buffer);
-            free((void *) audio->filepath);
+            ma_decoder_uninit(&audio->decoder);
         }
+        free(audio->buffer);
+        free(audio->filepath);
         dynamic_pool_free(sModAudioPool, audio);
         node = prev;
     }

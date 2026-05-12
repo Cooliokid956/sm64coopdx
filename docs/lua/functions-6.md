@@ -5852,6 +5852,53 @@ Sets the volume of an `audio`
 
 <br />
 
+## [audio_get_pan](#audio_get_pan)
+
+### Description
+Gets the pan of an `audio`
+
+### Lua Example
+`local numberValue = audio_get_pan(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_get_pan(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_set_pan](#audio_set_pan)
+
+### Description
+Sets the pan of an `audio`
+
+### Lua Example
+`audio_set_pan(audio, pan)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| pan | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_set_pan(struct ModAudio* audio, f32 pan);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_get_position](#audio_get_position)
 
 ### Description
@@ -5988,29 +6035,6 @@ Sets if an `audio` is playing
 
 ### C Prototype
 `void audio_set_playing(struct ModAudio* audio, bool playing);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_get_sample_rate](#audio_get_sample_rate)
-
-### Description
-Gets the sample rate of an `audio`
-
-### Lua Example
-`local integerValue = audio_get_sample_rate(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 audio_get_sample_rate(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
@@ -6154,6 +6178,29 @@ Sets the volume channel of an `audio`
 
 ### C Prototype
 `void audio_set_volume_channel(struct ModAudio *audio, u8 channel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_sample_rate](#audio_get_sample_rate)
+
+### Description
+Gets the sample rate of an `audio`
+
+### Lua Example
+`local integerValue = audio_get_sample_rate(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 audio_get_sample_rate(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
