@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+from common import cobject_overload_identifier
 
 replacements = {
     'BAD_RETURN(s8)':  'void',
@@ -74,6 +75,9 @@ def extract_functions(filename):
     txt = txt.replace('{', '{\n')
     while ('  ' in txt):
         txt = txt.replace('  ', ' ')
+
+    # handle overloads
+    txt = re.sub(f'{cobject_overload_identifier}\\((.*),(.*)\\)', f'{cobject_overload_identifier} \\1\\2', txt)
 
     # strip macros
     txt = re.sub(r'[^a-zA-Z0-9_][A-Z0-9_]+\(.*\)', '', txt)

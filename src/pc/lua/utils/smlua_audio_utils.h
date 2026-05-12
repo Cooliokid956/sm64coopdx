@@ -98,10 +98,12 @@ struct ModAudio* audio_stream_load(const char* filename);
 /* |description|Loads an `audio` sample|descriptionEnd| */
 struct ModAudio* audio_sample_load(const char* filename);
 
+OVERLOAD(audio_play, 2);
 /* |description|Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.|descriptionEnd| */
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);
 /* |description|Plays an `audio` sample at `position` with `volume`|descriptionEnd| */
 struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);
+
 /* |description|Pauses an `audio`|descriptionEnd| */
 void audio_pause(struct ModAudio* audio);
 /* |description|Stops an `audio`|descriptionEnd| */

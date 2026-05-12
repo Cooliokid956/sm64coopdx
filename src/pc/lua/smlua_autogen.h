@@ -29,4 +29,7 @@
 // A macro to tell autogen the field `name` is a function member of the struct that calls `c_function`
 #define FUNCTION(name, c_function)
 
+// A macro to tell autogen the `count` next functions are to be combined in a single overloaded function under `name`
+#define OVERLOAD(name, count)
+
 #endif // SMLUA_AUTOGEN_H
