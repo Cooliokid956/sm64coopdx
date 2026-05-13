@@ -185,10 +185,24 @@ u8 smlua_audio_utils_allocate_sequence(void) {
 #define MA_SOUND_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT)
 
 static ma_engine sModAudioEngine;
-static const char* sModAudioTypes[] = { "sample", "stream" };
+static const char* sModAudioTypes[] = { "", "sample", "stream" };
 #define GET_TYPE_NAME(audio) (sModAudioTypes[MA_GET_TYPE(audio)])
 static ma_sound_group sModAudioChannels[3];
 static struct DynamicPool *sModAudioPool;
+
+static bool audio_sanity_check(struct ModAudio* audio, u8 type, const char* action) {
+    if (!audio || !audio->loaded) {
+        LOG_LUA_LINE("Tried to %s an unloaded audio %s", action, audio ? GET_TYPE_NAME(audio) : "(NULL)");
+        return false;
+    }
+    if (type && (type != MA_GET_TYPE(audio))) {
+        LOG_LUA_LINE("Tried to %s a %s as a %s", action,
+            GET_TYPE_NAME(audio),
+            sModAudioTypes[type]);
+        return false;
+    }
+    return true;
+}
 
 // MA calls the end callback from its audio thread
 // Use mutexes to be sure we don't try to delete the same memory at the same time
@@ -253,6 +267,7 @@ static void audio_destroy_all_copies(struct ModAudio* audio) {
 }
 
 struct ModAudio* audio_copy(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "copy")) { return NULL; }
     if (audio->copy) { audio = audio->parent; }
 
     struct ModAudio* copy = calloc(1, sizeof(struct ModAudio)); copy->copy = true;
@@ -294,12 +309,7 @@ static void smlua_audio_custom_init(void) {
         ma_sound_group_init(&sModAudioEngine, MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, &sModAudioChannels[i]);
     }
 
-    f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-    f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
-    f32 envVolume = (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f;
-    ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_MUSIC], musicVolume);
-    ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_SFX], sfxVolume);
-    ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_ENV], envVolume);
+    audio_custom_update_volume();
 }
 
 static struct ModAudio* find_mod_audio(const char *filepath) {
@@ -311,20 +321,6 @@ static struct ModAudio* find_mod_audio(const char *filepath) {
         node = prev;
     }
     return NULL;
-}
-
-static bool audio_sanity_check(struct ModAudio* audio, u8 type, const char* action) {
-    if (!audio || !audio->loaded) {
-        LOG_LUA_LINE("Tried to %s an unloaded audio %s", action, audio ? GET_TYPE_NAME(audio) : "(NULL)");
-        return false;
-    }
-    if (type != MA_GET_TYPE(audio)) {
-        LOG_LUA_LINE("Tried to %s a %s as a %s", action,
-            GET_TYPE_NAME(audio),
-            sModAudioTypes[type]);
-        return false;
-    }
-    return true;
 }
 
 struct ModAudio* audio_load(const char* filename, enum ModAudioType type) {
@@ -520,10 +516,14 @@ struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 v
 }
 
 void audio_pause(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "pause")) { return; }
+
     ma_sound_stop(&audio->sound);
 }
 
 void audio_stop(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "stop")) { return; }
+
     ma_sound_stop(&audio->sound);
     if (audio->copy && audio->type == MA_TYPE_SAMPLE) {
         return audio_destroy_copy(audio);
@@ -532,6 +532,8 @@ void audio_stop(struct ModAudio* audio) {
 }
 
 void audio_destroy(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "destroy")) { return; }
+
     if (audio->copy) {
         return audio_destroy_copy(audio);
     } else if (audio->copiesTail) {
@@ -543,22 +545,32 @@ void audio_destroy(struct ModAudio* audio) {
 }
 
 f32 audio_get_volume(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get volume from")) { return 0; }
+
     return ma_sound_get_volume(&audio->sound);
 }
 
 void audio_set_volume(struct ModAudio* audio, f32 volume) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "set volume for")) { return; }
+
     ma_sound_set_volume(&audio->sound, volume);
 }
 
 f32 audio_get_pan(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get pan from")) { return 0; }
+
     return ma_sound_get_pan(&audio->sound);
 }
 
 void audio_set_pan(struct ModAudio* audio, f32 pan) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "set pan for")) { return; }
+
     ma_sound_set_pan(&audio->sound, pan);
 }
 
 f32 audio_get_position(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get position from")) { return 0; }
+
     u64 cursor;
     ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
 
@@ -566,34 +578,46 @@ f32 audio_get_position(struct ModAudio* audio) {
 }
 
 void audio_set_position(struct ModAudio* audio, f32 pos) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "set position for")) { return; }
+
     ma_uint64 frame = (ma_uint64)(pos * audio->sound.engineNode.sampleRate);
 
     ma_sound_seek_to_pcm_frame(&audio->sound, frame);
 }
 
 bool audio_get_looping(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get looping from")) { return false; }
+
     return ma_sound_is_looping(&audio->sound);
 }
 
 void audio_set_looping(struct ModAudio* audio, bool looping) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "set looping for")) { return; }
+
     ma_sound_set_looping(&audio->sound, looping);
 }
 
 bool audio_get_playing(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get playing from")) { return false; }
+
     return ma_sound_is_playing(&audio->sound);
 }
 
 void audio_set_playing(struct ModAudio* audio, bool playing) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "set playing for")) { return; }
+
     if (playing) { ma_sound_start(&audio->sound); }
     else { ma_sound_stop(&audio->sound); }
 }
 
 void audio_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get loop points from")) { return; }
+
     ma_data_source_get_loop_point_in_pcm_frames(&audio->decoder, loopStart, loopEnd);
 }
 
 void audio_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 loopEnd) {
-    if (!audio_sanity_check(audio, MA_TYPE_STREAM, "set stream loop points for")) { return; }
+    if (!audio_sanity_check(audio, MA_TYPE_STREAM, "set loop points for")) { return; }
     
     u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
     if (loopStart < 0) loopStart = length + loopStart % length;
@@ -604,10 +628,14 @@ void audio_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 l
 }
 
 f32 audio_get_frequency(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get frequency from")) { return 0; }
+
     return ma_sound_get_pitch(&audio->sound);
 }
 
 void audio_set_frequency(struct ModAudio* audio, f32 freq) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "set frequency for")) { return; }
+
     ma_sound_set_pitch(&audio->sound, freq);
 }
 
@@ -617,7 +645,8 @@ void audio_set_frequency(struct ModAudio* audio, f32 freq) {
 //     return bassh_get_tempo(audio->handle);
 // }
 
-// ? Possibly implement as a tempo node? https://source.chromium.org/chromium/chromium/src/+/main:media/base/audio_shifter.cc
+// ? Possibly implement as a tempo node? https://source.chromium.org/chromium/chromium/src/+/main:third_party/webrtc/modules/audio_coding/neteq/time_stretch.cc
+// ? https://github.com/audacity/audacity/blob/release-4.0.0-alpha2/au3/libraries/lib-time-and-pitch/StaffPad/readme.md
 // void audio_stream_set_tempo(struct ModAudio* audio, f32 tempo) {
 //     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "set stream tempo for")) { return; }
 //
@@ -631,10 +660,14 @@ void audio_set_frequency(struct ModAudio* audio, f32 freq) {
 // }
 
 u8 audio_get_volume_channel(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get volume channel from")) { return 0; }
+
     return audio->channel;
 }
 
 void audio_set_volume_channel(struct ModAudio* audio, u8 channel) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "set volume channel for")) { return; }
+
     if (channel > MA_CHANNEL_MASTER) {
         LOG_LUA_LINE("Tried to set volume channel to invalid value: %d", channel);
         return;
@@ -649,6 +682,8 @@ void audio_set_volume_channel(struct ModAudio* audio, u8 channel) {
 }
 
 u32 audio_get_sample_rate(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get sample rate of")) { return 0; }
+
     return audio->sound.engineNode.sampleRate;
 }
 
@@ -660,9 +695,7 @@ void audio_custom_update_volume(void) {
     // Update master volume
     gMasterVolume = shouldMute ? 0 : ((f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f);
     if (!sModAudioPool) { return; }
-    if (ma_engine_get_volume(&sModAudioEngine) != gMasterVolume) {
-        ma_engine_set_volume(&sModAudioEngine, gMasterVolume);
-    }
+    ma_engine_set_volume(&sModAudioEngine, gMasterVolume);
 
     // Update music volume
     f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;

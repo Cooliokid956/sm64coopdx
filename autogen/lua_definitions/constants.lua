@@ -8192,10 +8192,12 @@ C_BUTTONS = (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 --- @type integer
 MA_TYPE_MASK = 0x3
 
-MA_TYPE_SAMPLE = 0 --- @type ModAudioType
-MA_TYPE_STREAM = 1 --- @type ModAudioType
+MA_TYPE_NONE   = 0 --- @type ModAudioType
+MA_TYPE_SAMPLE = 1 --- @type ModAudioType
+MA_TYPE_STREAM = 2 --- @type ModAudioType
 
 --- @alias ModAudioType
+--- | `MA_TYPE_NONE`
 --- | `MA_TYPE_SAMPLE`
 --- | `MA_TYPE_STREAM`
 

@@ -30,6 +30,7 @@ u8 smlua_audio_utils_allocate_sequence(void);
 #define MA_TYPE_MASK 0x3
 #define MA_GET_TYPE(audio) (audio->flags & MA_TYPE_MASK)
 enum ModAudioType {
+    MA_TYPE_NONE,
     MA_TYPE_SAMPLE,
     MA_TYPE_STREAM
 };

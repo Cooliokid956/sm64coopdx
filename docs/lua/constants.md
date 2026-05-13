@@ -3496,8 +3496,9 @@
 ### [enum ModAudioType](#ModAudioType)
 | Identifier | Value |
 | :--------- | :---- |
-| MA_TYPE_SAMPLE | 0 |
-| MA_TYPE_STREAM | 1 |
+| MA_TYPE_NONE | 0 |
+| MA_TYPE_SAMPLE | 1 |
+| MA_TYPE_STREAM | 2 |
 
 ### [enum ModAudioFlags](#ModAudioFlags)
 | Identifier | Value |
