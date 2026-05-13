@@ -974,9 +974,9 @@ def build_function(function, do_extern):
     fparams, freturns = split_function_parameters_and_returns(function)
 
     if len(function['params']) <= 0:
-        s += 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
+        s += 'int smlua_func_%s(UNUSED lua_State* L) {\n' % fid
     else:
-        s += 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
+        s += 'int smlua_func_%s(lua_State* L) {\n' % fid
 
     # make sure the bhv functions have a current object
     fname = function['filename']
@@ -992,14 +992,14 @@ def build_function(function, do_extern):
     if (top != %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected %%u, Received %%u", "%s", %d, top);
         return 0;
-    }\n\n""" % (params_max, function['identifier'], params_max)
+    }\n\n""" % (params_max, fid, params_max)
     else:
         s += """    if (L == NULL) { return 0; }\n
     int top = lua_gettop(L);
     if (top < %d || top > %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected between %%u and %%u, Received %%u", "%s", %d, %d, top);
         return 0;
-    }\n\n""" % (params_min, params_max, function['identifier'], params_min, params_max)
+    }\n\n""" % (params_min, params_max, fid, params_min, params_max)
 
     is_interact_func = fid.startswith('interact_') and fname == 'interaction.h'
 
@@ -1206,17 +1206,32 @@ def process_function(fname, line, description):
 
 def process_functions(fname, file_str, extracted_descriptions):
     functions = []
+    overload_func = { 'overload' : [] }
+    overload_count = 0
     for line in file_str.splitlines():
+        line = line.strip()
+        if line.startswith(cobject_overload_identifier):
+            overload_func['line'] = line
+            line = line[:-1].split()
+            overload_func['identifier'] = line[1]
+            overload_count = int(line[2])
+            continue
         if reject_line(line):
             global rejects
             rejects += line + '\n'
             continue
-        line = line.strip()
         description = extracted_descriptions.get(line, "")
         fn = process_function(fname, line, description)
-        if fn == None:
-            continue
-        functions.append(fn)
+        if fn == None: continue
+
+        if overload_count > 0:
+            overload_count -= 1
+            overload_func['overload'].append(fn)
+            if overload_count == 0:
+                functions.append(overload_func)
+                overload_func = { 'overload' : [] }
+        else:
+            functions.append(fn)
     return functions
 
 def process_file(fname):
