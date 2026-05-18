@@ -558,6 +558,7 @@
 
 --- @class DjuiInteractableTheme
 --- @field public textColor DjuiColor
+--- @field public disabledTextColor DjuiColor
 --- @field public defaultRectColor DjuiColor
 --- @field public cursorDownRectColor DjuiColor
 --- @field public hoveredRectColor DjuiColor
@@ -1212,6 +1213,7 @@
 --- @field public looping boolean
 --- @field public frequency number
 --- @field public volume number
+--- @field public channel integer
 
 --- @class ModFs
 --- @field public mod Mod
@@ -2154,10 +2156,10 @@
 
 --- @class RomhackCameraSettings
 --- @field public enable RomhackCameraOverride
---- @field public centering integer
+--- @field public switchable integer
 --- @field public dpad integer
 --- @field public collisions integer
---- @field public slowFall integer
+--- @field public following integer
 --- @field public zoomedInDist integer
 --- @field public zoomedOutDist integer
 --- @field public zoomedInHeight integer

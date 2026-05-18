@@ -9889,6 +9889,21 @@ int smlua_func_position_based_random_float_position(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_draw_distance_scalar_is_infinite(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "draw_distance_scalar_is_infinite", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, draw_distance_scalar_is_infinite());
+
+    return 1;
+}
+
 int smlua_func_draw_distance_scalar(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30966,6 +30981,42 @@ int smlua_func_audio_stream_set_volume(lua_State* L) {
     return 1;
 }
 
+int smlua_func_audio_stream_get_volume_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "audio_stream_get_volume_channel", 1, top);
+        return 0;
+    }
+
+    struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_get_volume_channel"); return 0; }
+
+    lua_pushinteger(L, audio_stream_get_volume_channel(audio));
+
+    return 1;
+}
+
+int smlua_func_audio_stream_set_volume_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "audio_stream_set_volume_channel", 2, top);
+        return 0;
+    }
+
+    struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_set_volume_channel"); return 0; }
+    u8 channel = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "audio_stream_set_volume_channel"); return 0; }
+
+    audio_stream_set_volume_channel(audio, channel);
+
+    return 1;
+}
+
 int smlua_func_audio_sample_load(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31138,19 +31189,19 @@ int smlua_func_camera_set_romhack_override(lua_State* L) {
     return 1;
 }
 
-int smlua_func_camera_romhack_allow_centering(lua_State* L) {
+int smlua_func_camera_romhack_allow_switchable(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_allow_centering", 1, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_allow_switchable", 1, top);
         return 0;
     }
 
     u8 allow = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_allow_centering"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_allow_switchable"); return 0; }
 
-    camera_romhack_allow_centering(allow);
+    camera_romhack_allow_switchable(allow);
 
     return 1;
 }
@@ -31349,17 +31400,17 @@ int smlua_func_camera_get_romhack_override(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_camera_romhack_get_allow_centering(UNUSED lua_State* L) {
+int smlua_func_camera_romhack_get_allow_switchable(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_allow_centering", 0, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_allow_switchable", 0, top);
         return 0;
     }
 
 
-    lua_pushinteger(L, camera_romhack_get_allow_centering());
+    lua_pushinteger(L, camera_romhack_get_allow_switchable());
 
     return 1;
 }
@@ -32279,6 +32330,125 @@ int smlua_func_network_player_palette_to_color(lua_State* L) {
   ///////////////////////
  // smlua_gfx_utils.h //
 ///////////////////////
+
+int smlua_func_get_shader_flag_enabled(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_shader_flag_enabled", 1, top);
+        return 0;
+    }
+
+    int flag = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_shader_flag_enabled"); return 0; }
+
+    lua_pushboolean(L, get_shader_flag_enabled(flag));
+
+    return 1;
+}
+
+int smlua_func_set_shader_flag_enabled(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_shader_flag_enabled", 2, top);
+        return 0;
+    }
+
+    int flag = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_shader_flag_enabled"); return 0; }
+    bool enabled = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_shader_flag_enabled"); return 0; }
+
+    set_shader_flag_enabled(flag, enabled);
+
+    return 1;
+}
+
+int smlua_func_get_shader_flag_value(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_shader_flag_value", 1, top);
+        return 0;
+    }
+
+    int flag = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_shader_flag_value"); return 0; }
+
+    lua_pushnumber(L, get_shader_flag_value(flag));
+
+    return 1;
+}
+
+int smlua_func_set_shader_flag_value(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_shader_flag_value", 2, top);
+        return 0;
+    }
+
+    int flag = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_shader_flag_value"); return 0; }
+    f32 value = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_shader_flag_value"); return 0; }
+
+    set_shader_flag_value(flag, value);
+
+    return 1;
+}
+
+int smlua_func_get_global_shader_flags_enabled(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_global_shader_flags_enabled", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, get_global_shader_flags_enabled());
+
+    return 1;
+}
+
+int smlua_func_set_global_shader_flags_enabled(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_global_shader_flags_enabled", 1, top);
+        return 0;
+    }
+
+    bool enabled = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_global_shader_flags_enabled"); return 0; }
+
+    set_global_shader_flags_enabled(enabled);
+
+    return 1;
+}
+
+int smlua_func_clear_all_shader_flags(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "clear_all_shader_flags", 0, top);
+        return 0;
+    }
+
+
+    clear_all_shader_flags();
+
+    return 1;
+}
 
 int smlua_func_set_override_fov(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -37732,6 +37902,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_update_gfx_pos_and_angle", smlua_func_obj_update_gfx_pos_and_angle);
     smlua_bind_function(L, "position_based_random_u16", smlua_func_position_based_random_u16);
     smlua_bind_function(L, "position_based_random_float_position", smlua_func_position_based_random_float_position);
+    smlua_bind_function(L, "draw_distance_scalar_is_infinite", smlua_func_draw_distance_scalar_is_infinite);
     smlua_bind_function(L, "draw_distance_scalar", smlua_func_draw_distance_scalar);
 
     // behavior_table.h
@@ -38880,6 +39051,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_stream_set_frequency", smlua_func_audio_stream_set_frequency);
     smlua_bind_function(L, "audio_stream_get_volume", smlua_func_audio_stream_get_volume);
     smlua_bind_function(L, "audio_stream_set_volume", smlua_func_audio_stream_set_volume);
+    smlua_bind_function(L, "audio_stream_get_volume_channel", smlua_func_audio_stream_get_volume_channel);
+    smlua_bind_function(L, "audio_stream_set_volume_channel", smlua_func_audio_stream_set_volume_channel);
     smlua_bind_function(L, "audio_sample_load", smlua_func_audio_sample_load);
     smlua_bind_function(L, "audio_sample_destroy", smlua_func_audio_sample_destroy);
     smlua_bind_function(L, "audio_sample_stop", smlua_func_audio_sample_stop);
@@ -38892,7 +39065,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_is_frozen", smlua_func_camera_is_frozen);
     smlua_bind_function(L, "camera_romhack_allow_only_mods", smlua_func_camera_romhack_allow_only_mods);
     smlua_bind_function(L, "camera_set_romhack_override", smlua_func_camera_set_romhack_override);
-    smlua_bind_function(L, "camera_romhack_allow_centering", smlua_func_camera_romhack_allow_centering);
+    smlua_bind_function(L, "camera_romhack_allow_switchable", smlua_func_camera_romhack_allow_switchable);
     smlua_bind_function(L, "camera_allow_toxic_gas_camera", smlua_func_camera_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_romhack_allow_dpad_usage", smlua_func_camera_romhack_allow_dpad_usage);
     smlua_bind_function(L, "camera_romhack_set_collisions", smlua_func_camera_romhack_set_collisions);
@@ -38905,7 +39078,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_romhack_get_zoomed_in_height", smlua_func_camera_romhack_get_zoomed_in_height);
     smlua_bind_function(L, "camera_romhack_get_zoomed_out_height", smlua_func_camera_romhack_get_zoomed_out_height);
     smlua_bind_function(L, "camera_get_romhack_override", smlua_func_camera_get_romhack_override);
-    smlua_bind_function(L, "camera_romhack_get_allow_centering", smlua_func_camera_romhack_get_allow_centering);
+    smlua_bind_function(L, "camera_romhack_get_allow_switchable", smlua_func_camera_romhack_get_allow_switchable);
     smlua_bind_function(L, "camera_get_allow_toxic_gas_camera", smlua_func_camera_get_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_romhack_get_allow_dpad_usage", smlua_func_camera_romhack_get_allow_dpad_usage);
     smlua_bind_function(L, "camera_romhack_get_collisions", smlua_func_camera_romhack_get_collisions);
@@ -38964,6 +39137,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
 
     // smlua_gfx_utils.h
+    smlua_bind_function(L, "get_shader_flag_enabled", smlua_func_get_shader_flag_enabled);
+    smlua_bind_function(L, "set_shader_flag_enabled", smlua_func_set_shader_flag_enabled);
+    smlua_bind_function(L, "get_shader_flag_value", smlua_func_get_shader_flag_value);
+    smlua_bind_function(L, "set_shader_flag_value", smlua_func_set_shader_flag_value);
+    smlua_bind_function(L, "get_global_shader_flags_enabled", smlua_func_get_global_shader_flags_enabled);
+    smlua_bind_function(L, "set_global_shader_flags_enabled", smlua_func_set_global_shader_flags_enabled);
+    smlua_bind_function(L, "clear_all_shader_flags", smlua_func_clear_all_shader_flags);
     smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);
     smlua_bind_function(L, "set_override_near", smlua_func_set_override_near);
     smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);

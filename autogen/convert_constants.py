@@ -55,8 +55,10 @@ in_files = [
     "src/engine/lighting_engine.h",
     "include/PR/gbi.h",
     "include/PR/gbi_extension.h",
+    "src/pc/gfx/gfx_pc.h",
     "src/pc/djui/djui_gfx.h",
     "src/engine/surface_load.h",
+    "src/pc/lua/utils/smlua_audio_utils.h",
 ]
 
 exclude_constants = {
@@ -79,6 +81,7 @@ include_constants = {
     "include/geo_commands.h": [ "BACKGROUND" ],
     "include/level_commands.h": [ "WARP_CHECKPOINT", "WARP_NO_CHECKPOINT" ],
     "src/audio/external.h": [ "SEQ_PLAYER", "DS_" ],
+    "src/pc/lua/utils/smlua_audio_utils.h": ["MOD_AUDIO_CHANNEL"],
     "src/pc/mods/mod_storage.h": [ "MAX_KEYS", "MAX_KEY_VALUE_LENGTH" ],
     "include/PR/gbi.h": [
         "^G_NOOP$",
@@ -118,7 +121,8 @@ include_constants = {
     "include/PR/gbi_extension.h": [
         "^G_VTX_EXT$",
         "^G_PPARTTOCOLOR$",
-        "^G_SETENVRGB$"
+        "^G_SETENVRGB$",
+        "^G_STATE_EXT$",
     ],
 }
 
