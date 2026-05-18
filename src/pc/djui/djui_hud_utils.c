@@ -665,7 +665,7 @@ void djui_hud_transform_interpolated(f32 prevX, f32 prevY, f32 prevScaleX, f32 p
         interp->height = SCREEN_HEIGHT;
     }
 
-    djui_hud_transform_internal(prevX, prevY, scaleX, scaleY, interp);
+    djui_hud_transform_internal(prevX, prevY, prevScaleX, prevScaleY, interp);
 }
 
 void djui_hud_close_transform(void) {
