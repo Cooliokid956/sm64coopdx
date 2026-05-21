@@ -56,6 +56,7 @@ struct ModAudio {
             u8 loaded  : 1;
             u8 copy    : 1;
             u8 channel : 2;
+            u8 alive   : 1;
         };
         u8 flags;
     };

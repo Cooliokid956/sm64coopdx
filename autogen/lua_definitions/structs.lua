@@ -558,6 +558,7 @@
 
 --- @class DjuiInteractableTheme
 --- @field public textColor DjuiColor
+--- @field public disabledTextColor DjuiColor
 --- @field public defaultRectColor DjuiColor
 --- @field public cursorDownRectColor DjuiColor
 --- @field public hoveredRectColor DjuiColor
@@ -1310,6 +1311,7 @@
 --- @field public collidedObjs Object[]
 --- @field public collisionData Pointer_Collision
 --- @field public behavior Pointer_BehaviorScript
+--- @field public initBhvCommand Pointer_BehaviorScript
 --- @field public curBhvCommand Pointer_BehaviorScript
 --- @field public bhvStack integer[]
 --- @field public bhvStackIndex integer
@@ -2161,10 +2163,10 @@
 
 --- @class RomhackCameraSettings
 --- @field public enable RomhackCameraOverride
---- @field public centering integer
+--- @field public switchable integer
 --- @field public dpad integer
 --- @field public collisions integer
---- @field public slowFall integer
+--- @field public following integer
 --- @field public zoomedInDist integer
 --- @field public zoomedOutDist integer
 --- @field public zoomedInHeight integer
