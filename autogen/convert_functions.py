@@ -1220,7 +1220,7 @@ def process_functions(fname, file_str, extracted_descriptions):
             global rejects
             rejects += line + '\n'
             continue
-        description = extracted_descriptions.get(line, "")
+        description = extracted_descriptions.get(line, [""])
         fn = process_function(fname, line, description)
         if fn == None: continue
 

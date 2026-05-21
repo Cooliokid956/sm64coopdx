@@ -186,19 +186,18 @@ u8 smlua_audio_utils_allocate_sequence(void) {
 
 static ma_engine sModAudioEngine;
 static const char* sModAudioTypes[] = { "sound", "sample", "stream" };
-#define GET_TYPE_NAME(audio) (sModAudioTypes[audio->type])
 static ma_sound_group sModAudioChannels[3];
 static struct DynamicPool *sModAudioPool;
 static bool sModAudioShuttingDown = false;
 
 static bool audio_sanity_check(struct ModAudio* audio, u8 type, const char* action) {
     if (!audio || !audio->loaded) {
-        LOG_LUA_LINE("Tried to %s an unloaded audio %s", action, audio ? GET_TYPE_NAME(audio) : "(NULL)");
+        LOG_LUA_LINE("Tried to %s an unloaded audio %s", action, audio ? sModAudioTypes[audio->type] : "(NULL)");
         return false;
     }
     if (type && (type != audio->type)) {
         LOG_LUA_LINE("Tried to %s a %s as a %s", action,
-            GET_TYPE_NAME(audio),
+            sModAudioTypes[audio->type],
             sModAudioTypes[type]);
         return false;
     }
@@ -293,14 +292,14 @@ static void audio_destroy_all_copies(struct ModAudio* audio) {
     pthread_mutex_unlock(&sSoundCopyMutex);
 }
 
-struct ModAudio* audio_copy(struct ModAudio* audio, OPTIONAL bool noLink) {
+struct ModAudio* audio_copy_internal(struct ModAudio* audio, bool link) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "copy")) { return NULL; }
     if (audio->copy) { audio = audio->parent; }
 
     struct ModAudio* copy = calloc(1, sizeof(struct ModAudio));
     if (!copy) {
         LOG_ERROR("Failed to allocate memory for audio copy.");
-        return;
+        return NULL;
     } else { copy->copy = true; }
     ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
     if (result != MA_SUCCESS) {
@@ -319,7 +318,7 @@ struct ModAudio* audio_copy(struct ModAudio* audio, OPTIONAL bool noLink) {
     audio_set_volume_channel(copy, copy->channel);
 
     // Add to list
-    if (!noLink) {
+    if (link) {
         if (audio->copiesTail) {
             copy->prev = audio->copiesTail;
             audio->copiesTail->next = copy;
@@ -328,6 +327,10 @@ struct ModAudio* audio_copy(struct ModAudio* audio, OPTIONAL bool noLink) {
     }
 
     return copy;
+}
+
+struct ModAudio* audio_copy(struct ModAudio* audio) {
+    return audio_copy_internal(audio, true);
 }
 
 static void smlua_audio_custom_init(void) {
@@ -503,7 +506,7 @@ struct ModAudio* audio_load(const char* filename, enum ModAudioType type) {
     audio->alive = true;
     audio_set_volume_channel(audio, type == MA_TYPE_STREAM ? MA_CHANNEL_MUSIC : MA_CHANNEL_SFX);
     printf("%X \n", audio->flags);
-    printf("type %s, channel %i, loaded %i \n", GET_TYPE_NAME(audio), audio->channel, audio->loaded);
+    printf("type %s, channel %i, loaded %i \n", sModAudioTypes[audio->type], audio->channel, audio->loaded);
     return audio;
 
 error:
@@ -540,7 +543,7 @@ struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 v
     ma_sound *sound = &audio->sound;
     struct ModAudio* copy = NULL;
     if (ma_sound_is_playing(sound)) {
-        copy = audio_copy(audio, true);
+        copy = audio_copy_internal(audio, false);
         if (!copy) { return NULL; }
         sound = &audio->sound;
     }
@@ -625,10 +628,8 @@ void audio_destroy(struct ModAudio* audio) {
 
     ma_sound_uninit(&audio->sound);
     ma_decoder_uninit(&audio->decoder);
-    if (audio->buffer) {
-        free(audio->buffer);
-        audio->buffer = NULL;
-    }
+    free(audio->buffer);
+    audio->buffer = NULL;
     audio->loaded = false;
 }
 
@@ -829,14 +830,10 @@ void audio_custom_shutdown(void) {
             ma_decoder_uninit(&audio->decoder);
             audio->loaded = false;
         }
-        if (audio->filepath) {
-            free((void *) audio->filepath);
-            audio->filepath = NULL;
-        }
-        if (audio->buffer) {
-            free(audio->buffer);
-            audio->buffer = NULL;
-        }
+        free((void *) audio->filepath);
+        free(audio->buffer);
+        audio->filepath = NULL;
+        audio->buffer = NULL;
         node = node->prev;
     }
 
