@@ -8361,7 +8361,7 @@ end
 --- @param z number
 --- @param dist integer
 --- @return integer
---- Checks if a point is within distance from any active Mario visible to enemies' graphical position
+--- Checks if a point is within distance from any active Mario visible to objects' graphical position
 function is_point_within_radius_of_mario(x, y, z, dist)
     -- ...
 end

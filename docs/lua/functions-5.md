@@ -3199,7 +3199,7 @@ Moves `obj` based on a seemingly random mix of using either the current obj or `
 ## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
 
 ### Description
-Checks if a point is within distance from any active Mario visible to enemies' graphical position
+Checks if a point is within distance from any active Mario visible to objects' graphical position
 
 ### Lua Example
 `local integerValue = is_point_within_radius_of_mario(x, y, z, dist)`

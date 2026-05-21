@@ -180,6 +180,7 @@ bool gfx_sdl_check_opengl_compatibility(void) {
         return false;
     }
 
+    SDL_GL_MakeCurrent(window, ctx);
     bool validVersion = gfx_opengl_check_compatibility();
 
     SDL_GL_DeleteContext(ctx);
