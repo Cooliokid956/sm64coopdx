@@ -63,7 +63,7 @@ void bhv_small_bully_init(void) {
     o->oGravity = 4.0;
     o->oFriction = 0.91;
     o->oBuoyancy = 1.3;
-    
+
     // We only set this here so it has a set value just in case.
     // A mod may make a small bully spawn a star.
     // For whatever reason that may be.
@@ -83,7 +83,7 @@ void bhv_big_bully_init(void) {
     o->oGravity = 5.0;
     o->oFriction = 0.93;
     o->oBuoyancy = 1.3;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.

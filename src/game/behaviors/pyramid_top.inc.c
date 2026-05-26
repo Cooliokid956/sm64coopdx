@@ -97,7 +97,7 @@ void bhv_pyramid_top_loop(void) {
             sync_object_init_field(o, o->oTimer);
         }
     }
-    
+
     switch (o->oAction) {
         case PYRAMID_TOP_ACT_CHECK_IF_SOLVED:
             if (o->oPyramidTopPillarsTouched == 4) {

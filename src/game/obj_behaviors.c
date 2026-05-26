@@ -487,17 +487,16 @@ s16 object_step_without_floor_orient(void) {
 }
 
 /* |description|
-Don't use this function outside of of a context where the current object and `obj` are the same.
-Moves `obj` based on a seemingly random mix of using either the current obj or `obj`'s fields
+Updates the object `obj` horizontal velocity using its forward vel and move angle yaw, then moves it
 |descriptionEnd| */
 void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
-    if (!o || !obj) { return; }
-    o->oVelX = obj->oForwardVel * sins(obj->oMoveAngleYaw);
-    o->oVelZ = obj->oForwardVel * coss(obj->oMoveAngleYaw);
+    if (!obj) { return; }
+    obj->oVelX = obj->oForwardVel * sins(obj->oMoveAngleYaw);
+    obj->oVelZ = obj->oForwardVel * coss(obj->oMoveAngleYaw);
 
-    obj->oPosX += o->oVelX;
+    obj->oPosX += obj->oVelX;
     obj->oPosY += obj->oVelY;
-    obj->oPosZ += o->oVelZ;
+    obj->oPosZ += obj->oVelZ;
 }
 
 /* |description|Checks if a point is within distance from any active Mario visible to objects' graphical position|descriptionEnd| */
@@ -786,12 +785,11 @@ s8 obj_find_wall_displacement(VEC_OUT Vec3f dist, f32 x, f32 y, f32 z, f32 radiu
 Spawns a number of coins at the location of an object with a random forward velocity, y velocity, and direction
 |descriptionEnd| */
 void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins) {
-    if (!o) { return; }
     if (!obj) { return; }
     struct Object *coin;
     s8 count;
 
-    rng_position_init(o->oPosX, o->oPosY, o->oPosZ);
+    rng_position_init(obj->oPosX, obj->oPosY, obj->oPosZ);
     for (count = 0; count < nCoins; count++) {
         coin = spawn_object(obj, MODEL_YELLOW_COIN, bhvMovingYellowCoin);
         if (coin != NULL) {

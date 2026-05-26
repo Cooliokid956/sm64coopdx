@@ -390,7 +390,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(fs_buf, &fs_len, "    }");
         append_line(fs_buf, &fs_len, "    return brightness < limit ? 0.0 : 1.0;");
         append_line(fs_buf, &fs_len, "}");
-    
+
         append_line(fs_buf, &fs_len, "vec3 rgb2hsv(vec3 c) {");
         append_line(fs_buf, &fs_len, "    vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);");
         append_line(fs_buf, &fs_len, "    vec4 p = mix(vec4(c.bg, K.wz),");

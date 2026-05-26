@@ -98,7 +98,7 @@ Useful for determining if Mario's fall warrants a health penalty or a special la
 |descriptionEnd| */
 s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
     if (!m) { return 0; }
-    
+
     f32 fallHeight;
     f32 damageHeight;
 

@@ -170,6 +170,55 @@ Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer
 
 <br />
 
+## [get_shading_fullbright_enabled](#get_shading_fullbright_enabled)
+
+### Description
+Gets if fullbright mode is enabled for shaded materials (`G_LIGHTING`)
+
+### Lua Example
+`local booleanValue = get_shading_fullbright_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_shading_fullbright_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_shading_fullbright_enabled](#set_shading_fullbright_enabled)
+
+### Description
+Enables fullbright mode for shaded materials (`G_LIGHTING`.)
+If a light color is completely black, the rendered color will default to the shade color.
+This is for already fullbright materials that set their shade color to something and their light color to black.
+This visually corrects rendering on materials such as Mario's emblem.
+Useful for using the lighting engine and having entirely your own shading without the game's own systems
+and compatibility with most models, not having to used specialized env/prim color approaches for example
+
+### Lua Example
+`set_shading_fullbright_enabled(enabled)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enabled | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_shading_fullbright_enabled(bool enabled);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_override_fov](#set_override_fov)
 
 ### Description
@@ -2504,6 +2553,48 @@ Checks if a screen transition is playing
 
 ### C Prototype
 `bool is_transition_playing(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_current_play_mode](#get_current_play_mode)
+
+### Description
+Gets the current play mode (`PLAY_MODE_*`)
+
+### Lua Example
+`local integerValue = get_current_play_mode()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_current_play_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_delayed_warp_op](#get_delayed_warp_op)
+
+### Description
+Gets the delayed warp operation type (`WARP_OP_*`)
+
+### Lua Example
+`local integerValue = get_delayed_warp_op()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_delayed_warp_op(void);`
 
 [:arrow_up_small:](#)
 

@@ -925,7 +925,7 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
 
 Gfx *geo_switch_character_type(s32 callContext, struct GraphNode *node, UNUSED void *context) {
     struct GraphNodeSwitchCase *switchCase;
-    
+
     if (callContext == GEO_CONTEXT_RENDER) {
         // move to a local var because GraphNodes are passed in all geo functions.
         // cast the pointer.

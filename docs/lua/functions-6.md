@@ -2566,12 +2566,12 @@ Marks an object to be unloaded at the end of the frame
 ## [obj_set_hitbox_radius_and_height](#obj_set_hitbox_radius_and_height)
 
 ### Lua Example
-`obj_set_hitbox_radius_and_height(o, radius, height)`
+`obj_set_hitbox_radius_and_height(obj, radius, height)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| o | [Object](structs.md#Object) |
+| obj | [Object](structs.md#Object) |
 | radius | `number` |
 | height | `number` |
 
@@ -2579,7 +2579,7 @@ Marks an object to be unloaded at the end of the frame
 - None
 
 ### C Prototype
-`void obj_set_hitbox_radius_and_height(struct Object *o, f32 radius, f32 height);`
+`void obj_set_hitbox_radius_and_height(struct Object *obj, f32 radius, f32 height);`
 
 [:arrow_up_small:](#)
 
@@ -2588,12 +2588,12 @@ Marks an object to be unloaded at the end of the frame
 ## [obj_set_hurtbox_radius_and_height](#obj_set_hurtbox_radius_and_height)
 
 ### Lua Example
-`obj_set_hurtbox_radius_and_height(o, radius, height)`
+`obj_set_hurtbox_radius_and_height(obj, radius, height)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| o | [Object](structs.md#Object) |
+| obj | [Object](structs.md#Object) |
 | radius | `number` |
 | height | `number` |
 
@@ -2601,7 +2601,7 @@ Marks an object to be unloaded at the end of the frame
 - None
 
 ### C Prototype
-`void obj_set_hurtbox_radius_and_height(struct Object *o, f32 radius, f32 height);`
+`void obj_set_hurtbox_radius_and_height(struct Object *obj, f32 radius, f32 height);`
 
 [:arrow_up_small:](#)
 

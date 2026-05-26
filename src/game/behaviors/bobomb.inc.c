@@ -35,7 +35,7 @@ void bobomb_act_explode(void) {
         cur_obj_scale(1.0 + (f32) o->oTimer / 5.0);
         return;
     }
-    
+
     struct Object *explosion = spawn_object(o, MODEL_EXPLOSION, bhvExplosion);
     if (explosion != NULL) {
         explosion->oGraphYOffset += 100.0f;

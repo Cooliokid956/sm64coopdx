@@ -225,7 +225,7 @@ u32 mario_update_windy_ground(struct MarioState *m) {
     if (!m) { return 0; }
     struct Surface *floor = m->floor;
     if (!floor) { return 0; }
-    
+
     extern bool gDjuiInMainMenu;
     if (floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
         bool allowHazard = true;

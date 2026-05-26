@@ -1271,7 +1271,6 @@ s32 act_spawn_spin_airborne(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
-        m->freeze = 2;
         return set_water_plunge_action(m);
     }
 
@@ -1304,7 +1303,6 @@ s32 act_spawn_spin_landing(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
-        m->freeze = 2;
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;
@@ -1557,7 +1555,6 @@ s32 act_spawn_no_spin_landing(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
-        m->freeze = 2;
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;

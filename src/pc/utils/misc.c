@@ -2,6 +2,7 @@
 #include <windows.h>
 #else
 #include <unistd.h>
+#include <sys/wait.h>
 #endif
 
 #include <stdio.h>
@@ -10,6 +11,11 @@
 #include <stdbool.h>
 #include <time.h>
 #include <float.h>
+#include <sys/stat.h>
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#include <direct.h>
+#endif
 #include <ctype.h>
 
 #include "misc.h"
@@ -601,6 +607,52 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
             buffer_index += seperator_length;
         }
     }
+}
+
+#if defined(__linux__) || defined(__APPLE__)
+static s8 launch(const char* program, const char* arg) {
+    pid_t pid = fork();
+
+    if (pid < 0) { return -1; }
+
+    if (pid == 0) {
+        execlp(program, program, arg, (char*)NULL);
+        _exit(127);
+    }
+
+    s32 status;
+    waitpid(pid, &status, 0);
+    return WIFEXITED(status) && WEXITSTATUS(status) == 0 ? 0 : -1;
+}
+#endif
+
+
+void open_url(const char* url) {
+#if defined(_WIN32) || defined(_WIN64) // windows
+    ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+
+#elif __linux__ // linux
+    launch("xdg-open", url);
+
+#elif __APPLE__ // macOS
+    launch("open", url);
+
+#endif
+}
+
+void open_folder(const char* path) {
+#if defined(_WIN32) || defined(_WIN64) // windows
+    _mkdir(path);
+    ShellExecuteA(NULL, "open", path, NULL, NULL, SW_SHOWNORMAL);
+
+#elif __linux__ // linux
+    mkdir(path, 0777);
+    launch("xdg-open", path);
+
+#elif __APPLE__ // macOS
+    mkdir(path, 0777);
+    launch("open", path);
+#endif
 }
 
 const char *strstr_lowercased(const char *haystack, const char *needle) {

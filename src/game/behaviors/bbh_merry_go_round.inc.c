@@ -80,7 +80,7 @@ static void handle_merry_go_round_music(void) {
 
             struct Surface *marioFloor = NULL;
             find_floor(marioObject->oPosX, marioObject->oPosY, marioObject->oPosZ, &marioFloor);
-            
+
             if (marioFloor != NULL && marioFloor->type == SURFACE_MGR_MUSIC) {
                 gMarioOnMerryGoRound = TRUE;
                 break;

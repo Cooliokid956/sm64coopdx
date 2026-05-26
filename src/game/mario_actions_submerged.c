@@ -209,7 +209,7 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[0] = m->pos[0] + step[0];
     nextPos[1] = m->pos[1] + step[1];
     nextPos[2] = m->pos[2] + step[2];
-  
+
     if (nextPos[1] > m->waterLevel - 80) {
         bool allowForceAction = true;
         smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
@@ -539,9 +539,9 @@ static s32 check_water_jump(struct MarioState *m) {
     s32 probe = (s32)(m->pos[1] + 1.5f);
 
     if (m->input & INPUT_A_PRESSED) {
-        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {      
+        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {
             bool allowForceAction = true;
-            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction); 
+            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
             if (!allowForceAction) { return FALSE; }
 
             vec3s_set(m->angleVel, 0, 0, 0);

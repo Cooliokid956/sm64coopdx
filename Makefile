@@ -22,6 +22,11 @@ DEBUG ?= 0
 # Enable development/testing flags
 DEVELOPMENT ?= 0
 
+# Enable this if you want to use some very unsafe and potentially harmful code from the Lua standard libs
+# that is normally disabled to prevent catastrophic accidents.
+# Only enable this if you know exactly why you need it and will take measures to mitigate the risks.
+LUA_UNSAFE ?= 0
+
 # Build for the N64 (turn this off for ports)
 TARGET_N64 = 0
 
@@ -1006,6 +1011,16 @@ endif
 ifeq ($(DEVELOPMENT),1)
   CC_CHECK_CFLAGS += -DDEVELOPMENT
   CFLAGS += -DDEVELOPMENT
+endif
+
+# Check for unsafe mode option
+ifeq ($(LUA_UNSAFE),1)
+  ifeq ($(DEVELOPMENT),1)
+    CC_CHECK_CFLAGS += -DLUA_UNSAFE
+    CFLAGS += -DLUA_UNSAFE
+  else
+    $(error LUA_UNSAFE cannot be enabled outside of development mode)
+  endif
 endif
 
 # Check for rpi option

@@ -8350,8 +8350,7 @@ function object_step_without_floor_orient()
 end
 
 --- @param obj Object
---- Don't use this function outside of of a context where the current object and `obj` are the same.<br>
---- Moves `obj` based on a seemingly random mix of using either the current obj or `obj`'s fields
+--- Updates the object `obj` horizontal velocity using its forward vel and move angle yaw, then moves it
 function obj_move_xyz_using_fvel_and_yaw(obj)
     -- ...
 end
@@ -9666,17 +9665,17 @@ function cur_obj_set_billboard_if_vanilla_cam()
     -- ...
 end
 
---- @param o Object
+--- @param obj Object
 --- @param radius number
 --- @param height number
-function obj_set_hitbox_radius_and_height(o, radius, height)
+function obj_set_hitbox_radius_and_height(obj, radius, height)
     -- ...
 end
 
---- @param o Object
+--- @param obj Object
 --- @param radius number
 --- @param height number
-function obj_set_hurtbox_radius_and_height(o, radius, height)
+function obj_set_hurtbox_radius_and_height(obj, radius, height)
     -- ...
 end
 
@@ -11200,6 +11199,23 @@ function clear_all_shader_flags()
     -- ...
 end
 
+--- @return boolean
+--- Gets if fullbright mode is enabled for shaded materials (`G_LIGHTING`)
+function get_shading_fullbright_enabled()
+    -- ...
+end
+
+--- @param enabled boolean
+--- Enables fullbright mode for shaded materials (`G_LIGHTING`.)<br>
+--- If a light color is completely black, the rendered color will default to the shade color.<br>
+--- This is for already fullbright materials that set their shade color to something and their light color to black.<br>
+--- This visually corrects rendering on materials such as Mario's emblem.<br>
+--- Useful for using the lighting engine and having entirely your own shading without the game's own systems<br>
+--- and compatibility with most models, not having to used specialized env/prim color approaches for example
+function set_shading_fullbright_enabled(enabled)
+    -- ...
+end
+
 --- @param fov number
 --- Sets the override FOV
 function set_override_fov(fov)
@@ -11885,6 +11901,18 @@ end
 --- @return boolean
 --- Checks if a screen transition is playing
 function is_transition_playing()
+    -- ...
+end
+
+--- @return integer
+--- Gets the current play mode (`PLAY_MODE_*`)
+function get_current_play_mode()
+    -- ...
+end
+
+--- @return integer
+--- Gets the delayed warp operation type (`WARP_OP_*`)
+function get_delayed_warp_op()
     -- ...
 end
 

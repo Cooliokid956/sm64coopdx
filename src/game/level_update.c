@@ -319,6 +319,9 @@ void load_level_init_text(u32 arg) {
     if (!gotAchievement) {
         //level_set_transition(-1, NULL);
         create_dialog_box(dialogID);
+        // since coop doesn't use timefreeze, freeze mario to preserve no input when there
+        // is a dialog on screen when loading a new level
+        gMarioState->freeze = 2;
     }
 }
 
