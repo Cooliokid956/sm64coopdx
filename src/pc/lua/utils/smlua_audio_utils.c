@@ -300,7 +300,7 @@ struct ModAudio* audio_copy_internal(struct ModAudio* audio, bool link) {
     if (!copy) {
         LOG_ERROR("Failed to allocate memory for audio copy.");
         return NULL;
-    } else { copy->copy = true; }
+    }
     ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
     if (result != MA_SUCCESS) {
         free(copy);
@@ -314,7 +314,8 @@ struct ModAudio* audio_copy_internal(struct ModAudio* audio, bool link) {
     }
     ma_sound_set_end_callback(&copy->sound, audio_destroy_copy_callback, copy);
     copy->parent = audio;
-    copy->flags |= audio->flags;
+    copy->flags = audio->flags;
+    copy->copy = true;
     audio_set_volume_channel(copy, copy->channel);
 
     // Add to list
@@ -545,7 +546,7 @@ struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 v
     if (ma_sound_is_playing(sound)) {
         copy = audio_copy_internal(audio, false);
         if (!copy) { return NULL; }
-        sound = &audio->sound;
+        sound = &copy->sound;
     }
 
     f32 dist = 0;
@@ -631,6 +632,14 @@ void audio_destroy(struct ModAudio* audio) {
     free(audio->buffer);
     audio->buffer = NULL;
     audio->loaded = false;
+}
+
+void audio_reload(struct ModAudio* audio) {
+    if (audio->copy) { audio = audio->parent; }
+    if (audio->loaded) { audio_destroy(audio); }
+    char *filename = strrchr(audio->filepath, *PATH_SEPARATOR);
+    
+    audio_load(filename, audio->type);
 }
 
 f32 audio_get_volume(struct ModAudio* audio) {

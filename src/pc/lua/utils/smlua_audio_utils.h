@@ -21,14 +21,13 @@ u8 smlua_audio_utils_allocate_sequence(void);
 ////////////////
 
 // flags
-// XXCCPLTT
-// CC - Channel
-// P - Copy
-// L - Loaded
+// XACCPLTT
 // TT - Type
+// L - Loaded
+// P - Copy
+// CC - Channel
+// A - Alive
 
-#define MA_TYPE_MASK 0x3
-#define MA_GET_TYPE(audio) (audio->flags & MA_TYPE_MASK)
 enum ModAudioType {
     MA_TYPE_NONE,
     MA_TYPE_SAMPLE,
@@ -81,6 +80,7 @@ struct ModAudio {
     FUNCTION(pause,   audio_pause);
     FUNCTION(stop,    audio_stop);
     FUNCTION(destroy, audio_destroy);
+    FUNCTION(reload,  audio_reload);
     FUNCTION(copy,    audio_copy);
 
     PROPERTY(volume,     audio_get_volume,         audio_set_volume);
@@ -112,6 +112,8 @@ void audio_pause(struct ModAudio* audio);
 void audio_stop(struct ModAudio* audio);
 /* |description|Destroys an `audio`|descriptionEnd| */
 void audio_destroy(struct ModAudio* audio);
+/* |description|Reloads a destroyed `audio`|descriptionEnd| */
+void audio_reload(struct ModAudio* audio);
 /* |description|Copies an `audio`|descriptionEnd| */
 struct ModAudio* audio_copy(struct ModAudio* audio);
 

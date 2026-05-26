@@ -1212,6 +1212,7 @@
 --- @field public pause fun(audio: ModAudio)
 --- @field public stop fun(audio: ModAudio)
 --- @field public destroy fun(audio: ModAudio)
+--- @field public reload fun(audio: ModAudio)
 --- @field public copy fun(audio: ModAudio): ModAudio
 --- @field public volume number
 --- @field public pan number

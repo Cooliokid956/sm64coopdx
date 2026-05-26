@@ -1844,6 +1844,7 @@
    - [audio_pause](functions-6.md#audio_pause)
    - [audio_stop](functions-6.md#audio_stop)
    - [audio_destroy](functions-6.md#audio_destroy)
+   - [audio_reload](functions-6.md#audio_reload)
    - [audio_copy](functions-6.md#audio_copy)
    - [audio_get_volume](functions-6.md#audio_get_volume)
    - [audio_set_volume](functions-6.md#audio_set_volume)

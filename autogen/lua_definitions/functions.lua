@@ -10602,6 +10602,12 @@ function audio_destroy(audio)
 end
 
 --- @param audio ModAudio
+--- Reloads a destroyed `audio`
+function audio_reload(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
 --- @return ModAudio
 --- Copies an `audio`
 function audio_copy(audio)

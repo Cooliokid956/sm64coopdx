@@ -5810,6 +5810,29 @@ Destroys an `audio`
 
 <br />
 
+## [audio_reload](#audio_reload)
+
+### Description
+Reloads a destroyed `audio`
+
+### Lua Example
+`audio_reload(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_reload(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_copy](#audio_copy)
 
 ### Description

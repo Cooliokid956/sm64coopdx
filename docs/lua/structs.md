@@ -1781,6 +1781,7 @@
 | pause | [`audio_pause`](functions-6.md#audio_pause) |
 | stop | [`audio_stop`](functions-6.md#audio_stop) |
 | destroy | [`audio_destroy`](functions-6.md#audio_destroy) |
+| reload | [`audio_reload`](functions-6.md#audio_reload) |
 | copy | [`audio_copy`](functions-6.md#audio_copy) |
 
 [:arrow_up_small:](#)

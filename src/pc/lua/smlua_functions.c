@@ -1072,14 +1072,6 @@ int smlua_func_djui_hud_print_text_interpolated(lua_State* L) {
     return 1;
 }
 
-// compatibility band-aid
-int smlua_func_return_self(lua_State* L) {
-    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    lua_pushvalue(L, 1);
-    return 1;
-}
-
   //////////
  // bind //
 //////////
@@ -1113,5 +1105,4 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
     smlua_bind_function(L, "djui_hud_print_text_interpolated", smlua_func_djui_hud_print_text_interpolated);
-    smlua_bind_function(L, "return_self", smlua_func_return_self); // compatibility band-aid
 }
