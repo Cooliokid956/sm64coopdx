@@ -34192,7 +34192,7 @@ int smlua_func_is_transition_playing(lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_current_play_mode(UNUSED lua_State* L) {
+int smlua_func_get_current_play_mode(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
@@ -34207,7 +34207,7 @@ int smlua_func_get_current_play_mode(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_delayed_warp_op(UNUSED lua_State* L) {
+int smlua_func_get_delayed_warp_op(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);

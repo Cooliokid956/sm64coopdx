@@ -3510,7 +3510,6 @@
 <br />
 
 ## [smlua_audio_utils.h](#smlua_audio_utils.h)
-- MA_TYPE_MASK
 
 ### [enum ModAudioType](#ModAudioType)
 | Identifier | Value |

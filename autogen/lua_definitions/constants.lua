@@ -8194,9 +8194,6 @@ VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD |
 --- @type integer
 C_BUTTONS = (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
---- @type integer
-MA_TYPE_MASK = 0x3
-
 MA_TYPE_NONE   = 0 --- @type ModAudioType
 MA_TYPE_SAMPLE = 1 --- @type ModAudioType
 MA_TYPE_STREAM = 2 --- @type ModAudioType

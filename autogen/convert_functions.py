@@ -1203,30 +1203,28 @@ def process_function(fname, line, description):
 
 def process_functions(fname, file_str, extracted_descriptions):
     functions = []
-    overload_func = { 'overload' : [] }
-    overload_count = 0
+    overload_funcs = {}
     for line in file_str.splitlines():
+        overload = None
         line = line.strip()
         if line.startswith(cobject_overload_identifier):
-            overload_func['line'] = line
-            line = line[:-1].split()
-            overload_func['identifier'] = line[1]
-            overload_count = int(line[2])
-            continue
+            line = line.split()
+            overload = line[1]
+            line = ' '.join(line[2:])
         if reject_line(line):
             global rejects
             rejects += line + '\n'
             continue
         description = extracted_descriptions.get(line, [""])
         fn = process_function(fname, line, description)
-        if fn == None: continue
+        if fn is None: continue
 
-        if overload_count > 0:
-            overload_count -= 1
-            overload_func['overload'].append(fn)
-            if overload_count == 0:
+        if overload is not None:
+            overload_func = overload_funcs.get(overload)
+            if overload_func is None:
+                overload_func = overload_funcs[overload] = { 'identifier': overload, 'overload': [] }
                 functions.append(overload_func)
-                overload_func = { 'overload' : [] }
+            overload_func['overload'].append(fn)
         else:
             functions.append(fn)
     return functions
