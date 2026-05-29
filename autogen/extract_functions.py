@@ -104,14 +104,16 @@ def extract_functions(filename):
     # use raw lines to find descriptions for identified functions
     for line in tmp.splitlines():
         line = line.strip()
-        if cobject_overload_identifier not in line:
-            if '(' not in line or ')' not in line or '=' in line:
-                continue
-            if line.startswith('static ') or line.startswith('extern '):
-                continue
+        if '(' not in line or ')' not in line or '=' in line:
+            continue
+        if line.startswith('static ') or line.startswith('extern '):
+            continue
 
         # add function
         functions.append(line)
+
+        # clean overload before description search
+        line = re.sub(f'{cobject_overload_identifier} .+? ', '', line)
 
         # look for a description above the function in raw lines
         function_without_semicolon = line.rstrip(';')
@@ -160,7 +162,6 @@ def extract_functions(filename):
 
     # normalize function ending
     txt = '\n'.join(functions).replace(' {', ';')
-    if cobject_overload_identifier in txt: print(txt)
     return txt, descriptions
 
 if __name__ == "__main__":

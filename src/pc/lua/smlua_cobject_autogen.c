@@ -1508,7 +1508,7 @@ static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
     { "looping",      LVT_PROPERTY, .get = "audio_get_looping",              .set = "audio_set_looping" },
     { "pan",          LVT_PROPERTY, .get = "audio_get_pan",                  .set = "audio_set_pan" },
     { "pause",        LVT_FUNCTION, .function = "audio_pause"                               },
-    { "play",         LVT_FUNCTION, .function = "audio_stream_play"                         },
+    { "play",         LVT_FUNCTION, .function = "audio_play"                                },
     { "playing",      LVT_PROPERTY, .get = "audio_get_playing",              .set = "audio_set_playing" },
     { "position",     LVT_PROPERTY, .get = "audio_get_position",             .set = "audio_set_position" },
     { "relativePath", LVT_STRING_P, offsetof(struct ModAudio, relativePath), true, LOT_NONE },

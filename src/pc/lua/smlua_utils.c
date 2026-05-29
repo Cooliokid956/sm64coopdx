@@ -173,8 +173,12 @@ LuaTable smlua_to_lua_table(lua_State* L, int index) {
     return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
-bool smlua_is_cobject(lua_State* L, int index, UNUSED u16 lot) {
-    return lua_isuserdata(L, index);
+bool smlua_is_cobject(lua_State* L, int index, u16 lot) {
+    CObject *cobject = luaL_testudata(L, index, "CObject");
+    if (cobject && lot) {
+        return lot == cobject->lot;
+    }
+    return cobject != NULL;
 }
 
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
@@ -208,6 +212,14 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 
     gSmLuaConvertSuccess = true;
     return cobject->pointer;
+}
+
+bool smlua_is_cpointer(lua_State* L, int index, u16 lvt) {
+    CPointer *cpointer = luaL_testudata(L, index, "CPointer");
+    if (cpointer && lvt) {
+        return lvt == cpointer->lvt;
+    }
+    return cpointer != NULL;
 }
 
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {

@@ -31,6 +31,7 @@ LuaFunction smlua_to_lua_function(lua_State* L, int index);
 LuaTable smlua_to_lua_table(lua_State* L, int index);
 bool smlua_is_cobject(lua_State* L, int index, u16 lot);
 void* smlua_to_cobject(lua_State* L, int index, u16 lot);
+bool smlua_is_cpointer(lua_State* L, int index, u16 lvt);
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt);
 struct LSTNetworkType smlua_to_lnt(lua_State* L, int index);
 struct TextureInfo *smlua_to_texture_info(lua_State *L, int index);

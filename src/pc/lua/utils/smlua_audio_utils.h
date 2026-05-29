@@ -76,7 +76,7 @@ struct ModAudio {
         };
     };
 
-    FUNCTION(play,    audio_stream_play);
+    FUNCTION(play,    audio_play);
     FUNCTION(pause,   audio_pause);
     FUNCTION(stop,    audio_stop);
     FUNCTION(destroy, audio_destroy);
@@ -105,6 +105,8 @@ OVERLOAD(audio_play) void audio_stream_play(struct ModAudio* audio, bool restart
 /* |description|Plays an `audio` sample at `position` with `volume`|descriptionEnd| */
 OVERLOAD(audio_play) struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);
 
+/* |description|Plays an `audio`|descriptionEnd| */
+OVERLOAD(audio_play) void audio_play(struct ModAudio* audio);
 /* |description|Pauses an `audio`|descriptionEnd| */
 void audio_pause(struct ModAudio* audio);
 /* |description|Stops an `audio`|descriptionEnd| */

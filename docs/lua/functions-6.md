@@ -5691,13 +5691,13 @@ Loads an `audio` sample
 
 <br />
 
-## [audio_stream_play](#audio_stream_play)
+## [audio_play](#audio_play)
 
 ### Description
 Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
 
 ### Lua Example
-`audio_stream_play(audio, restart, volume)`
+`audio_play(audio, restart, volume)`
 
 ### Parameters
 | Field | Type |
@@ -5712,17 +5712,12 @@ Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0
 ### C Prototype
 `void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
 
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_play](#audio_sample_play)
-
+---
 ### Description
 Plays an `audio` sample at `position` with `volume`
 
 ### Lua Example
-`local modAudioValue = audio_sample_play(audio, position, volume)`
+`local modAudioValue = audio_play(audio, position, volume)`
 
 ### Parameters
 | Field | Type |
@@ -5736,6 +5731,24 @@ Plays an `audio` sample at `position` with `volume`
 
 ### C Prototype
 `struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+
+---
+### Description
+Plays an `audio`
+
+### Lua Example
+`audio_play(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_play(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 

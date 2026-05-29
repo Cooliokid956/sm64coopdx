@@ -189,14 +189,10 @@ $[BINDS]
 
 ###########################################################
 
-vec_type_before = """
-    %s $[IDENTIFIER];
-    smlua_get_%s($[IDENTIFIER], $[INDEX]);
-"""
+vec_type_before = "    %s $[IDENTIFIER]; smlua_get_%s($[IDENTIFIER], $[INDEX]);\n"
+vec_type_after  = "    smlua_push_%s($[IDENTIFIER], $[INDEX]);\n"
 
-vec_type_after = """
-    smlua_push_%s($[IDENTIFIER], $[INDEX]);
-"""
+vec_type_check  = "smlua_check_%s(%i)"
 
 #
 # Special cases for sound functions
@@ -209,10 +205,7 @@ SOUND_FUNCTIONS = [
     "stop_sounds_from_source",
 ]
 
-vec3f_sound_before = """
-    f32 *$[IDENTIFIER] = smlua_get_vec3f_from_buffer();
-    smlua_get_vec3f($[IDENTIFIER], $[INDEX]);
-"""
+vec3f_sound_before = "    f32 *$[IDENTIFIER] = smlua_get_vec3f_from_buffer(); smlua_get_vec3f($[IDENTIFIER], $[INDEX]);\n"
 
 ###########################################################
 
@@ -905,6 +898,27 @@ def build_param_after(param, i):
     else:
         return ''
 
+def build_param_check(param, i):
+    ptype = alter_type(param['type'])
+
+    if "struct TextureInfo" in ptype and "*" in ptype:
+        return 'smlua_is_cobject(L, %d, LOT_TEXTUREINFO);\n' % (i)
+
+    if ptype in VEC_TYPES \
+      or ptype == 'LuaTable':    return 'lua_istable(L, %d)'    % (i)
+    elif ptype == 'bool':        return 'lua_isboolean(L, %d)'  % (i)
+    elif ptype in integer_types: return 'lua_isinteger(L, %d)'  % (i)
+    elif ptype in number_types:  return 'lua_isnumber(L, %d)'   % (i)
+    elif ptype == 'const char*' \
+      or ptype == 'ByteString':  return 'lua_isstring(L, %d)'   % (i)
+    elif ptype == 'LuaFunction': return 'lua_isfunction(L, %d)' % (i)
+    elif translate_type_to_lot(ptype) == 'LOT_POINTER':
+        lvt = translate_type_to_lvt(ptype)
+        return 'smlua_is_cpointer(L, %d, %s)' % (i, lvt)
+    else:
+        lot = translate_type_to_lot(ptype)
+        return 'smlua_is_cobject(L, %d, %s)' % (i, lot)
+
 def build_return_value(id, rtype):
     rtype = alter_type(rtype)
     lot = translate_type_to_lot(rtype)
@@ -964,7 +978,77 @@ def split_function_parameters_and_returns(function):
             fparams.append(param)
     return fparams, freturns
 
+def get_params_bounds(params):
+    return len(params), len([param for param in params if 'OPTIONAL' not in param])
+
+def build_overloaded_function(function, do_extern):
+    s = ''
+    fid = function['identifier']
+    overload = function['overload']
+    oblocks = []
+    for func in overload:
+        func['filename'] = function['filename']
+        built = build_function(func, do_extern)
+        if func['implemented']: function['implemented'] = True
+
+        built = built.split('\n\n')[2:-1]
+        built[-1] = built[-1][:-2]
+        if len(built) == 3:
+            built[0] = built[0].replace(func['identifier'], function['identifier'])
+        built = '\n\n'.join(built)
+
+        fparams, freturns = split_function_parameters_and_returns(func)
+        params_max, params_min = get_params_bounds(fparams)
+        oblocks.append({'params': fparams, 'lines': built, 'count': params_min, 'max': params_max})
+
+    s += 'int smlua_func_%s(lua_State* L) {\n' % fid
+    s += """    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);\n\n"""
+
+    def add_block(block, i, unique=False):
+        nonlocal s
+        first = len(oblocks) == len(overload)
+        last = len(oblocks) == 1
+        s += '    ' if first else ' else '
+        if not last:
+            if unique: s += 'if (top == %i) ' % i
+            else: s += 'if (%s) ' % build_param_check(block['params'][i], i)
+        s += '{\n'
+        for line in block['lines'].splitlines():
+            s += '    ' + line + '\n'
+        s = s[:-1] + '\n    }'
+        oblocks.remove(block)
+
+    i = 0
+    while len(oblocks) > 0:
+        candidates = []
+        ptypes = {}
+        for block in oblocks:
+            if i >= block['max']: continue
+            if i + 1 == block['count'] and block['count'] == block['max']:
+                candidates.append(ptype)
+
+            ptype = block['params'][i]['type']
+            if ptypes.get(ptype) is None: ptypes[ptype] = []
+            ptypes[ptype].append(block)
+
+        for blocks in ptypes.values():
+            if len(blocks) == 1:
+                for block in blocks: add_block(block, i + 1)
+
+        if len(candidates) == 1:
+            add_block(block, i + 1, True)
+            
+        i += 1
+
+    s += '\n}\n'
+
+    return s + '\n'
+
 def build_function(function, do_extern):
+    if function.get('overload') is not None:
+        return build_overloaded_function(function, do_extern)
+
     s = ''
     fid = function['identifier']
 
@@ -981,18 +1065,18 @@ def build_function(function, do_extern):
         if 'bhv_' in fid:
             s += '    if (!gCurrentObject) { return 0; }\n'
 
-    params_max = len(fparams)
-    params_min = len([param for param in fparams if 'OPTIONAL' not in param])
+    s += """    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);"""
+
+    params_max, params_min = get_params_bounds(fparams)
     if params_min == params_max:
-        s += """    if (L == NULL) { return 0; }\n
-    int top = lua_gettop(L);
+        s += """
     if (top != %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected %%u, Received %%u", "%s", %d, top);
         return 0;
     }\n\n""" % (params_max, fid, params_max)
     else:
-        s += """    if (L == NULL) { return 0; }\n
-    int top = lua_gettop(L);
+        s += """
     if (top < %d || top > %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected between %%u and %%u, Received %%u", "%s", %d, %d, top);
         return 0;
@@ -1018,7 +1102,7 @@ def build_function(function, do_extern):
             s += build_param(fid, param, i)
             s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
         i += 1
-    s += '\n'
+    if params_max > 0: s += '\n'
 
     if freturns:
         for param in freturns:
@@ -1350,7 +1434,30 @@ def doc_lua_func_param(param):
     s += ')'
     return s
 
+def doc_overloaded_function(fname, function):
+    s = ''
+    overload = function['overload']
+    skip, cont = 0, 0
+    for i, func in enumerate(overload):
+        for line in doc_function(fname, func).splitlines():
+            if skip > 0: skip -= 1; continue
+            if cont > 0: cont -= 1
+            else: line = line.replace(func['identifier'], function['identifier'])
+
+            if "C Prototype" in line: cont = 1
+            if i+1 != len(overload) and "(#)" in line:
+                s += "---"
+                skip = 2
+                break
+
+            s += line + '\n'
+
+    return s
+
 def doc_function(fname, function):
+    if function.get('overload'):
+        return doc_overloaded_function(fname, function)
+
     if not function['implemented']:
         return ''
 
@@ -1499,7 +1606,17 @@ def doc_files(processed_files):
 
 def_pointers = []
 
+def def_overloaded_function(fname, function):
+    s = ''
+    for func in function['overload']:
+        s += def_function(fname, func).replace(func['identifier'], function['identifier'])
+    
+    return s
+
 def def_function(fname, function):
+    if function.get('overload') is not None:
+        return def_overloaded_function(fname, function)
+
     s = ''
     if not function['implemented']:
         return ''

@@ -10569,7 +10569,7 @@ end
 --- @param restart boolean
 --- @param volume number
 --- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
-function audio_stream_play(audio, restart, volume)
+function audio_play(audio, restart, volume)
     -- ...
 end
 
@@ -10578,7 +10578,13 @@ end
 --- @param volume number
 --- @return ModAudio
 --- Plays an `audio` sample at `position` with `volume`
-function audio_sample_play(audio, position, volume)
+function audio_play(audio, position, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Plays an `audio`
+function audio_play(audio)
     -- ...
 end
 

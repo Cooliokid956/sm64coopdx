@@ -594,6 +594,12 @@ struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 v
     return audio;
 }
 
+void audio_play(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "play")) { return; }
+    
+    ma_sound_start(&audio->sound);
+}
+
 void audio_pause(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "pause")) { return; }
 

@@ -1777,7 +1777,7 @@
 
 | Name | Reference |
 | ---- | --------- |
-| play | [`audio_stream_play`](functions-6.md#audio_stream_play) |
+| play | [`audio_play`](functions-6.md#audio_play) |
 | pause | [`audio_pause`](functions-6.md#audio_pause) |
 | stop | [`audio_stop`](functions-6.md#audio_stop) |
 | destroy | [`audio_destroy`](functions-6.md#audio_destroy) |

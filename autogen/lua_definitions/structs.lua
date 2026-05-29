@@ -1209,6 +1209,8 @@
 --- @field public flags integer
 --- @field public filepath string
 --- @field public play fun(audio: ModAudio, restart: boolean, volume: number)
+--- @field public play fun(audio: ModAudio, position: Vec3f, volume: number): ModAudio
+--- @field public play fun(audio: ModAudio)
 --- @field public pause fun(audio: ModAudio)
 --- @field public stop fun(audio: ModAudio)
 --- @field public destroy fun(audio: ModAudio)
