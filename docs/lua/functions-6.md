@@ -5645,47 +5645,25 @@ Allocates a new sequence ID
 
 <br />
 
-## [audio_stream_load](#audio_stream_load)
+## [audio_load](#audio_load)
 
 ### Description
-Loads an `audio` stream by `filename` (with extension)
+Loads an `audio` by `filename` (with extension)
 
 ### Lua Example
-`local modAudioValue = audio_stream_load(filename)`
+`local modAudioValue = audio_load(filename, type)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | filename | `string` |
+| type | [enum ModAudioType](constants.md#enum-ModAudioType) |
 
 ### Returns
 - [ModAudio](structs.md#ModAudio)
 
 ### C Prototype
-`struct ModAudio* audio_stream_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_load](#audio_sample_load)
-
-### Description
-Loads an `audio` sample
-
-### Lua Example
-`local modAudioValue = audio_sample_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-- [ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_sample_load(const char* filename);`
+`struct ModAudio* audio_load(const char* filename, OPTIONAL enum ModAudioType type);`
 
 [:arrow_up_small:](#)
 

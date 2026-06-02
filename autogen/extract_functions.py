@@ -77,7 +77,7 @@ def extract_functions(filename):
         txt = txt.replace('  ', ' ')
 
     # handle overloads
-    txt = re.sub(f'{cobject_overload_identifier}\\((.*)\\) ', f'{cobject_overload_identifier} \\1 ', txt)
+    txt = re.sub(f'{cobject_overload_identifier}\\((.*?)\\) ', f'{cobject_overload_identifier} \\1 ', txt)
 
     # strip macros
     txt = re.sub(r'[^a-zA-Z0-9_][A-Z0-9_]+\(.*\)', '', txt)

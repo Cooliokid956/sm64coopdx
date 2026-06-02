@@ -33,6 +33,8 @@ hypotf = math.hypot
 -- Old audio functions --
 -------------------------
 
+function audio_sample_load(filename) return audio_load(filename, MA_TYPE_SAMPLE) end
+function audio_stream_load(filename) return audio_load(filename, MA_TYPE_STREAM) end
 audio_sample_play = audio_play
 audio_stream_play = audio_play
 audio_sample_destroy = audio_destroy

@@ -521,14 +521,6 @@ error:
     return NULL;
 }
 
-struct ModAudio* audio_stream_load(const char* filename) {
-    return audio_load(filename, MA_TYPE_STREAM);
-}
-
-struct ModAudio* audio_sample_load(const char* filename) {
-    return audio_load(filename, MA_TYPE_SAMPLE);
-}
-
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "play")) { return; }
     

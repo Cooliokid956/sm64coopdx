@@ -95,10 +95,8 @@ struct ModAudio {
     PROPERTY(file, return_self, NULL); // compatibility band-aid
 };
 
-/* |description|Loads an `audio` stream by `filename` (with extension)|descriptionEnd| */
-struct ModAudio* audio_stream_load(const char* filename);
-/* |description|Loads an `audio` sample|descriptionEnd| */
-struct ModAudio* audio_sample_load(const char* filename);
+/* |description|Loads an `audio` by `filename` (with extension)|descriptionEnd| */
+struct ModAudio* audio_load(const char* filename, OPTIONAL enum ModAudioType type);
 
 /* |description|Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.|descriptionEnd| */
 OVERLOAD(audio_play) void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);

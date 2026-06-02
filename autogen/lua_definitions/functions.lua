@@ -4157,6 +4157,51 @@ function djui_hud_measure_text(message)
     -- ...
 end
 
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scale)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleX number
+--- @param prevScaleY number
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScale number
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
+    -- ...
+end
+
 --- @param texInfo TextureInfo
 --- @param x number
 --- @param y number
@@ -10552,16 +10597,10 @@ function smlua_audio_utils_allocate_sequence()
 end
 
 --- @param filename string
+--- @param type? ModAudioType
 --- @return ModAudio
---- Loads an `audio` stream by `filename` (with extension)
-function audio_stream_load(filename)
-    -- ...
-end
-
---- @param filename string
---- @return ModAudio
---- Loads an `audio` sample
-function audio_sample_load(filename)
+--- Loads an `audio` by `filename` (with extension)
+function audio_load(filename, type)
     -- ...
 end
 
