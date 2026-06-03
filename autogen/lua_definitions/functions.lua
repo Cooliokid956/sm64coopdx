@@ -10687,7 +10687,14 @@ function audio_set_pan(audio, pan)
 end
 
 --- @param audio ModAudio
---- @return number
+--- @return number length
+--- Gets the length of an `audio` in seconds
+function audio_get_length(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number position
 --- Gets the position of an `audio` in seconds
 function audio_get_position(audio)
     -- ...

@@ -5941,13 +5941,13 @@ Sets the pan of an `audio`
 
 <br />
 
-## [audio_get_position](#audio_get_position)
+## [audio_get_length](#audio_get_length)
 
 ### Description
-Gets the position of an `audio` in seconds
+Gets the length of an `audio` in seconds
 
 ### Lua Example
-`local numberValue = audio_get_position(audio)`
+`local length = audio_get_length(audio)`
 
 ### Parameters
 | Field | Type |
@@ -5958,7 +5958,30 @@ Gets the position of an `audio` in seconds
 - `number`
 
 ### C Prototype
-`f32 audio_get_position(struct ModAudio* audio);`
+`void audio_get_length(struct ModAudio* audio, RET f32 *length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_position](#audio_get_position)
+
+### Description
+Gets the position of an `audio` in seconds
+
+### Lua Example
+`local position = audio_get_position(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`void audio_get_position(struct ModAudio* audio, RET f32 *position);`
 
 [:arrow_up_small:](#)
 

@@ -1,6 +1,7 @@
 -- name: Audio Test
 -- description: Testing out the custom audio system
 
+---@type ModAudio, ModAudio
 local audioStream, audioSample
 
 function on_stream_play(msg)
@@ -28,8 +29,14 @@ function on_stream_play(msg)
     elseif msg == "destroy" then
         audioStream:destroy()
         djui_chat_message_create("destroyed audio")
-    elseif msg == "getpos" then
-        djui_chat_message_create("pos: " .. tostring(audioStream.position))
+    elseif msg:sub(1, 4) == "seek" then
+        audioStream.position = tonumber(msg:sub(5)) or 0
+    elseif msg:sub(1, 5) == "speed" then
+        audioStream.frequency = tonumber(msg:sub(6)) or 1
+    elseif msg == "pos" then
+        djui_chat_message_create("pos: " .. audioStream.position)
+    elseif msg == "length" then
+        djui_chat_message_create("length: " .. audioStream.length)
     end
 
     return true
@@ -49,5 +56,5 @@ function on_sample_play(msg)
     return true
 end
 
-hook_chat_command('stream', "[load|play|resume|pause|stop|destroy|getpos]", on_stream_play)
+hook_chat_command('stream', "[load|play|resume|pause|stop|destroy|seek|speed|pos|length]", on_stream_play)
 hook_chat_command('sample', "[load|play]", on_sample_play)

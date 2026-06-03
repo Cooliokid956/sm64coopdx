@@ -85,6 +85,7 @@ struct ModAudio {
 
     PROPERTY(volume,     audio_get_volume,         audio_set_volume);
     PROPERTY(pan,        audio_get_pan,            audio_set_pan);
+    PROPERTY(length,     audio_get_length,         NULL);
     PROPERTY(position,   audio_get_position,       audio_set_position);
     PROPERTY(frequency,  audio_get_frequency,      audio_set_frequency);
     PROPERTY(looping,    audio_get_looping,        audio_set_looping);
@@ -124,8 +125,10 @@ void audio_set_volume(struct ModAudio* audio, f32 volume);
 f32 audio_get_pan(struct ModAudio* audio);
 /* |description|Sets the pan of an `audio`|descriptionEnd| */
 void audio_set_pan(struct ModAudio* audio, f32 pan);
+/* |description|Gets the length of an `audio` in seconds|descriptionEnd| */
+void audio_get_length(struct ModAudio* audio, RET f32 *length);
 /* |description|Gets the position of an `audio` in seconds|descriptionEnd| */
-f32 audio_get_position(struct ModAudio* audio);
+void audio_get_position(struct ModAudio* audio, RET f32 *position);
 /* |description|Sets the position of an `audio` in seconds|descriptionEnd| */
 void audio_set_position(struct ModAudio* audio, f32 pos);
 /* |description|Gets if an `audio` is looping or not|descriptionEnd| */

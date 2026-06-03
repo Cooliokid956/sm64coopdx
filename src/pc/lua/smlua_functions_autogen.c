@@ -29423,6 +29423,27 @@ int smlua_func_audio_set_pan(lua_State* L) {
     return 1;
 }
 
+int smlua_func_audio_get_length(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "audio_get_length", 1, top);
+        return 0;
+    }
+
+    struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_get_length"); return 0; }
+
+    f32 length;
+
+    audio_get_length(audio, &length);
+
+    lua_pushnumber(L, length);
+
+    return 1;
+}
+
 int smlua_func_audio_get_position(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29435,7 +29456,11 @@ int smlua_func_audio_get_position(lua_State* L) {
     struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_get_position"); return 0; }
 
-    lua_pushnumber(L, audio_get_position(audio));
+    f32 position;
+
+    audio_get_position(audio, &position);
+
+    lua_pushnumber(L, position);
 
     return 1;
 }
@@ -37532,6 +37557,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_set_volume", smlua_func_audio_set_volume);
     smlua_bind_function(L, "audio_get_pan", smlua_func_audio_get_pan);
     smlua_bind_function(L, "audio_set_pan", smlua_func_audio_set_pan);
+    smlua_bind_function(L, "audio_get_length", smlua_func_audio_get_length);
     smlua_bind_function(L, "audio_get_position", smlua_func_audio_get_position);
     smlua_bind_function(L, "audio_set_position", smlua_func_audio_set_position);
     smlua_bind_function(L, "audio_get_looping", smlua_func_audio_get_looping);

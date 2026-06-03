@@ -1766,6 +1766,7 @@
 | filepath | `string` | read-only |
 | volume | number |  |
 | pan | number |  |
+| length | number | read-only |
 | position | number |  |
 | frequency | number |  |
 | looping | boolean |  |

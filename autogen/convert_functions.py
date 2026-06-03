@@ -839,7 +839,6 @@ def build_param_after(param, i):
         return ''
 
 def build_param_check(param, i):
-    print(param, i)
     ptype = alter_type(param['type'])
 
     if "struct TextureInfo" in ptype and "*" in ptype:
@@ -969,7 +968,6 @@ def build_overloaded_function(function, do_extern):
         for line in block['lines'].splitlines():
             s += '    ' + line + '\n'
         s = s[:-1] + '\n    }'
-        # print(block, i)
         oblocks.remove(block)
 
     i = 0

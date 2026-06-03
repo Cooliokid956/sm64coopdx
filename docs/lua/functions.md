@@ -1848,6 +1848,7 @@
    - [audio_set_volume](functions-6.md#audio_set_volume)
    - [audio_get_pan](functions-6.md#audio_get_pan)
    - [audio_set_pan](functions-6.md#audio_set_pan)
+   - [audio_get_length](functions-6.md#audio_get_length)
    - [audio_get_position](functions-6.md#audio_get_position)
    - [audio_set_position](functions-6.md#audio_set_position)
    - [audio_get_looping](functions-6.md#audio_get_looping)

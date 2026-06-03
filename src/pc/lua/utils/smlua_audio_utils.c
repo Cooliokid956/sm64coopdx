@@ -588,13 +588,11 @@ struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 v
 
 void audio_play(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "play")) { return; }
-    
     ma_sound_start(&audio->sound);
 }
 
 void audio_pause(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "pause")) { return; }
-
     ma_sound_stop(&audio->sound);
 }
 
@@ -642,73 +640,62 @@ void audio_reload(struct ModAudio* audio) {
 
 f32 audio_get_volume(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "get volume from")) { return 0; }
-
     return ma_sound_get_volume(&audio->sound);
 }
 
 void audio_set_volume(struct ModAudio* audio, f32 volume) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "set volume for")) { return; }
-
     ma_sound_set_volume(&audio->sound, volume);
 }
 
 f32 audio_get_pan(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "get pan from")) { return 0; }
-
     return ma_sound_get_pan(&audio->sound);
 }
 
 void audio_set_pan(struct ModAudio* audio, f32 pan) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "set pan for")) { return; }
-
     ma_sound_set_pan(&audio->sound, pan);
 }
 
-f32 audio_get_position(struct ModAudio* audio) {
-    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get position from")) { return 0; }
+void audio_get_length(struct ModAudio* audio, RET f32 *length) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get length of")) { return; }
+    ma_sound_get_length_in_seconds(&audio->sound, length);
+}
 
-    u64 cursor;
-    ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
-
-    return (f32)cursor / audio->sound.engineNode.sampleRate;
+void audio_get_position(struct ModAudio* audio, RET f32 *position) {
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "get position from")) { return; }
+    ma_sound_get_cursor_in_seconds(&audio->sound, position);
 }
 
 void audio_set_position(struct ModAudio* audio, f32 pos) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "set position for")) { return; }
-
-    ma_uint64 frame = (ma_uint64)(pos * audio->sound.engineNode.sampleRate);
-
-    ma_sound_seek_to_pcm_frame(&audio->sound, frame);
+    ma_sound_seek_to_second(&audio->sound, pos);
 }
 
 bool audio_get_looping(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "get looping from")) { return false; }
-
     return ma_sound_is_looping(&audio->sound);
 }
 
 void audio_set_looping(struct ModAudio* audio, bool looping) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "set looping for")) { return; }
-
     ma_sound_set_looping(&audio->sound, looping);
 }
 
 bool audio_get_playing(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "get playing from")) { return false; }
-
     return ma_sound_is_playing(&audio->sound);
 }
 
 void audio_set_playing(struct ModAudio* audio, bool playing) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "set playing for")) { return; }
-
     if (playing) { ma_sound_start(&audio->sound); }
     else { ma_sound_stop(&audio->sound); }
 }
 
 void audio_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "get loop points from")) { return; }
-
     ma_data_source_get_loop_point_in_pcm_frames(&audio->decoder, loopStart, loopEnd);
 }
 
@@ -725,13 +712,11 @@ void audio_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 l
 
 f32 audio_get_frequency(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "get frequency from")) { return 0; }
-
     return ma_sound_get_pitch(&audio->sound);
 }
 
 void audio_set_frequency(struct ModAudio* audio, f32 freq) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "set frequency for")) { return; }
-
     ma_sound_set_pitch(&audio->sound, freq);
 }
 
@@ -779,7 +764,6 @@ void audio_set_volume_channel(struct ModAudio* audio, u8 channel) {
 
 u32 audio_get_sample_rate(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, MA_TYPE_NONE, "get sample rate of")) { return 0; }
-
     return audio->sound.engineNode.sampleRate;
 }
 
@@ -789,20 +773,20 @@ void audio_custom_update_volume(void) {
     bool shouldMute = (configMuteFocusLoss && !gWindowApi->has_focus());
 
     // Update master volume
-    gMasterVolume = shouldMute ? 0 : ((f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f);
+    gMasterVolume = shouldMute ? 0 : (configMasterVolume / 127.0f * gLuaVolumeMaster / 127.0f);
     if (!sModAudioPool) { return; }
     ma_engine_set_volume(&sModAudioEngine, gMasterVolume);
 
     // Update music volume
-    f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
+    f32 musicVolume = configMusicVolume / 127.0f * gLuaVolumeLevel / 127.0f;
     ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_MUSIC], musicVolume);
 
     // Update sound volume
-    f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
+    f32 sfxVolume = configSfxVolume / 127.0f * gLuaVolumeSfx / 127.0f;
     ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_SFX], sfxVolume);
 
     // Update env volume
-    f32 envVolume = (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f;
+    f32 envVolume = configEnvVolume / 127.0f * gLuaVolumeEnv / 127.0f;
     ma_sound_group_set_volume(&sModAudioChannels[MA_CHANNEL_ENV], envVolume);
 }
 

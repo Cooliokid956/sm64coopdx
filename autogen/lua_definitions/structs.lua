@@ -1218,6 +1218,7 @@
 --- @field public copy fun(audio: ModAudio): ModAudio
 --- @field public volume number
 --- @field public pan number
+--- @field public length number
 --- @field public position number
 --- @field public frequency number
 --- @field public looping boolean
