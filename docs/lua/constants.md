@@ -3522,7 +3522,7 @@
 | Identifier | Value |
 | :--------- | :---- |
 | MA_FLAGS_LOADED | (1 << 2) |
-| MA_FLAGS_COPY | (1 << 3) |
+| MA_FLAGS_COPY | (1 << 6) |
 
 ### [enum ModAudioChannel](#ModAudioChannel)
 | Identifier | Value |

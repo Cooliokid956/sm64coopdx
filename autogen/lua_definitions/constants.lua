@@ -8204,7 +8204,7 @@ MA_TYPE_STREAM = 2 --- @type ModAudioType
 --- | `MA_TYPE_STREAM`
 
 MA_FLAGS_LOADED = (1 << 2) --- @type ModAudioFlags
-MA_FLAGS_COPY   = (1 << 3) --- @type ModAudioFlags
+MA_FLAGS_COPY   = (1 << 6) --- @type ModAudioFlags
 
 --- @alias ModAudioFlags
 --- | `MA_FLAGS_LOADED`
