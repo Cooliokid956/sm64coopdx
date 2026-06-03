@@ -12103,6 +12103,10 @@ int smlua_func_djui_hud_print_text(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
+    if (top != 5 && top != 4) {
+        LOG_LUA_LINE("Improper param count for 'djui_hud_print_text': Expected 5 or 4, Received %u", top);
+        return 0;
+    }
 
     if (top == 4) {
         const char* message = smlua_to_string(L, 1);
@@ -12139,6 +12143,10 @@ int smlua_func_djui_hud_print_text_interpolated(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
+    if (top != 9 && top != 7) {
+        LOG_LUA_LINE("Improper param count for 'djui_hud_print_text_interpolated': Expected 9 or 7, Received %u", top);
+        return 0;
+    }
 
     if (top == 7) {
         const char* message = smlua_to_string(L, 1);
@@ -29221,6 +29229,10 @@ int smlua_func_audio_play(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
+    if (top != 3 && top != 1) {
+        LOG_LUA_LINE("Improper param count for 'audio_play': Expected 3 or 1, Received %u", top);
+        return 0;
+    }
 
     if (top == 1) {
         struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);

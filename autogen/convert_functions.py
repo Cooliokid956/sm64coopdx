@@ -927,6 +927,7 @@ def build_overloaded_function(function, do_extern):
     fid = function['identifier']
     overload = function['overload']
     oblocks = []
+    bounds = {}
     for func in overload:
         func['filename'] = function['filename']
         built = build_function(func, do_extern)
@@ -940,11 +941,19 @@ def build_overloaded_function(function, do_extern):
 
         fparams, freturns = split_function_parameters_and_returns(func)
         params_max, params_min = get_params_bounds(fparams)
+
+        bounds["top != %i" % params_max if params_min == params_max else "(top < %d || top > %d)" % (params_min, params_max)] \
+             = "%i"        % params_max if params_min == params_max else "between %d and %d"      % (params_min, params_max)
+
         oblocks.append({'params': fparams, 'lines': built, 'count': params_min, 'max': params_max})
 
-    s += 'int smlua_func_%s(lua_State* L) {\n' % fid
-    s += """    if (L == NULL) { return 0; }\n
-    int top = lua_gettop(L);\n\n"""
+    s += """int smlua_func_%s(lua_State* L) {
+    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);
+    if (%s) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %s, Received %%u", top);
+        return 0;
+    }\n\n""" % (fid, ' && '.join(bounds.keys()), fid, ' or '.join(bounds.values()))
 
     def add_block(block, i, unique=False):
         if block not in oblocks: return
