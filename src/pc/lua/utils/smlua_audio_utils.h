@@ -21,12 +21,12 @@ u8 smlua_audio_utils_allocate_sequence(void);
 ////////////////
 
 // flags
-// XACCPLTT
+// XPCCALTT
 // TT - Type
 // L - Loaded
-// P - Copy
-// CC - Channel
 // A - Alive
+// CC - Channel
+// P - Copy
 
 enum ModAudioType {
     MA_TYPE_NONE,
@@ -36,7 +36,7 @@ enum ModAudioType {
 
 enum ModAudioFlags {
     MA_FLAGS_LOADED = (1 << 2),
-    MA_FLAGS_COPY   = (1 << 3)
+    MA_FLAGS_COPY   = (1 << 6)
 };
 
 enum ModAudioChannel {
@@ -53,9 +53,9 @@ struct ModAudio {
         struct {
             u8 type    : 2;
             u8 loaded  : 1;
-            u8 copy    : 1;
-            u8 channel : 2;
             u8 alive   : 1;
+            u8 channel : 2;
+            u8 copy    : 1;
         };
         u8 flags;
     };

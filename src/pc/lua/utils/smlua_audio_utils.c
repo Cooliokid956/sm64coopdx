@@ -503,11 +503,8 @@ struct ModAudio* audio_load(const char* filename, enum ModAudioType type) {
     audio->buffer = buffer;
     audio->bufferSize = size;
     audio->type = type;
-    audio->loaded = true;
-    audio->alive = true;
+    audio->loaded = audio->alive = true;
     audio_set_volume_channel(audio, type == MA_TYPE_STREAM ? MA_CHANNEL_MUSIC : MA_CHANNEL_SFX);
-    printf("%X \n", audio->flags);
-    printf("type %s, channel %i, loaded %i \n", sModAudioTypes[audio->type], audio->channel, audio->loaded);
     return audio;
 
 error:
