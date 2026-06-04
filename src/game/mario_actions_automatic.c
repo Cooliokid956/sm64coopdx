@@ -1064,7 +1064,7 @@ s32 act_bubbled(struct MarioState* m) {
     s32 pitchToPlayer = obj_pitch_to_object(m->marioObj, target);
     s32 distanceToPlayer = dist_between_objects(m->marioObj, target);
 
-    // trigger warp if all are bubbled
+    // trigger warp if all are bubbled long enough
     if (m->playerIndex == 0) {
         u8 allInBubble = TRUE;
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -1076,9 +1076,10 @@ s32 act_bubbled(struct MarioState* m) {
             }
         }
         if (allInBubble) {
-            level_trigger_warp(m, WARP_OP_DEATH);
-            return FALSE;
-        }
+            if (m->actionState++ == 60) {
+                level_trigger_warp(m, WARP_OP_DEATH);
+            }
+        } else { m->actionState = 0; }
     }
 
     // create bubble

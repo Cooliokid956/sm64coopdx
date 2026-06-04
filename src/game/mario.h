@@ -6,7 +6,6 @@
 #include "macros.h"
 #include "types.h"
 
-extern u16 gLocalBubbleCounter;
 struct WallCollisionData;
 
 /* |description|

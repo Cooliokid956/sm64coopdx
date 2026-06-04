@@ -2207,7 +2207,6 @@ void init_single_mario(struct MarioState* m) {
 
     u16 playerIndex = m->playerIndex;
     struct SpawnInfo* spawnInfo = &gPlayerSpawnInfos[playerIndex];
-    unused80339F10 = 0;
 
     m->freeze = 0;
 
