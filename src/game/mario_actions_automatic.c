@@ -1070,14 +1070,14 @@ s32 act_bubbled(struct MarioState* m) {
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (!gMarioStates[i].visibleToObjects) { continue; }
-            if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
+            if (gMarioStates[i].action != ACT_BUBBLED) {
                 allInBubble = FALSE;
                 break;
             }
         }
         if (allInBubble) {
             level_trigger_warp(m, WARP_OP_DEATH);
-            return set_mario_action(m, ACT_SOFT_BONK, 0);
+            return FALSE;
         }
     }
 
@@ -1149,16 +1149,14 @@ s32 act_bubbled(struct MarioState* m) {
         if (m->numLives <= -1) {
             m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
             level_trigger_warp(m, WARP_OP_DEATH);
-            return set_mario_action(m, ACT_SOFT_BONK, 0);
+            return FALSE;
         } else {
             m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
         }
     }
 
-    if (gLocalBubbleCounter > 0) { gLocalBubbleCounter--; }
-
     // pop bubble
-    if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1 && gLocalBubbleCounter == 0) {
+    if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1 && ++m->actionTimer > 20) {
         mario_pop_bubble(m);
         return TRUE;
     }
