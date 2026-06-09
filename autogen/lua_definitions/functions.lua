@@ -5264,8 +5264,8 @@ function level_trigger_warp(m, warpOp)
     -- ...
 end
 
---- @param arg integer
---- Special warps to arg (`SPECIAL_WARP_*`)
+--- @param arg SpecialWarpDestinations
+--- Special warps to arg (`WARP_SPECIAL_*`)
 function warp_special(arg)
     -- ...
 end

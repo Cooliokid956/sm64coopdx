@@ -3592,20 +3592,22 @@ WARP_OP_EXIT = 0x21
 --- @type integer
 WARP_OP_TRIGGERS_LEVEL_SELECT = 0x10
 
---- @type integer
-SPECIAL_WARP_CAKE = -1
+WARP_SPECIAL_LEVEL_SELECT        = -9 --- @type SpecialWarpDestinations
+WARP_SPECIAL_INTRO_SPLASH_SCREEN = -8 --- @type SpecialWarpDestinations
+WARP_SPECIAL_SWITCH_FILE         = -7 --- @type SpecialWarpDestinations
+WARP_SPECIAL_MARIO_HEAD_DIZZY    = -3 --- @type SpecialWarpDestinations
+WARP_SPECIAL_MARIO_HEAD_REGULAR  = -2 --- @type SpecialWarpDestinations
+WARP_SPECIAL_ENDING              = -1 --- @type SpecialWarpDestinations
+WARP_SPECIAL_NONE                =  0 --- @type SpecialWarpDestinations
 
---- @type integer
-SPECIAL_WARP_GODDARD = -2
-
---- @type integer
-SPECIAL_WARP_GODDARD_GAMEOVER = -3
-
---- @type integer
-SPECIAL_WARP_TITLE = -8
-
---- @type integer
-SPECIAL_WARP_LEVEL_SELECT = -9
+--- @alias SpecialWarpDestinations
+--- | `WARP_SPECIAL_LEVEL_SELECT`
+--- | `WARP_SPECIAL_INTRO_SPLASH_SCREEN`
+--- | `WARP_SPECIAL_SWITCH_FILE`
+--- | `WARP_SPECIAL_MARIO_HEAD_DIZZY`
+--- | `WARP_SPECIAL_MARIO_HEAD_REGULAR`
+--- | `WARP_SPECIAL_ENDING`
+--- | `WARP_SPECIAL_NONE`
 
 MARIO_SPAWN_NONE                  =    0 --- @type MarioSpawnType
 MARIO_SPAWN_DOOR_WARP             =    1 --- @type MarioSpawnType

@@ -32,11 +32,15 @@
 
 #define WARP_OP_TRIGGERS_LEVEL_SELECT 0x10
 
-#define SPECIAL_WARP_CAKE -1
-#define SPECIAL_WARP_GODDARD -2
-#define SPECIAL_WARP_GODDARD_GAMEOVER -3
-#define SPECIAL_WARP_TITLE -8
-#define SPECIAL_WARP_LEVEL_SELECT -9
+enum SpecialWarpDestinations {
+    WARP_SPECIAL_LEVEL_SELECT        = -9,
+    WARP_SPECIAL_INTRO_SPLASH_SCREEN = -8,
+    WARP_SPECIAL_SWITCH_FILE         = -7,
+    WARP_SPECIAL_MARIO_HEAD_DIZZY    = -3,
+    WARP_SPECIAL_MARIO_HEAD_REGULAR  = -2,
+    WARP_SPECIAL_ENDING              = -1,
+    WARP_SPECIAL_NONE                =  0,
+};
 
 enum MarioSpawnType {
     MARIO_SPAWN_NONE,
@@ -93,10 +97,10 @@ struct CreditsEntry
 {
     /*0x00*/ u8 levelNum;
     /*0x01*/ u8 areaIndex;
-    /*0x02*/ u8 unk02;
+    /*0x02*/ u8 actNum;
     /*0x03*/ s8 marioAngle;
     /*0x04*/ Vec3s marioPos;
-    /*0x0C*/ const char **unk0C;
+    /*0x0C*/ const char **string;
 };
 
 extern struct CreditsEntry *gCurrCreditsEntry;
@@ -105,10 +109,8 @@ extern struct MarioState gMarioStates[];
 extern struct MarioState *gMarioState;
 
 extern s16 sCurrPlayMode;
-extern u16 D_80339ECA;
 extern s16 sTransitionTimer;
 extern void (*sTransitionUpdate)(s16 *);
-extern u8 unused3[4];
 
 extern s16 gChangeLevel;
 extern s16 gChangeActNum;
@@ -122,25 +124,15 @@ struct WarpDest {
     u32 arg;
 };
 
-struct SavedWarpValues {
-    u8 received;
-    struct WarpDest warpDest;
-    s8 inWarpCheckpoint;
-    s16 ttcSpeedSetting;
-    s16 D_80339EE0;
-    f32 paintingMarioYEntry;
-};
-
 extern struct WarpDest sWarpDest;
 extern s8 sWarpCheckpointActive;
-extern u16 gFanFareDebounce;
+extern u16 gFanfareDebounce;
 
-extern s16 D_80339EE0;
+extern s16 sSpecialWarpDest;
 extern s16 sDelayedWarpOp;
 extern s16 sDelayedWarpTimer;
 extern s16 sSourceWarpNodeId;
 extern s32 sDelayedWarpArg;
-extern u8 unused4[2];
 extern s8 sTimerRunning;
 
 struct HudDisplay {
@@ -194,8 +186,8 @@ void initiate_painting_warp(s16 paintingIndex);
 s16 level_trigger_warp(struct MarioState *m, s32 warpOp);
 void level_set_transition(s16 length, void (*updateFunction)(s16 *));
 void set_play_mode(s16 playMode);
-/* |description|Special warps to arg (`SPECIAL_WARP_*`)|descriptionEnd| */
-void warp_special(s32 arg);
+/* |description|Special warps to arg (`WARP_SPECIAL_*`)|descriptionEnd| */
+void warp_special(enum SpecialWarpDestinations arg);
 /* |description|Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead|descriptionEnd| */
 void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg);
 

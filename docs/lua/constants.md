@@ -41,6 +41,7 @@
 - [level_defines.h](#level_definesh)
     - [enum LevelNum](#enum-LevelNum)
 - [level_update.h](#level_updateh)
+    - [enum SpecialWarpDestinations](#enum-SpecialWarpDestinations)
     - [enum MarioSpawnType](#enum-MarioSpawnType)
     - [enum HUDDisplayFlag](#enum-HUDDisplayFlag)
 - [lighting_engine.h](#lighting_engineh)
@@ -1605,11 +1606,17 @@
 - WARP_OP_FORCE_SYNC
 - WARP_OP_EXIT
 - WARP_OP_TRIGGERS_LEVEL_SELECT
-- SPECIAL_WARP_CAKE
-- SPECIAL_WARP_GODDARD
-- SPECIAL_WARP_GODDARD_GAMEOVER
-- SPECIAL_WARP_TITLE
-- SPECIAL_WARP_LEVEL_SELECT
+
+### [enum SpecialWarpDestinations](#SpecialWarpDestinations)
+| Identifier | Value |
+| :--------- | :---- |
+| WARP_SPECIAL_LEVEL_SELECT | -9 |
+| WARP_SPECIAL_INTRO_SPLASH_SCREEN | -8 |
+| WARP_SPECIAL_SWITCH_FILE | -7 |
+| WARP_SPECIAL_MARIO_HEAD_DIZZY | -3 |
+| WARP_SPECIAL_MARIO_HEAD_REGULAR | -2 |
+| WARP_SPECIAL_ENDING | -1 |
+| WARP_SPECIAL_NONE | 0 |
 
 ### [enum MarioSpawnType](#MarioSpawnType)
 | Identifier | Value |

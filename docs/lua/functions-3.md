@@ -7101,7 +7101,7 @@ Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 ## [warp_special](#warp_special)
 
 ### Description
-Special warps to arg (`SPECIAL_WARP_*`)
+Special warps to arg (`WARP_SPECIAL_*`)
 
 ### Lua Example
 `warp_special(arg)`
@@ -7109,13 +7109,13 @@ Special warps to arg (`SPECIAL_WARP_*`)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg | `integer` |
+| arg | [enum SpecialWarpDestinations](constants.md#enum-SpecialWarpDestinations) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void warp_special(s32 arg);`
+`void warp_special(enum SpecialWarpDestinations arg);`
 
 [:arrow_up_small:](#)
 

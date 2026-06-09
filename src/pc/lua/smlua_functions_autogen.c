@@ -15495,7 +15495,7 @@ int smlua_func_warp_special(lua_State* L) {
         return 0;
     }
 
-    s32 arg = smlua_to_integer(L, 1);
+    int arg = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "warp_special"); return 0; }
 
     warp_special(arg);
