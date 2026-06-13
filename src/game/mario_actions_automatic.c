@@ -1148,7 +1148,7 @@ s32 act_bubbled(struct MarioState* m) {
     bubbled_offset_visual(m);
 
     // pop bubble
-    if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1 && ++m->actionTimer > 20) {
+    if (m->playerIndex == 0 && ++m->actionTimer > 20 && distanceToPlayer < 120 && is_player_active(targetMarioState)) {
         mario_pop_bubble(m);
         return TRUE;
     }
