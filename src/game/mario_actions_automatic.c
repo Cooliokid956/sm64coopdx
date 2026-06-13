@@ -1147,17 +1147,6 @@ s32 act_bubbled(struct MarioState* m) {
     // offset the player model to be in the center of the bubble
     bubbled_offset_visual(m);
 
-    // make invisible on -1 lives
-    if (m->playerIndex == 0) {
-        if (m->numLives <= -1) {
-            m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
-            level_trigger_warp(m, WARP_OP_DEATH);
-            return FALSE;
-        } else {
-            m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-        }
-    }
-
     // pop bubble
     if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1 && ++m->actionTimer > 20) {
         mario_pop_bubble(m);
