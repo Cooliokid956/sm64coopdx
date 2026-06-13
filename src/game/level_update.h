@@ -7,30 +7,33 @@
 
 #include "pc/djui/djui.h"
 
-#define TIMER_CONTROL_SHOW  0
-#define TIMER_CONTROL_START 1
-#define TIMER_CONTROL_STOP  2
-#define TIMER_CONTROL_HIDE  3
+enum TimerControl {
+    TIMER_CONTROL_SHOW,
+    TIMER_CONTROL_START,
+    TIMER_CONTROL_STOP,
+    TIMER_CONTROL_HIDE
+};
 
-#define WARP_OP_NONE                      0x00
-#define WARP_OP_LOOK_UP                   0x01
-#define WARP_OP_SPIN_SHRINK               0x02
-#define WARP_OP_WARP_DOOR                 0x03
-#define WARP_OP_WARP_OBJECT               0x04
-#define WARP_OP_TELEPORT                  0x05
-#define WARP_OP_STAR_EXIT                 0x11
-#define WARP_OP_DEATH                     0x12
-#define WARP_OP_WARP_FLOOR                0x13
-#define WARP_OP_GAME_OVER                 0x14
-#define WARP_OP_CREDITS_END               0x15
-#define WARP_OP_DEMO_NEXT                 0x16
-#define WARP_OP_CREDITS_START             0x17
-#define WARP_OP_CREDITS_NEXT              0x18
-#define WARP_OP_DEMO_END                  0x19
-#define WARP_OP_FORCE_SYNC                0x20
-#define WARP_OP_EXIT                      0x21
-
-#define WARP_OP_TRIGGERS_LEVEL_SELECT 0x10
+enum WarpOperation {
+    WARP_OP_NONE,
+    WARP_OP_LOOK_UP,
+    WARP_OP_SPIN_SHRINK,
+    WARP_OP_WARP_DOOR,
+    WARP_OP_WARP_OBJECT,
+    WARP_OP_TELEPORT,
+    WARP_OP_TRIGGERS_LEVEL_SELECT = 0x10,
+    WARP_OP_STAR_EXIT,
+    WARP_OP_DEATH,
+    WARP_OP_WARP_FLOOR,
+    WARP_OP_GAME_OVER,
+    WARP_OP_CREDITS_END,
+    WARP_OP_DEMO_NEXT,
+    WARP_OP_CREDITS_START,
+    WARP_OP_CREDITS_NEXT,
+    WARP_OP_DEMO_END,
+    WARP_OP_FORCE_SYNC,
+    WARP_OP_EXIT
+};
 
 enum SpecialWarpDestinations {
     WARP_SPECIAL_LEVEL_SELECT        = -9,
@@ -40,6 +43,14 @@ enum SpecialWarpDestinations {
     WARP_SPECIAL_MARIO_HEAD_REGULAR  = -2,
     WARP_SPECIAL_ENDING              = -1,
     WARP_SPECIAL_NONE                =  0,
+};
+
+enum WarpFlags {
+    WARP_FLAGS_NONE           = (0 << 0),
+    WARP_FLAG_DOOR_PULLED     = (1 << 0),
+    WARP_FLAG_DOOR_FLIP_MARIO = (1 << 1),
+    WARP_FLAG_DOOR_IS_WARP    = (1 << 2),
+    WARP_FLAG_EXIT_COURSE     = (1 << 3),
 };
 
 enum MarioSpawnType {
@@ -66,25 +77,24 @@ enum MarioSpawnType {
     MARIO_SPAWN_FADE_FROM_BLACK
 };
 
-#define MARIO_SPAWN_UNKNOWN_02            0x02
-#define MARIO_SPAWN_UNKNOWN_03            0x03
-#define MARIO_SPAWN_UNKNOWN_27            0x27
+enum WarpNodes {
+    WARP_NODE_MAIN_ENTRY    = 0x0A,
+    WARP_NODE_DEFAULT       = 0xF0,
+    WARP_NODE_DEATH         = 0xF1,
+    WARP_NODE_LOOK_UP       = 0xF2,
+    WARP_NODE_WARP_FLOOR    = 0xF3,
+    WARP_NODE_CREDITS_MIN   = 0xF8,
+    WARP_NODE_CREDITS_START = 0xF8,
+    WARP_NODE_CREDITS_NEXT  = 0xF9,
+    WARP_NODE_CREDITS_END   = 0xFA
+};
 
-#define WARP_NODE_F0 0xF0
-#define WARP_NODE_DEATH 0xF1
-#define WARP_NODE_F2 0xF2
-#define WARP_NODE_WARP_FLOOR 0xF3
-#define WARP_NODE_CREDITS_START 0xF8
-#define WARP_NODE_CREDITS_NEXT 0xF9
-#define WARP_NODE_CREDITS_END 0xFA
-#define WARP_NODE_CREDITS_MIN 0xF8
-
-#define WARP_TYPE_NOT_WARPING 0
-#define WARP_TYPE_CHANGE_LEVEL 1
-#define WARP_TYPE_CHANGE_AREA 2
-#define WARP_TYPE_SAME_AREA 3
-
-#define WARP_ARG_EXIT_COURSE -1
+enum WarpTypes {
+    WARP_TYPE_NOT_WARPING,
+    WARP_TYPE_CHANGE_LEVEL,
+    WARP_TYPE_CHANGE_AREA,
+    WARP_TYPE_SAME_AREA
+};
 
 #define PRESS_START_DEMO_TIMER 800
 
@@ -183,13 +193,13 @@ struct WarpNode *get_painting_warp_node(void);
 /* |description|Initiates a painting warp of `paintingIndex`|descriptionEnd| */
 void initiate_painting_warp(s16 paintingIndex);
 /* |description|Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`|descriptionEnd| */
-s16 level_trigger_warp(struct MarioState *m, s32 warpOp);
+s16 level_trigger_warp(struct MarioState *m, enum WarpOperation warpOp);
 void level_set_transition(s16 length, void (*updateFunction)(s16 *));
 void set_play_mode(s16 playMode);
 /* |description|Special warps to arg (`WARP_SPECIAL_*`)|descriptionEnd| */
 void warp_special(enum SpecialWarpDestinations arg);
-/* |description|Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead|descriptionEnd| */
-void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg);
+/* |description|Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead|descriptionEnd| */
+void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 warpFlags);
 
 s32 lvl_init_or_update(s16 initOrUpdate, UNUSED s32 unused);
 s32 lvl_init_from_save_file(UNUSED s16 arg0, s16 levelNum);

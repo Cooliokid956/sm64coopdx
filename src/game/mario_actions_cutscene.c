@@ -38,7 +38,7 @@
 #include "pc/lua/smlua_hooks.h"
 
 // TODO: put this elsewhere
-enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, /*SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME,*/ SAVE_OPT_CONTINUE_DONT_SAVE };
+enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, /*SAVE_OPT_SAVE_AND_QUIT,*/ SAVE_OPT_CONTINUE_DONT_SAVE };
 
 static struct Object* sIntroWarpPipeObj[MAX_PLAYERS] = { 0 };
 static struct Object *sEndPeachObj;
@@ -288,20 +288,16 @@ void handle_save_menu(struct MarioState *m) {
     // wait for the menu to show up
     if (is_anim_past_end(m) && gSaveOptSelectIndex != 0) {
         // save and continue / save and quit
-        if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE /*|| gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME || gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT*/) {
+        if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE /*|| gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT*/) {
             save_file_do_save(gCurrSaveFileNum - 1, FALSE);
 
             /*if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
-                fade_into_special_warp(-2, 0); // reset game
-            } else if (gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME) {
-                //initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
-                fade_into_special_warp(0, 0);
-                game_exit();
+                fade_into_special_warp(WARP_SPECIAL_MARIO_HEAD_REGULAR, 0); // reset game
             }*/
         }
 
         // not quitting
-        //if (gSaveOptSelectIndex != SAVE_OPT_SAVE_EXIT_GAME) {
+        //if (gSaveOptSelectIndex != SAVE_OPT_SAVE_AND_QUIT) {
             disable_time_stop();
             m->faceAngle[1] += 0x8000;
             // figure out what dialog to show, if we should
@@ -976,7 +972,7 @@ s32 act_unlocking_key_door(struct MarioState *m) {
         m->pos[2] = m->usedObj->oPosZ + sins(m->faceAngle[1]) * 75.0f;
     }
 
-    if (m->actionArg & 2) {
+    if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
         m->faceAngle[1] += 0x8000;
     }
 
@@ -1020,7 +1016,7 @@ s32 act_unlocking_star_door(struct MarioState *m) {
             if (m->usedObj != NULL) {
                 m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
             }
-            if (m->actionArg & 2) {
+            if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
                 m->faceAngle[1] += 0x8000;
             }
             m->marioObj->oMarioReadingSignDPosX = m->pos[0];
@@ -1077,7 +1073,7 @@ s32 act_entering_star_door(struct MarioState *m) {
 
         // ~30 degrees / 1/12 rot
         if (m->usedObj != NULL) { targetAngle = m->usedObj->oMoveAngleYaw + 0x1555; }
-        if (m->actionArg & 2) {
+        if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
             targetAngle += 0x5556; // ~120 degrees / 1/3 rot (total 150d / 5/12)
         }
 
@@ -1108,7 +1104,7 @@ s32 act_entering_star_door(struct MarioState *m) {
             m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
         }
 
-        if (m->actionArg & 2) {
+        if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
             m->faceAngle[1] += 0x8000;
         }
 
@@ -1130,7 +1126,7 @@ s32 act_entering_star_door(struct MarioState *m) {
 s32 act_going_through_door(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->actionTimer == 0) {
-        if (m->actionArg & 1) {
+        if (m->actionArg & WARP_FLAG_DOOR_PULLED) {
             if (m->interactObj != NULL) {
                 m->interactObj->oInteractStatus = 0x00010000;
             }
@@ -1151,12 +1147,12 @@ s32 act_going_through_door(struct MarioState *m) {
     update_mario_pos_for_anim(m);
     stop_and_set_height_to_floor(m);
 
-    if (m->actionArg & 4) {
+    if (m->actionArg & WARP_FLAG_DOOR_IS_WARP) {
         if (m->actionTimer == 16) {
             level_trigger_warp(m, WARP_OP_WARP_DOOR);
         }
     } else if (is_anim_at_end(m)) {
-        if (m->actionArg & 2) {
+        if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
             m->faceAngle[1] += 0x8000;
         }
         set_mario_action(m, ACT_IDLE, 0);
@@ -1184,7 +1180,7 @@ s32 act_warp_door_spawn(struct MarioState *m) {
     if (m->actionState == 0) {
         m->actionState = 1;
         if (m->usedObj != NULL) {
-            if (m->actionArg & 1) {
+            if (m->actionArg & WARP_FLAG_DOOR_PULLED) {
                 m->usedObj->oInteractStatus = 0x00040000;
             } else {
                 m->usedObj->oInteractStatus = 0x00080000;
@@ -1430,7 +1426,7 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
 }
 
 static void lose_life_after_death_exit(struct MarioState *m) {
-    if (sDelayedWarpArg != WARP_ARG_EXIT_COURSE) {
+    if (~sDelayedWarpArg & WARP_FLAG_EXIT_COURSE) {
         m->numLives--;
     }
 }

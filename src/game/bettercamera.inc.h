@@ -605,7 +605,7 @@ static void newcam_apply_values(struct Camera *c) {
         gMarioState->forwardVel == 0 &&
         save_file_get_total_star_count(gCurrSaveFileNum - 1, 0, COURSE_COUNT - 1) >= gLevelValues.wingCapLookUpReq)
     {
-        level_trigger_warp(gMarioState, 1);
+        level_trigger_warp(gMarioState, WARP_OP_LOOK_UP);
     }
 }
 

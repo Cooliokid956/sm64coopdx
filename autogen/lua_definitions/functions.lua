@@ -5257,7 +5257,7 @@ function initiate_painting_warp(paintingIndex)
 end
 
 --- @param m MarioState
---- @param warpOp integer
+--- @param warpOp WarpOperation
 --- @return integer
 --- Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 function level_trigger_warp(m, warpOp)
@@ -5273,9 +5273,9 @@ end
 --- @param destLevel integer
 --- @param destArea integer
 --- @param destWarpNode integer
---- @param arg integer
---- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
-function initiate_warp(destLevel, destArea, destWarpNode, arg)
+--- @param warpFlags integer
+--- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+function initiate_warp(destLevel, destArea, destWarpNode, warpFlags)
     -- ...
 end
 
