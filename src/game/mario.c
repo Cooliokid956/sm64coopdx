@@ -432,17 +432,20 @@ bool mario_can_bubble(struct MarioState* m) {
     return false;
 }
 
-void mario_set_bubbled(struct MarioState* m) {
+void mario_set_bubbled(struct MarioState* m, OPTIONAL bool stayAlive) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
     if (m->action == ACT_BUBBLED) { return; }
 
-    drop_and_set_mario_action(m, ACT_BUBBLED, 0);
-    if (m->numLives > 0) {
-        m->numLives--;
+    drop_and_set_mario_action(m, ACT_BUBBLED, stayAlive);
+    if (!stayAlive) {
+        if (m->numLives > 0) {
+            m->numLives--;
+        }
+        m->healCounter = 0;
+        m->hurtCounter = 31;
     }
-    m->healCounter = 0;
-    m->hurtCounter = 31;
+    
     gCamera->cutscene = 0;
     m->statusForCamera->action = m->action;
     m->statusForCamera->cameraEvent = 0;

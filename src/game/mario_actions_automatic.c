@@ -1032,9 +1032,11 @@ Makes Mario act like he was popped from a bubble. Useful for custom bubble poppi
 void mario_pop_bubble(struct MarioState* m) {
     if (!m) { return; }
     m->marioObj->activeFlags &= ~ACTIVE_FLAG_MOVE_THROUGH_GRATE;
-    m->hurtCounter = 0;
-    m->healCounter = 31;
-    m->health = 0x100;
+    if (!m->actionArg) {
+        m->hurtCounter = 0;
+        m->healCounter = 31;
+        m->health = 0x100;
+    }
     m->marioObj->oIntangibleTimer = 0;
     m->peakHeight = m->pos[1];
     mario_set_forward_vel(m, 0.0f);
