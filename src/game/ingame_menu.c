@@ -2547,9 +2547,9 @@ void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
 #else
     INGAME_TEXT_COPY(textContinue, TEXT_CONTINUE);
     INGAME_TEXT_COPY(textExitCourse, TEXT_EXIT_COURSE);
-    u8 textExitToCastle[] = { TEXT_EXIT_TO_CASTLE };
     INGAME_TEXT_COPY(textCameraAngleR, TEXT_CAMERA_ANGLE_R);
-#endif
+    #endif
+    u8 textExitToCastle[] = { TEXT_EXIT_TO_CASTLE };
     u8 maxIndex = PAUSE_EXIT_MODE == PAUSE_EXIT_BOTH ? 4 : 3;
     handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, maxIndex);
 

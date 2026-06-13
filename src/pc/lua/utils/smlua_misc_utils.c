@@ -321,7 +321,7 @@ void game_unpause(void) {
     level_set_transition(0, NULL);
     gMenuMode = -1;
     gDialogBoxState = 0;
-    gMenuOptSelectIndex = 1;
+    gMenuOptSelectIndex = MENU_OPT_DEFAULT;
 }
 
 ///

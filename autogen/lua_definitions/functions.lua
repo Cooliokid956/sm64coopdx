@@ -5664,7 +5664,7 @@ end
 
 --- @param m MarioState
 --- @param stayAlive? boolean
---- Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
+--- Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives by default and preventing normal movement
 function mario_set_bubbled(m, stayAlive)
     -- ...
 end

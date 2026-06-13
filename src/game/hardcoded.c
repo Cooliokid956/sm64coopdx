@@ -371,8 +371,7 @@ AT_STARTUP void hardcoded_reset_default_values(void) {
     RESTORE_PAINTING(ttm_slide_painting);
     gPaintingValues = gDefaultPaintingValues;
 
-    memcpy(sDummyContents, sDefaultExclamationBoxContents, sizeof(struct ExclamationBoxContent) * 15);
+    memcpy(sDummyContents, sDefaultExclamationBoxContents, sizeof(sDefaultExclamationBoxContents));
     gExclamationBoxContents = sDummyContents;
-    gExclamationBoxSize = 15;
-
+    gExclamationBoxSize = sizeof(sDefaultExclamationBoxContents) / sizeof(sDefaultExclamationBoxContents[0]);
 }
