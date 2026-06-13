@@ -183,7 +183,7 @@ u16 level_control_timer(s32 timerOp);
 /* |description|Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled|descriptionEnd|*/
 bool pressed_pause(void);
 /* |description|Fades into a special warp with `arg` and using `color`|descriptionEnd| */
-void fade_into_special_warp(u32 arg, u32 color);
+void fade_into_special_warp(enum SpecialWarpDestinations arg, u32 color);
 void load_level_init_text(u32 arg);
 void warp_credits(void);
 /* |description|Gets an instant warp from the current area's instant warp array (0-3)|descriptionEnd| */

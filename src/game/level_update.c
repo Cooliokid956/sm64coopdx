@@ -277,7 +277,7 @@ void warp_special(enum SpecialWarpDestinations arg) {
     sSpecialWarpDest = arg;
 }
 
-void fade_into_special_warp(u32 arg, u32 color) {
+void fade_into_special_warp(enum SpecialWarpDestinations arg, u32 color) {
     if (color != 0) {
         color = 0xFF;
     }

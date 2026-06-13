@@ -5230,7 +5230,7 @@ function pressed_pause()
     -- ...
 end
 
---- @param arg integer
+--- @param arg SpecialWarpDestinations
 --- @param color integer
 --- Fades into a special warp with `arg` and using `color`
 function fade_into_special_warp(arg, color)
