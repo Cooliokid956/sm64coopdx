@@ -618,18 +618,17 @@ WARP_TRANSITION_FADE_FROM_BOWSER = 0x12
 --- @type integer
 WARP_TRANSITION_FADE_INTO_BOWSER = 0x13
 
-MENU_OPT_NONE               =              0 --- @type MenuOption
-MENU_OPT_1                  =              1 --- @type MenuOption
-MENU_OPT_2                  =              2 --- @type MenuOption
-MENU_OPT_3                  =              3 --- @type MenuOption
-MENU_OPT_DEFAULT            =     MENU_OPT_1 --- @type MenuOption
-MENU_OPT_CONTINUE           =     MENU_OPT_1 --- @type MenuOption
-MENU_OPT_EXIT_COURSE        =     MENU_OPT_2 --- @type MenuOption
-MENU_OPT_CAMERA_ANGLE_R     =     MENU_OPT_3 --- @type MenuOption
-MENU_OPT_EXIT_TO_CASTLE     = MENU_OPT_3 + 1 --- @type MenuOption
-MENU_OPT_SAVE_AND_CONTINUE  =     MENU_OPT_1 --- @type MenuOption
-MENU_OPT_SAVE_AND_QUIT      =     MENU_OPT_2 --- @type MenuOption
-MENU_OPT_CONTINUE_DONT_SAVE =     MENU_OPT_3 --- @type MenuOption
+MENU_OPT_NONE               =                                  0 --- @type MenuOption
+MENU_OPT_1                  =                                  1 --- @type MenuOption
+MENU_OPT_2                  =                                  2 --- @type MenuOption
+MENU_OPT_3                  =                                  3 --- @type MenuOption
+MENU_OPT_DEFAULT            =                         MENU_OPT_1 --- @type MenuOption
+MENU_OPT_CONTINUE           =                         MENU_OPT_1 --- @type MenuOption
+MENU_OPT_EXIT_COURSE        =          ((MENU_OPT_CONTINUE) + 1) --- @type MenuOption
+MENU_OPT_CAMERA_ANGLE_R     =          ((MENU_OPT_CONTINUE) + 2) --- @type MenuOption
+MENU_OPT_EXIT_TO_CASTLE     =          ((MENU_OPT_CONTINUE) + 3) --- @type MenuOption
+MENU_OPT_SAVE_AND_CONTINUE  =                         MENU_OPT_1 --- @type MenuOption
+MENU_OPT_CONTINUE_DONT_SAVE = ((MENU_OPT_SAVE_AND_CONTINUE) + 1) --- @type MenuOption
 
 --- @alias MenuOption
 --- | `MENU_OPT_NONE`
@@ -642,7 +641,6 @@ MENU_OPT_CONTINUE_DONT_SAVE =     MENU_OPT_3 --- @type MenuOption
 --- | `MENU_OPT_CAMERA_ANGLE_R`
 --- | `MENU_OPT_EXIT_TO_CASTLE`
 --- | `MENU_OPT_SAVE_AND_CONTINUE`
---- | `MENU_OPT_SAVE_AND_QUIT`
 --- | `MENU_OPT_CONTINUE_DONT_SAVE`
 
 --- @type string

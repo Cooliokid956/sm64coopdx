@@ -37,9 +37,6 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_hooks.h"
 
-// TODO: put this elsewhere
-enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, /*SAVE_OPT_SAVE_AND_QUIT,*/ SAVE_OPT_CONTINUE_DONT_SAVE };
-
 static struct Object* sIntroWarpPipeObj[MAX_PLAYERS] = { 0 };
 static struct Object *sEndPeachObj;
 static struct Object *sEndRightToadObj;
@@ -288,7 +285,7 @@ void handle_save_menu(struct MarioState *m) {
     // wait for the menu to show up
     if (is_anim_past_end(m) && gSaveOptSelectIndex != 0) {
         // save and continue / save and quit
-        if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE /*|| gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT*/) {
+        if (gSaveOptSelectIndex == MENU_OPT_SAVE_AND_CONTINUE /*|| gSaveOptSelectIndex == MENU_OPT_SAVE_AND_QUIT*/) {
             save_file_do_save(gCurrSaveFileNum - 1, FALSE);
 
             /*if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
