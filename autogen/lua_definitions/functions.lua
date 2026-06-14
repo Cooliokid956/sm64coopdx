@@ -9841,29 +9841,29 @@ end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp30 number
+--- @param baseYVel number
 --- @param coinBehavior Pointer_BehaviorScript
 --- @param posJitter integer
 --- @param model integer
 --- Spawns loot coins from an object using the specified behavior, jitter, and model
-function obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)
+function obj_spawn_loot_coins(obj, numCoins, baseYVel, coinBehavior, posJitter, model)
     -- ...
 end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp28 number
+--- @param baseYVel number
 --- @param posJitter integer
 --- Spawns blue loot coins from an object
-function obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)
+function obj_spawn_loot_blue_coins(obj, numCoins, baseYVel, posJitter)
     -- ...
 end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp28 number
+--- @param baseYVel number
 --- Spawns yellow loot coins from an object
-function obj_spawn_loot_yellow_coins(obj, numCoins, sp28)
+function obj_spawn_loot_yellow_coins(obj, numCoins, baseYVel)
     -- ...
 end
 
@@ -10251,10 +10251,10 @@ function cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)
     -- ...
 end
 
---- @param sp18 number
---- @param sp1C integer
+--- @param mistSize number
+--- @param coinType integer
 --- Explodes the current object, spawns particles, and optionally spawns coins
-function obj_explode_and_spawn_coins(sp18, sp1C)
+function obj_explode_and_spawn_coins(mistSize, coinType)
     -- ...
 end
 
@@ -12449,7 +12449,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @param objSetupFunction function
+--- @param objSetupFunction? function
 --- @return Object
 --- Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.<br>
 --- You can change the fields of the object in `objSetupFunction`
@@ -12462,7 +12462,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @param objSetupFunction function
+--- @param objSetupFunction? function
 --- @return Object
 --- Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.<br>
 --- You can change the fields of the object in `objSetupFunction`

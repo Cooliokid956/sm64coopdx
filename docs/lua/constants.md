@@ -79,6 +79,7 @@
 - [obj_behaviors.c](#obj_behaviorsc)
 - [obj_behaviors_2.h](#obj_behaviors_2h)
 - [object_constants.h](#object_constantsh)
+    - [enum CoinTypes](#enum-CoinTypes)
 - [object_list_processor.h](#object_list_processorh)
     - [enum ObjectList](#enum-ObjectList)
 - [os_cont.h](#os_conth)
@@ -2490,6 +2491,13 @@
 - BOBOMB_ACT_EXPLODE
 - BOBOMB_ACT_LAVA_DEATH
 - BOBOMB_ACT_DEATH_PLANE_DEATH
+
+### [enum CoinTypes](#CoinTypes)
+| Identifier | Value |
+| :--------- | :---- |
+| COIN_TYPE_NONE | 0 |
+| COIN_TYPE_YELLOW | 1 |
+| COIN_TYPE_BLUE | 2 |
 - HIDDEN_BLUE_COIN_ACT_INACTIVE
 - HIDDEN_BLUE_COIN_ACT_WAITING
 - HIDDEN_BLUE_COIN_ACT_ACTIVE

@@ -3024,14 +3024,14 @@ Sets the current object's hurtbox radius and height
 Spawns loot coins from an object using the specified behavior, jitter, and model
 
 ### Lua Example
-`obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)`
+`obj_spawn_loot_coins(obj, numCoins, baseYVel, coinBehavior, posJitter, model)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp30 | `number` |
+| baseYVel | `number` |
 | coinBehavior | `Pointer` <`BehaviorScript`> |
 | posJitter | `integer` |
 | model | `integer` |
@@ -3040,7 +3040,7 @@ Spawns loot coins from an object using the specified behavior, jitter, and model
 - None
 
 ### C Prototype
-`void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30, const BehaviorScript *coinBehavior, s16 posJitter, s16 model);`
+`void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 baseYVel, const BehaviorScript *coinBehavior, s16 posJitter, s16 model);`
 
 [:arrow_up_small:](#)
 
@@ -3052,21 +3052,21 @@ Spawns loot coins from an object using the specified behavior, jitter, and model
 Spawns blue loot coins from an object
 
 ### Lua Example
-`obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)`
+`obj_spawn_loot_blue_coins(obj, numCoins, baseYVel, posJitter)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp28 | `number` |
+| baseYVel | `number` |
 | posJitter | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 sp28, s16 posJitter);`
+`void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 baseYVel, s16 posJitter);`
 
 [:arrow_up_small:](#)
 
@@ -3078,20 +3078,20 @@ Spawns blue loot coins from an object
 Spawns yellow loot coins from an object
 
 ### Lua Example
-`obj_spawn_loot_yellow_coins(obj, numCoins, sp28)`
+`obj_spawn_loot_yellow_coins(obj, numCoins, baseYVel)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp28 | `number` |
+| baseYVel | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 sp28);`
+`void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 baseYVel);`
 
 [:arrow_up_small:](#)
 
@@ -4459,19 +4459,19 @@ Gives the current object a hitbox and kills it if attacked, with optional loot s
 Explodes the current object, spawns particles, and optionally spawns coins
 
 ### Lua Example
-`obj_explode_and_spawn_coins(sp18, sp1C)`
+`obj_explode_and_spawn_coins(mistSize, coinType)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | `number` |
-| sp1C | `integer` |
+| mistSize | `number` |
+| coinType | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C);`
+`void obj_explode_and_spawn_coins(f32 mistSize, s32 coinType);`
 
 [:arrow_up_small:](#)
 
