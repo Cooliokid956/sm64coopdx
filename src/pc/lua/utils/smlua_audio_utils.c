@@ -342,7 +342,7 @@ static void smlua_audio_custom_init(void) {
         LOG_ERROR("failed to init Miniaudio: %d", result);
     }
 
-    for (u8 i = 0; i < 3; i++) {
+    for (u8 i = 0; i < ARRAY_COUNT(sModAudioChannels); i++) {
         ma_sound_group_init(&sModAudioEngine, MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, &sModAudioChannels[i]);
     }
 
@@ -844,7 +844,7 @@ void smlua_audio_custom_deinit(void) {
         sModAudioShuttingDown = true;
         pthread_mutex_unlock(&sSoundCopyMutex);
 
-        for (u8 i = 0; i < 3; i++) { ma_sound_group_uninit(&sModAudioChannels[i]); }
+        for (u8 i = 0; i < ARRAY_COUNT(sModAudioChannels); i++) { ma_sound_group_uninit(&sModAudioChannels[i]); }
         ma_engine_uninit(&sModAudioEngine);
 
         audio_custom_shutdown();
