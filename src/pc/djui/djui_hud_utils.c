@@ -713,12 +713,12 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
 
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY) {
     if (message == NULL) { return; }
-    
+
     if (djui_hud_text_font_is_legacy()) {
         scaleX *= 0.5f;
         scaleY *= 0.5f;
     }
-    
+
     djui_hud_print_text_internal(message, x, y, scaleX, scaleY, NULL);
 }
 
