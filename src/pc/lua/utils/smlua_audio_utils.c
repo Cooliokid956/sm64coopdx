@@ -227,7 +227,7 @@ static void audio_destroy_copy(struct ModAudio *copy) {
         copy->next = NULL;
         copy->prev = NULL;
         copy->parent = NULL;
-    
+
         // add copy to free list
         if (sSoundCopyFreeTail) {
             copy->prev = sSoundCopyFreeTail;
@@ -520,7 +520,7 @@ error:
 
 void audio_stream_play(struct ModAudio *audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "play")) { return; }
-    
+
     ma_sound_set_volume(&audio->sound, volume);
     if (restart) { ma_sound_seek_to_pcm_frame(&audio->sound, 0); }
     ma_sound_start(&audio->sound);
@@ -541,7 +541,7 @@ struct ModAudio *audio_sample_play(struct ModAudio *audio, Vec3f position, f32 v
     f32 dist = 0;
     if (gCamera) {
         dist = vec3f_dist(position, gCamera->pos);
-        
+
         if (configSoundOutput != SOUND_MODE_MONO) {
             Mat4 mtx;
             mtxf_translate(mtx, position);
@@ -628,7 +628,7 @@ void audio_reload(struct ModAudio *audio) {
     if (audio->copy) { audio = audio->parent; }
     if (audio->loaded) { audio_destroy(audio); }
     char *filename = strrchr(audio->filepath, *PATH_SEPARATOR);
-    
+
     audio_load(filename, audio->type);
 }
 
@@ -695,7 +695,7 @@ void audio_get_loop_points(struct ModAudio *audio, RET u64 *loopStart, RET u64 *
 
 void audio_set_loop_points(struct ModAudio *audio, s64 loopStart, OPTIONAL s64 loopEnd) {
     if (!audio_sanity_check(audio, MA_TYPE_STREAM, "set loop points for")) { return; }
-    
+
     u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
     if (loopStart < 0) loopStart = length + loopStart % length;
     if (loopEnd <= 0) loopEnd = length + loopEnd % length;
@@ -810,7 +810,7 @@ void audio_custom_shutdown(void) {
             }
             audio->copiesTail = NULL;
             pthread_mutex_unlock(&sSoundCopyMutex);
-            
+
             ma_sound_uninit(&audio->sound);
             ma_decoder_uninit(&audio->decoder);
             audio->loaded = false;
@@ -843,7 +843,7 @@ void smlua_audio_custom_deinit(void) {
         pthread_mutex_lock(&sSoundCopyMutex);
         sModAudioShuttingDown = true;
         pthread_mutex_unlock(&sSoundCopyMutex);
-        
+
         for (u8 i = 0; i < 3; i++) { ma_sound_group_uninit(&sModAudioChannels[i]); }
         ma_engine_uninit(&sModAudioEngine);
 
