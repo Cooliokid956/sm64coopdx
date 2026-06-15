@@ -713,23 +713,17 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
 
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY) {
     if (message == NULL) { return; }
-
+    
     if (djui_hud_text_font_is_legacy()) {
         scaleX *= 0.5f;
         scaleY *= 0.5f;
     }
-
+    
     djui_hud_print_text_internal(message, x, y, scaleX, scaleY, NULL);
 }
 
-void djui_hud_print_text_uniform(const char* message, f32 x, f32 y, f32 scale) {
-    if (message == NULL) { return; }
-
-    if (djui_hud_text_font_is_legacy()) {
-        scale *= 0.5f;
-    }
-
-    djui_hud_print_text_internal(message, x, y, scale, scale, NULL);
+inline void djui_hud_print_text_uniform(const char* message, f32 x, f32 y, f32 scale) {
+    djui_hud_print_text(message, x, y, scale, scale);
 }
 
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY) {
@@ -760,30 +754,8 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     djui_hud_print_text_internal(message, x, y, scaleX, scaleY, interp);
 }
 
-void djui_hud_print_text_interpolated_uniform(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
-    if (message == NULL) { return; }
-
-    if (djui_hud_text_font_is_legacy()) {
-        scale *= 0.5f;
-        prevScale *= 0.5f;
-    }
-
-    struct InterpHud *interp = djui_hud_create_interp();
-    if (interp) {
-        const struct DjuiFont* font = djui_hud_get_text_font();
-        interp->posX.prev = prevX;
-        interp->posY.prev = prevY;
-        interp->posX.curr = x;
-        interp->posY.curr = y;
-        interp->scaleX.prev = prevScale;
-        interp->scaleY.prev = prevScale;
-        interp->scaleX.curr = scale;
-        interp->scaleY.curr = scale;
-        interp->width = font->defaultFontScale;
-        interp->height = font->defaultFontScale;
-    }
-
-    djui_hud_print_text_internal(message, x, y, scale, scale, interp);
+inline void djui_hud_print_text_interpolated_uniform(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
+    djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, prevScale, x, y, scale, scale);
 }
 
 static inline bool is_power_of_two(u32 n) {
