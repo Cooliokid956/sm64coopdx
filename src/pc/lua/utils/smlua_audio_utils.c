@@ -540,10 +540,7 @@ struct ModAudio *audio_sample_play(struct ModAudio *audio, Vec3f position, f32 v
 
     f32 dist = 0;
     if (gCamera) {
-        f32 dX = position[0] - gCamera->pos[0];
-        f32 dY = position[1] - gCamera->pos[1];
-        f32 dZ = position[2] - gCamera->pos[2];
-        dist = sqrtf(dX * dX + dY * dY + dZ * dZ);
+        dist = vec3f_dist(position, gCamera->pos);
         
         if (configSoundOutput != SOUND_MODE_MONO) {
             Mat4 mtx;
