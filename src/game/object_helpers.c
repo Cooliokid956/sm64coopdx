@@ -2104,7 +2104,7 @@ void cur_obj_set_hurtbox_radius_and_height(f32 radius, f32 height) {
 }
 
 /* |description|Spawns loot coins from an object using the specified behavior, jitter, and model|descriptionEnd| */
-void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 baseYVel, const BehaviorScript *coinBehavior, s16 posJitter, s16 model) {
+void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30, const BehaviorScript *coinBehavior, s16 posJitter, s16 model) {
     if (obj == NULL) { return; }
     s32 i;
     f32 spawnHeight;
@@ -2127,18 +2127,18 @@ void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 baseYVel, const 
         if (coin == NULL) { return; }
         obj_translate_xz_random(coin, posJitter);
         coin->oPosY = spawnHeight;
-        coin->oCoinBaseYVel = baseYVel;
+        coin->oCoinUnk110 = sp30;
     }
 }
 
 /* |description|Spawns blue loot coins from an object|descriptionEnd| */
-void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 baseYVel, s16 posJitter) {
-    obj_spawn_loot_coins(obj, numCoins, baseYVel, bhvBlueCoinJumping, posJitter, MODEL_BLUE_COIN);
+void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 sp28, s16 posJitter) {
+    obj_spawn_loot_coins(obj, numCoins, sp28, bhvBlueCoinJumping, posJitter, MODEL_BLUE_COIN);
 }
 
 /* |description|Spawns yellow loot coins from an object|descriptionEnd| */
-void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 baseYVel) {
-    obj_spawn_loot_coins(obj, numCoins, baseYVel, bhvSingleCoinGetsSpawned, 0, MODEL_YELLOW_COIN);
+void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 sp28) {
+    obj_spawn_loot_coins(obj, numCoins, sp28, bhvSingleCoinGetsSpawned, 0, MODEL_YELLOW_COIN);
 }
 
 /* |description|Spawns a yellow coin at Mario's position and decrements the current object's loot count|descriptionEnd| */
@@ -3169,15 +3169,15 @@ s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deat
 }
 
 /* |description|Explodes the current object, spawns particles, and optionally spawns coins|descriptionEnd| */
-void obj_explode_and_spawn_coins(f32 mistSize, s32 coinType) {
+void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C) {
     if (!o) { return; }
-    spawn_mist_particles_variable(0, 0, mistSize);
+    spawn_mist_particles_variable(0, 0, sp18);
     spawn_triangle_break_particles(30, 138, 3.0f, 4);
     obj_mark_for_deletion(o);
 
-    if (coinType == COIN_TYPE_YELLOW) {
+    if (sp1C == 1) {
         obj_spawn_loot_yellow_coins(o, o->oNumLootCoins, 20.0f);
-    } else if (coinType == COIN_TYPE_BLUE) {
+    } else if (sp1C == 2) {
         obj_spawn_loot_blue_coins(o, o->oNumLootCoins, 20.0f, 150);
     }
 }

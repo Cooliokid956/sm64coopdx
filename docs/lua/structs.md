@@ -2189,7 +2189,7 @@
 | oCloudFwooshMovementRadius | `integer` |  |
 | oCoinUnkF4 | `integer` |  |
 | oCoinUnkF8 | `integer` |  |
-| oCoinBaseYVel | `number` |  |
+| oCoinUnk110 | `number` |  |
 | oCoinUnk1B0 | `integer` |  |
 | oCollisionParticleUnkF4 | `number` |  |
 | oControllablePlatformUnkF8 | `integer` |  |

@@ -28010,7 +28010,7 @@ int smlua_func_obj_spawn_loot_coins(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_spawn_loot_coins"); return 0; }
     s32 numCoins = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_spawn_loot_coins"); return 0; }
-    f32 baseYVel = smlua_to_number(L, 3);
+    f32 sp30 = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_spawn_loot_coins"); return 0; }
     BehaviorScript * coinBehavior = (BehaviorScript *)smlua_to_cpointer(L, 4, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "obj_spawn_loot_coins"); return 0; }
@@ -28019,8 +28019,8 @@ int smlua_func_obj_spawn_loot_coins(lua_State* L) {
     s16 model = smlua_to_integer(L, 6);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "obj_spawn_loot_coins"); return 0; }
 
-    extern void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 baseYVel, const BehaviorScript *coinBehavior, s16 posJitter, s16 model);
-    obj_spawn_loot_coins(obj, numCoins, baseYVel, coinBehavior, posJitter, model);
+    extern void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30, const BehaviorScript *coinBehavior, s16 posJitter, s16 model);
+    obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model);
 
     return 1;
 }
@@ -28038,13 +28038,13 @@ int smlua_func_obj_spawn_loot_blue_coins(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_spawn_loot_blue_coins"); return 0; }
     s32 numCoins = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_spawn_loot_blue_coins"); return 0; }
-    f32 baseYVel = smlua_to_number(L, 3);
+    f32 sp28 = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_spawn_loot_blue_coins"); return 0; }
     s16 posJitter = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "obj_spawn_loot_blue_coins"); return 0; }
 
-    extern void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 baseYVel, s16 posJitter);
-    obj_spawn_loot_blue_coins(obj, numCoins, baseYVel, posJitter);
+    extern void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 sp28, s16 posJitter);
+    obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter);
 
     return 1;
 }
@@ -28062,11 +28062,11 @@ int smlua_func_obj_spawn_loot_yellow_coins(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_spawn_loot_yellow_coins"); return 0; }
     s32 numCoins = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_spawn_loot_yellow_coins"); return 0; }
-    f32 baseYVel = smlua_to_number(L, 3);
+    f32 sp28 = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_spawn_loot_yellow_coins"); return 0; }
 
-    extern void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 baseYVel);
-    obj_spawn_loot_yellow_coins(obj, numCoins, baseYVel);
+    extern void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 sp28);
+    obj_spawn_loot_yellow_coins(obj, numCoins, sp28);
 
     return 1;
 }
@@ -29162,13 +29162,13 @@ int smlua_func_obj_explode_and_spawn_coins(lua_State* L) {
         return 0;
     }
 
-    f32 mistSize = smlua_to_number(L, 1);
+    f32 sp18 = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_explode_and_spawn_coins"); return 0; }
-    s32 coinType = smlua_to_integer(L, 2);
+    s32 sp1C = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_explode_and_spawn_coins"); return 0; }
 
-    extern void obj_explode_and_spawn_coins(f32 mistSize, s32 coinType);
-    obj_explode_and_spawn_coins(mistSize, coinType);
+    extern void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C);
+    obj_explode_and_spawn_coins(sp18, sp1C);
 
     return 1;
 }

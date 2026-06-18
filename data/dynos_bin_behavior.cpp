@@ -1132,7 +1132,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     /* Coin */
     bhv_constant(oCoinUnkF4);
     bhv_constant(oCoinUnkF8);
-    bhv_constant(oCoinBaseYVel);
+    bhv_constant(oCoinUnk110);
 #ifndef VERSION_JP
     bhv_constant(oCoinUnk1B0);
 #endif
