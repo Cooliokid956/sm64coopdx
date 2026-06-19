@@ -8,7 +8,8 @@
 #include "pc/lua/utils/smlua_model_utils.h"
 
 // used for chain chomp and wiggler
-struct ChainSegment {
+struct ChainSegment
+{
     f32 posX;
     f32 posY;
     f32 posZ;
@@ -25,7 +26,8 @@ struct ChainSegment {
 #define WATER_DROPLET_FLAG_RAND_ANGLE_INCR           0x80 // Unused
 
 // Call spawn_water_droplet with this struct to spawn an object.
-struct WaterDropletParams {
+struct WaterDropletParams
+{
     s16 flags; // Droplet spawn flags, see defines above
     s16 model;
     const BehaviorScript *behavior;
@@ -39,7 +41,9 @@ struct WaterDropletParams {
     f32 randSizeScale;
 };
 
-struct SpawnParticlesInfo {
+// TODO: Field names
+struct SpawnParticlesInfo
+{
     /*0x00*/ s8 behParam;
     /*0x01*/ s8 count;
     /*0x02*/ u16 model;

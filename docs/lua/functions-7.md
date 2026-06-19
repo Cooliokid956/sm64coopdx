@@ -4104,7 +4104,7 @@ You can change the fields of the object in `objSetupFunction`
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);`
+`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 
@@ -4133,7 +4133,7 @@ You can change the fields of the object in `objSetupFunction`
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);`
+`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 
