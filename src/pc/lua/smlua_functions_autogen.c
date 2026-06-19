@@ -29158,10 +29158,10 @@ int smlua_func_obj_explode_and_spawn_coins(lua_State* L) {
 
     f32 mistSize = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_explode_and_spawn_coins"); return 0; }
-    s32 coinType = smlua_to_integer(L, 2);
+    enum CoinType coinType = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_explode_and_spawn_coins"); return 0; }
 
-    extern void obj_explode_and_spawn_coins(f32 mistSize, s32 coinType);
+    extern void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType);
     obj_explode_and_spawn_coins(mistSize, coinType);
 
     return 1;

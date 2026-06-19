@@ -5179,11 +5179,11 @@ BOBOMB_ACT_LAVA_DEATH = 100
 --- @type integer
 BOBOMB_ACT_DEATH_PLANE_DEATH = 101
 
-COIN_TYPE_NONE   = 0 --- @type CoinTypes
-COIN_TYPE_YELLOW = 1 --- @type CoinTypes
-COIN_TYPE_BLUE   = 2 --- @type CoinTypes
+COIN_TYPE_NONE   = 0 --- @type CoinType
+COIN_TYPE_YELLOW = 1 --- @type CoinType
+COIN_TYPE_BLUE   = 2 --- @type CoinType
 
---- @alias CoinTypes
+--- @alias CoinType
 --- | `COIN_TYPE_NONE`
 --- | `COIN_TYPE_YELLOW`
 --- | `COIN_TYPE_BLUE`

@@ -147,7 +147,7 @@
     #define BOBOMB_ACT_DEATH_PLANE_DEATH 101
 
 /* Coin Type */
-enum CoinTypes { // coinType
+enum CoinType { // coinType
     COIN_TYPE_NONE,
     COIN_TYPE_YELLOW,
     COIN_TYPE_BLUE

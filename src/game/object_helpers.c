@@ -3170,7 +3170,7 @@ s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deat
 }
 
 /* |description|Explodes the current object, spawns particles, and optionally spawns coins|descriptionEnd| */
-void obj_explode_and_spawn_coins(f32 mistSize, s32 coinType) {
+void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType) {
     if (!o) { return; }
     spawn_mist_particles_variable(0, 0, mistSize);
     spawn_triangle_break_particles(30, 138, 3.0f, 4);

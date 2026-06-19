@@ -10251,7 +10251,7 @@ function cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)
 end
 
 --- @param mistSize number
---- @param coinType integer
+--- @param coinType CoinType
 --- Explodes the current object, spawns particles, and optionally spawns coins
 function obj_explode_and_spawn_coins(mistSize, coinType)
     -- ...

@@ -4465,13 +4465,13 @@ Explodes the current object, spawns particles, and optionally spawns coins
 | Field | Type |
 | ----- | ---- |
 | mistSize | `number` |
-| coinType | `integer` |
+| coinType | [enum CoinType](constants.md#enum-CoinType) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_explode_and_spawn_coins(f32 mistSize, s32 coinType);`
+`void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType);`
 
 [:arrow_up_small:](#)
 
