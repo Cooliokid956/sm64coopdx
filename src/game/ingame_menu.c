@@ -2997,7 +2997,7 @@ s16 render_pause_courses_and_castle(void) {
                     u8 maxIndex = PAUSE_EXIT_MODE == PAUSE_EXIT_BOTH ? 4 : 3;
                     bool allowExit = true;
                     bool pauseExit = gDialogLineNum > 1 && gDialogLineNum < maxIndex;
-                    bool usedExitToCastle = (PAUSE_EXIT_MODE & 1) ? gDialogLineNum == 3 : gDialogLineNum == 2;  
+                    bool usedExitToCastle = (PAUSE_EXIT_MODE & PAUSE_EXIT_COURSE) ? gDialogLineNum == 3 : gDialogLineNum == 2;  
                     if (pauseExit) {
                         smlua_call_event_hooks(HOOK_ON_PAUSE_EXIT, usedExitToCastle, &allowExit);
                     }
