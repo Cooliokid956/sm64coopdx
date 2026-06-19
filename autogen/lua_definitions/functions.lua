@@ -5230,7 +5230,7 @@ function pressed_pause()
     -- ...
 end
 
---- @param arg SpecialWarpDestinations
+--- @param arg integer
 --- @param color integer
 --- Fades into a special warp with `arg` and using `color`
 function fade_into_special_warp(arg, color)
@@ -5257,15 +5257,15 @@ function initiate_painting_warp(paintingIndex)
 end
 
 --- @param m MarioState
---- @param warpOp WarpOperation
+--- @param warpOp integer
 --- @return integer
 --- Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 function level_trigger_warp(m, warpOp)
     -- ...
 end
 
---- @param arg SpecialWarpDestinations
---- Special warps to arg (`WARP_SPECIAL_*`)
+--- @param arg integer
+--- Special warps to arg (`SPECIAL_WARP_*`)
 function warp_special(arg)
     -- ...
 end
@@ -5273,9 +5273,9 @@ end
 --- @param destLevel integer
 --- @param destArea integer
 --- @param destWarpNode integer
---- @param warpFlags integer
---- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead
-function initiate_warp(destLevel, destArea, destWarpNode, warpFlags)
+--- @param arg integer
+--- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+function initiate_warp(destLevel, destArea, destWarpNode, arg)
     -- ...
 end
 

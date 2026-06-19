@@ -63,7 +63,6 @@ struct LevelValues gDefaultLevelValues = {
     .showStarNumber                   = FALSE,
     .extendedPauseDisplay             = FALSE,
     .pauseExitAnywhere                = TRUE,
-    .pauseExitMode                    = PAUSE_EXIT_BOTH,
     .disableActs                      = FALSE,
     .bubbleOnDeathBarrierInCapStages  = FALSE,
     .entryLevel                       = LEVEL_CASTLE_GROUNDS,

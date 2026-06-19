@@ -1526,7 +1526,6 @@
 | showStarNumber | `integer` |  |
 | extendedPauseDisplay | `integer` |  |
 | pauseExitAnywhere | `integer` |  |
-| pauseExitMode | [enum PauseExitMode](constants.md#enum-PauseExitMode) |  |
 | disableActs | `integer` |  |
 | bubbleOnDeathBarrierInCapStages | `integer` |  |
 | entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
