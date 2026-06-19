@@ -6,6 +6,7 @@
 #include "macros.h"
 #include "types.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "object_constants.h"
 
 // used for chain chomp and wiggler
 struct ChainSegment
