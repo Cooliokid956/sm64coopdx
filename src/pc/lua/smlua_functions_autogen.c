@@ -15407,7 +15407,7 @@ int smlua_func_fade_into_special_warp(lua_State* L) {
         return 0;
     }
 
-    enum SpecialWarpDestinations arg = smlua_to_integer(L, 1);
+    enum SpecialWarpDestination arg = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "fade_into_special_warp"); return 0; }
     u32 color = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "fade_into_special_warp"); return 0; }
@@ -15494,7 +15494,7 @@ int smlua_func_warp_special(lua_State* L) {
         return 0;
     }
 
-    enum SpecialWarpDestinations arg = smlua_to_integer(L, 1);
+    enum SpecialWarpDestination arg = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "warp_special"); return 0; }
 
     warp_special(arg);

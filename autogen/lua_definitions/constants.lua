@@ -3618,15 +3618,15 @@ WARP_OP_EXIT                  =   27 --- @type WarpOperation
 --- | `WARP_OP_FORCE_SYNC`
 --- | `WARP_OP_EXIT`
 
-WARP_SPECIAL_LEVEL_SELECT        = -9 --- @type SpecialWarpDestinations
-WARP_SPECIAL_INTRO_SPLASH_SCREEN = -8 --- @type SpecialWarpDestinations
-WARP_SPECIAL_SWITCH_FILE         = -7 --- @type SpecialWarpDestinations
-WARP_SPECIAL_MARIO_HEAD_DIZZY    = -3 --- @type SpecialWarpDestinations
-WARP_SPECIAL_MARIO_HEAD_REGULAR  = -2 --- @type SpecialWarpDestinations
-WARP_SPECIAL_ENDING              = -1 --- @type SpecialWarpDestinations
-WARP_SPECIAL_NONE                =  0 --- @type SpecialWarpDestinations
+WARP_SPECIAL_LEVEL_SELECT        = -9 --- @type SpecialWarpDestination
+WARP_SPECIAL_INTRO_SPLASH_SCREEN = -8 --- @type SpecialWarpDestination
+WARP_SPECIAL_SWITCH_FILE         = -7 --- @type SpecialWarpDestination
+WARP_SPECIAL_MARIO_HEAD_DIZZY    = -3 --- @type SpecialWarpDestination
+WARP_SPECIAL_MARIO_HEAD_REGULAR  = -2 --- @type SpecialWarpDestination
+WARP_SPECIAL_ENDING              = -1 --- @type SpecialWarpDestination
+WARP_SPECIAL_NONE                =  0 --- @type SpecialWarpDestination
 
---- @alias SpecialWarpDestinations
+--- @alias SpecialWarpDestination
 --- | `WARP_SPECIAL_LEVEL_SELECT`
 --- | `WARP_SPECIAL_INTRO_SPLASH_SCREEN`
 --- | `WARP_SPECIAL_SWITCH_FILE`
@@ -3635,14 +3635,14 @@ WARP_SPECIAL_NONE                =  0 --- @type SpecialWarpDestinations
 --- | `WARP_SPECIAL_ENDING`
 --- | `WARP_SPECIAL_NONE`
 
-WARP_FLAGS_NONE           = (0 << 0) --- @type WarpFlags
+WARP_FLAG_NONE            = (0 << 0) --- @type WarpFlags
 WARP_FLAG_DOOR_PULLED     = (1 << 0) --- @type WarpFlags
 WARP_FLAG_DOOR_FLIP_MARIO = (1 << 1) --- @type WarpFlags
 WARP_FLAG_DOOR_IS_WARP    = (1 << 2) --- @type WarpFlags
 WARP_FLAG_EXIT_COURSE     = (1 << 3) --- @type WarpFlags
 
 --- @alias WarpFlags
---- | `WARP_FLAGS_NONE`
+--- | `WARP_FLAG_NONE`
 --- | `WARP_FLAG_DOOR_PULLED`
 --- | `WARP_FLAG_DOOR_FLIP_MARIO`
 --- | `WARP_FLAG_DOOR_IS_WARP`
@@ -3714,12 +3714,12 @@ WARP_NODE_CREDITS_END   = 0xFA --- @type WarpNodes
 --- | `WARP_NODE_CREDITS_NEXT`
 --- | `WARP_NODE_CREDITS_END`
 
-WARP_TYPE_NOT_WARPING  = 0 --- @type WarpTypes
-WARP_TYPE_CHANGE_LEVEL = 1 --- @type WarpTypes
-WARP_TYPE_CHANGE_AREA  = 2 --- @type WarpTypes
-WARP_TYPE_SAME_AREA    = 3 --- @type WarpTypes
+WARP_TYPE_NOT_WARPING  = 0 --- @type WarpType
+WARP_TYPE_CHANGE_LEVEL = 1 --- @type WarpType
+WARP_TYPE_CHANGE_AREA  = 2 --- @type WarpType
+WARP_TYPE_SAME_AREA    = 3 --- @type WarpType
 
---- @alias WarpTypes
+--- @alias WarpType
 --- | `WARP_TYPE_NOT_WARPING`
 --- | `WARP_TYPE_CHANGE_LEVEL`
 --- | `WARP_TYPE_CHANGE_AREA`

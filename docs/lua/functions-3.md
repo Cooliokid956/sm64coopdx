@@ -6994,14 +6994,14 @@ Fades into a special warp with `arg` and using `color`
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg | [enum SpecialWarpDestinations](constants.md#enum-SpecialWarpDestinations) |
+| arg | [enum SpecialWarpDestination](constants.md#enum-SpecialWarpDestination) |
 | color | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void fade_into_special_warp(enum SpecialWarpDestinations arg, u32 color);`
+`void fade_into_special_warp(enum SpecialWarpDestination arg, u32 color);`
 
 [:arrow_up_small:](#)
 
@@ -7109,13 +7109,13 @@ Special warps to arg (`WARP_SPECIAL_*`)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg | [enum SpecialWarpDestinations](constants.md#enum-SpecialWarpDestinations) |
+| arg | [enum SpecialWarpDestination](constants.md#enum-SpecialWarpDestination) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void warp_special(enum SpecialWarpDestinations arg);`
+`void warp_special(enum SpecialWarpDestination arg);`
 
 [:arrow_up_small:](#)
 

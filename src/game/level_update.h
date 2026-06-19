@@ -35,7 +35,7 @@ enum WarpOperation {
     WARP_OP_EXIT
 };
 
-enum SpecialWarpDestinations {
+enum SpecialWarpDestination {
     WARP_SPECIAL_LEVEL_SELECT        = -9,
     WARP_SPECIAL_INTRO_SPLASH_SCREEN = -8,
     WARP_SPECIAL_SWITCH_FILE         = -7,
@@ -46,7 +46,7 @@ enum SpecialWarpDestinations {
 };
 
 enum WarpFlags {
-    WARP_FLAGS_NONE           = (0 << 0),
+    WARP_FLAG_NONE            = (0 << 0),
     WARP_FLAG_DOOR_PULLED     = (1 << 0),
     WARP_FLAG_DOOR_FLIP_MARIO = (1 << 1),
     WARP_FLAG_DOOR_IS_WARP    = (1 << 2),
@@ -89,7 +89,7 @@ enum WarpNodes {
     WARP_NODE_CREDITS_END   = 0xFA
 };
 
-enum WarpTypes {
+enum WarpType {
     WARP_TYPE_NOT_WARPING,
     WARP_TYPE_CHANGE_LEVEL,
     WARP_TYPE_CHANGE_AREA,
@@ -183,7 +183,7 @@ u16 level_control_timer(s32 timerOp);
 /* |description|Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled|descriptionEnd|*/
 bool pressed_pause(void);
 /* |description|Fades into a special warp with `arg` and using `color`|descriptionEnd| */
-void fade_into_special_warp(enum SpecialWarpDestinations arg, u32 color);
+void fade_into_special_warp(enum SpecialWarpDestination arg, u32 color);
 void load_level_init_text(u32 arg);
 void warp_credits(void);
 /* |description|Gets an instant warp from the current area's instant warp array (0-3)|descriptionEnd| */
@@ -197,7 +197,7 @@ s16 level_trigger_warp(struct MarioState *m, enum WarpOperation warpOp);
 void level_set_transition(s16 length, void (*updateFunction)(s16 *));
 void set_play_mode(s16 playMode);
 /* |description|Special warps to arg (`WARP_SPECIAL_*`)|descriptionEnd| */
-void warp_special(enum SpecialWarpDestinations arg);
+void warp_special(enum SpecialWarpDestination arg);
 /* |description|Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead|descriptionEnd| */
 void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 warpFlags);
 

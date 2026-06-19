@@ -267,17 +267,23 @@ void set_play_mode(s16 playMode) {
     sCurrPlayMode = playMode;
 }
 
-void warp_special(enum SpecialWarpDestinations arg) {
-    if (arg > 0 || arg < -9 || (arg < -3 && arg > -7)) {
-        LOG_ERROR("Invalid parameter value for warp_special: %i", arg);
-        return;
+void warp_special(enum SpecialWarpDestination arg) {
+    switch (arg) {
+        case WARP_SPECIAL_LEVEL_SELECT:
+        case WARP_SPECIAL_INTRO_SPLASH_SCREEN:
+        case WARP_SPECIAL_SWITCH_FILE:
+        case WARP_SPECIAL_MARIO_HEAD_DIZZY:
+        case WARP_SPECIAL_MARIO_HEAD_REGULAR:
+        case WARP_SPECIAL_ENDING:
+        case WARP_SPECIAL_NONE:
+            sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
+            sSpecialWarpDest = arg;
+            break;
+        default: LOG_ERROR("Invalid parameter value for warp_special: %i (refer to enum SpecialWarpDestination)", arg);
     }
-
-    sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
-    sSpecialWarpDest = arg;
 }
 
-void fade_into_special_warp(enum SpecialWarpDestinations arg, u32 color) {
+void fade_into_special_warp(enum SpecialWarpDestination arg, u32 color) {
     if (color != 0) {
         color = 0xFF;
     }
@@ -818,7 +824,7 @@ static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
         sWarpCheckpointActive = check_warp_checkpoint(&warpNode);
     }
 
-    initiate_warp(warpNode.destLevel & 0x7F, warpNode.destArea, warpNode.destNode, WARP_FLAGS_NONE);
+    initiate_warp(warpNode.destLevel & 0x7F, warpNode.destArea, warpNode.destNode, WARP_FLAG_NONE);
     check_if_should_set_warp_checkpoint(&warpNode);
 
     extern s16 gMenuMode;
@@ -895,7 +901,7 @@ s16 level_trigger_warp(struct MarioState *m, enum WarpOperation warpOp) {
 
     if (sDelayedWarpOp == WARP_OP_NONE) {
         m->invincTimer = -1;
-        sDelayedWarpArg = WARP_FLAGS_NONE;
+        sDelayedWarpArg = WARP_FLAG_NONE;
         sDelayedWarpOp = warpOp;
 
         switch (warpOp) {
@@ -1072,7 +1078,7 @@ void initiate_delayed_warp(void) {
                         gCurrActStarNum = 99;
                         gCurrActNum = 99;
                         initiate_warp(gCurrCreditsEntry->levelNum, gCurrCreditsEntry->areaIndex,
-                                    WARP_NODE_CREDITS_START, WARP_FLAGS_NONE);
+                                    WARP_NODE_CREDITS_START, WARP_FLAG_NONE);
                     }
                     break;
 
@@ -1096,7 +1102,7 @@ void initiate_delayed_warp(void) {
                         }
 
                         initiate_warp(gCurrCreditsEntry->levelNum, gCurrCreditsEntry->areaIndex,
-                                    destWarpNode, WARP_FLAGS_NONE);
+                                    destWarpNode, WARP_FLAG_NONE);
                     }
                     break;
 

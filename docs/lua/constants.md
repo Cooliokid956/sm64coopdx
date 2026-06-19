@@ -46,11 +46,11 @@
 - [level_update.h](#level_updateh)
     - [enum TimerControl](#enum-TimerControl)
     - [enum WarpOperation](#enum-WarpOperation)
-    - [enum SpecialWarpDestinations](#enum-SpecialWarpDestinations)
+    - [enum SpecialWarpDestination](#enum-SpecialWarpDestination)
     - [enum WarpFlags](#enum-WarpFlags)
     - [enum MarioSpawnType](#enum-MarioSpawnType)
     - [enum WarpNodes](#enum-WarpNodes)
-    - [enum WarpTypes](#enum-WarpTypes)
+    - [enum WarpType](#enum-WarpType)
     - [enum HUDDisplayFlag](#enum-HUDDisplayFlag)
 - [lighting_engine.h](#lighting_engineh)
     - [enum LEMode](#enum-LEMode)
@@ -1654,7 +1654,7 @@
 | WARP_OP_FORCE_SYNC | 26 |
 | WARP_OP_EXIT | 27 |
 
-### [enum SpecialWarpDestinations](#SpecialWarpDestinations)
+### [enum SpecialWarpDestination](#SpecialWarpDestination)
 | Identifier | Value |
 | :--------- | :---- |
 | WARP_SPECIAL_LEVEL_SELECT | -9 |
@@ -1668,7 +1668,7 @@
 ### [enum WarpFlags](#WarpFlags)
 | Identifier | Value |
 | :--------- | :---- |
-| WARP_FLAGS_NONE | (0 << 0) |
+| WARP_FLAG_NONE | (0 << 0) |
 | WARP_FLAG_DOOR_PULLED | (1 << 0) |
 | WARP_FLAG_DOOR_FLIP_MARIO | (1 << 1) |
 | WARP_FLAG_DOOR_IS_WARP | (1 << 2) |
@@ -1712,7 +1712,7 @@
 | WARP_NODE_CREDITS_NEXT | 0xF9 |
 | WARP_NODE_CREDITS_END | 0xFA |
 
-### [enum WarpTypes](#WarpTypes)
+### [enum WarpType](#WarpType)
 | Identifier | Value |
 | :--------- | :---- |
 | WARP_TYPE_NOT_WARPING | 0 |

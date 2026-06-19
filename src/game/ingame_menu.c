@@ -3009,7 +3009,8 @@ s16 render_pause_courses_and_castle(void) {
 
                         if (pauseExit) {
                             return usedExitToCastle ? MENU_OPT_EXIT_TO_CASTLE : MENU_OPT_EXIT_COURSE;
-                        } else { return MENU_OPT_DEFAULT; }
+                        }
+                        return MENU_OPT_DEFAULT;
                     } else {
                         play_sound(SOUND_MENU_CAMERA_BUZZ | (0xFF << 8), gGlobalSoundSource);
                     }

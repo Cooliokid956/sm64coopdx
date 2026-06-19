@@ -5230,7 +5230,7 @@ function pressed_pause()
     -- ...
 end
 
---- @param arg SpecialWarpDestinations
+--- @param arg SpecialWarpDestination
 --- @param color integer
 --- Fades into a special warp with `arg` and using `color`
 function fade_into_special_warp(arg, color)
@@ -5264,7 +5264,7 @@ function level_trigger_warp(m, warpOp)
     -- ...
 end
 
---- @param arg SpecialWarpDestinations
+--- @param arg SpecialWarpDestination
 --- Special warps to arg (`WARP_SPECIAL_*`)
 function warp_special(arg)
     -- ...
