@@ -35013,8 +35013,8 @@ int smlua_func_spawn_sync_object(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 6) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "spawn_sync_object", 6, top);
+    if (top < 5 || top > 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "spawn_sync_object", 5, 6, top);
         return 0;
     }
 
@@ -35028,8 +35028,11 @@ int smlua_func_spawn_sync_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "spawn_sync_object"); return 0; }
     f32 z = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "spawn_sync_object"); return 0; }
-    LuaFunction objSetupFunction = smlua_to_lua_function(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_sync_object"); return 0; }
+    LuaFunction objSetupFunction = (LuaFunction) 0;
+    if (top >= 6) {
+        objSetupFunction = smlua_to_lua_function(L, 6);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_sync_object"); return 0; }
+    }
 
     smlua_push_object(L, LOT_OBJECT, spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction), NULL);
 
@@ -35040,8 +35043,8 @@ int smlua_func_spawn_non_sync_object(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 6) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "spawn_non_sync_object", 6, top);
+    if (top < 5 || top > 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "spawn_non_sync_object", 5, 6, top);
         return 0;
     }
 
@@ -35055,8 +35058,11 @@ int smlua_func_spawn_non_sync_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "spawn_non_sync_object"); return 0; }
     f32 z = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "spawn_non_sync_object"); return 0; }
-    LuaFunction objSetupFunction = smlua_to_lua_function(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_non_sync_object"); return 0; }
+    LuaFunction objSetupFunction = (LuaFunction) 0;
+    if (top >= 6) {
+        objSetupFunction = smlua_to_lua_function(L, 6);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_non_sync_object"); return 0; }
+    }
 
     smlua_push_object(L, LOT_OBJECT, spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction), NULL);
 
