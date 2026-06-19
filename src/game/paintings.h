@@ -48,11 +48,12 @@ typedef struct {
 	signed char	n[3];	/* normal */
 } Vtx_Interp;
 
-#define DEF_PAINTING(name, ...) \
+#define DEFINE_PAINTING(name, ...) \
 struct Painting name = __VA_ARGS__; \
 const struct Painting default_ ## name = __VA_ARGS__
 
 #define RESTORE_PAINTING(name) name = default_ ## name
+
 struct Painting
 {
     s16 id;

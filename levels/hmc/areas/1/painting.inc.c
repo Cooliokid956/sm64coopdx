@@ -510,7 +510,7 @@ static const Gfx hmc_seg7_painting_dl_070254E0[] = {
 }
 
 // 0x0702551C (PaintingData)
-DEF_PAINTING(cotmc_painting, {
+DEFINE_PAINTING(cotmc_painting, {
     /* id */ 0x000E,
     /* Image Count */ 0x01,
     /* Texture Type */ PAINTING_ENV_MAP,

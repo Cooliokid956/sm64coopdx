@@ -542,7 +542,7 @@ static const Gfx ttm_seg7_painting_dl_07012E98[] = {
 }
 
 // 0x07012F00 (PaintingData)
-DEF_PAINTING(ttm_slide_painting, {
+DEFINE_PAINTING(ttm_slide_painting, {
     /* id */ 0x0000,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,

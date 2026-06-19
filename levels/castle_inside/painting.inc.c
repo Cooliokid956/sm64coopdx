@@ -1308,7 +1308,7 @@ static const Gfx inside_castle_seg7_painting_dl_070235B8[] = {
 }
 
 // 0x07023620 - 0x07023698
-DEF_PAINTING(bob_painting, {
+DEFINE_PAINTING(bob_painting, {
     /* id */ 0x0000,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1336,7 +1336,7 @@ DEF_PAINTING(bob_painting, {
 });
 
 // 0x07023698 - 0x07023710
-DEF_PAINTING(ccm_painting, {
+DEFINE_PAINTING(ccm_painting, {
     /* id */ 0x0001,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1364,7 +1364,7 @@ DEF_PAINTING(ccm_painting, {
 });
 
 // 0x07023710 - 0x07023788
-DEF_PAINTING(wf_painting, {
+DEFINE_PAINTING(wf_painting, {
     /* id */ 0x0002,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1392,7 +1392,7 @@ DEF_PAINTING(wf_painting, {
 });
 
 // 0x07023788 - 0x07023800
-DEF_PAINTING(jrb_painting, {
+DEFINE_PAINTING(jrb_painting, {
     /* id */ 0x0003,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1420,7 +1420,7 @@ DEF_PAINTING(jrb_painting, {
 });
 
 // 0x07023800 - 0x07023878
-DEF_PAINTING(lll_painting, {
+DEFINE_PAINTING(lll_painting, {
     /* id */ 0x0004,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1448,7 +1448,7 @@ DEF_PAINTING(lll_painting, {
 });
 
 // 0x07023878 - 0x070238F0
-DEF_PAINTING(ssl_painting, {
+DEFINE_PAINTING(ssl_painting, {
     /* id */ 0x0005,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1476,7 +1476,7 @@ DEF_PAINTING(ssl_painting, {
 });
 
 // 0x070238F0 - 0x07023968
-DEF_PAINTING(hmc_painting, {
+DEFINE_PAINTING(hmc_painting, {
     /* id */ 0x000E,
     /* Image Count */ 0x01,
     /* Texture Type */ PAINTING_ENV_MAP,
@@ -1504,7 +1504,7 @@ DEF_PAINTING(hmc_painting, {
 });
 
 // 0x07023968 - 0x070239E0
-DEF_PAINTING(ddd_painting, {
+DEFINE_PAINTING(ddd_painting, {
     /* id */ 0x0007,
     /* Image Count */ 0x01,
     /* Texture Type */ PAINTING_ENV_MAP,
@@ -1532,7 +1532,7 @@ DEF_PAINTING(ddd_painting, {
 });
 
 // 0x070239E0 - 0x07023A58
-DEF_PAINTING(wdw_painting, {
+DEFINE_PAINTING(wdw_painting, {
     /* id */ 0x0008,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1560,7 +1560,7 @@ DEF_PAINTING(wdw_painting, {
 });
 
 // 0x07023A58 - 0x07023AD0
-DEF_PAINTING(thi_tiny_painting, {
+DEFINE_PAINTING(thi_tiny_painting, {
     /* id */ 0x0009,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1588,7 +1588,7 @@ DEF_PAINTING(thi_tiny_painting, {
 });
 
 // 0x07023AD0 - 0x07023B48
-DEF_PAINTING(ttm_painting, {
+DEFINE_PAINTING(ttm_painting, {
     /* id */ 0x000A,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1616,7 +1616,7 @@ DEF_PAINTING(ttm_painting, {
 });
 
 // 0x07023B48 - 0x07023BC0
-DEF_PAINTING(ttc_painting, {
+DEFINE_PAINTING(ttc_painting, {
     /* id */ 0x000B,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1644,7 +1644,7 @@ DEF_PAINTING(ttc_painting, {
 });
 
 // 0x07023BC0 - 0x07023C38
-DEF_PAINTING(sl_painting, {
+DEFINE_PAINTING(sl_painting, {
     /* id */ 0x000C,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
@@ -1672,7 +1672,7 @@ DEF_PAINTING(sl_painting, {
 });
 
 // 0x07023C38 - 0x07023CB0
-DEF_PAINTING(thi_huge_painting, {
+DEFINE_PAINTING(thi_huge_painting, {
     /* id */ 0x000D,
     /* Image Count */ 0x02,
     /* Texture Type */ PAINTING_IMAGE,
