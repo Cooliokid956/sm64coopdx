@@ -140,6 +140,26 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
     sTooltip = NULL;
 }
 
+bool should_add_mod_to_list(struct Mod* mod, const char* category) {
+    switch (sSelectedCategory) {
+        case MOD_CATEGORY_ALL: { return true; }
+        case MOD_CATEGORY_ENABLED: { return mod->enabled; }
+        case MOD_CATEGORY_MISC: {
+            if (category) {
+                for (int i = MOD_CATEGORY_START; i < MOD_CATEGORY_COUNT; i++) {
+                    if (strstr(category, sCategories[i].category)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        default: {
+            return category && strstr(category, sCategories[sSelectedCategory].category);
+        }
+    }
+}
+
 void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
     bool foundAny = false;
     for (int i = 0; i < gLocalMods.entryCount; i++) {
@@ -149,39 +169,14 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
             category = !strcmp(category, "cs") ? "character" : category;
         }
 
-        switch (sSelectedCategory) {
-            case MOD_CATEGORY_ALL: { break; }
-            case MOD_CATEGORY_ENABLED: {
-                if (!mod->enabled) { continue; }
-                break;
-            }
-            case MOD_CATEGORY_MISC: {
-                bool doContinue = false;
-                if (category) {
-                    for (int i = MOD_CATEGORY_START; i < MOD_CATEGORY_COUNT; i++) {
-                        if (strstr(category, sCategories[i].category)) {
-                            doContinue = true;
-                            break;
-                        }
-                    }
-                }
-                if (doContinue) { continue; }
-                break;
-            }
-            default: {
-                if (!category || !strstr(category, sCategories[sSelectedCategory].category)) {
-                    continue;
-                }
-                break;
-            }
-        }
+        if (!should_add_mod_to_list(mod, category)) { continue; }
+
         // filter results
         if (sSearchInputbox != NULL &&
             sSearchInputbox->buffer != NULL &&
             !strstr_lowercased(djui_text_get_uncolored_string(NULL, strlen(mod->name) + 1, mod->name), sSearchInputbox->buffer)
-        ) {
-            continue;
-        }
+        ) { continue; }
+
         struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
         checkbox->base.tag = i;
         djui_base_set_enabled(&checkbox->base, mod->selectable);
