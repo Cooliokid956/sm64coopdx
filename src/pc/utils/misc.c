@@ -1,9 +1,22 @@
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#include <sys/wait.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <PR/ultratypes.h>
 #include <stdbool.h>
 #include <time.h>
 #include <float.h>
+#include <sys/stat.h>
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#include <direct.h>
+#endif
+#include <ctype.h>
 
 #include "misc.h"
 
@@ -14,6 +27,7 @@
 #include "engine/math_util.h"
 #include "pc/configfile.h"
 #include "pc/pc_main.h"
+#include "pc/update_checker.h"
 
 float smooth_step(float edge0, float edge1, float x) {
     float t = (x - edge0) / (edge1 - edge0);
@@ -36,7 +50,7 @@ static void _clock_gettime(struct timespec* clock_time) {
     clock_gettime(CLOCK_MONOTONIC, clock_time);
 #else
     if (clock_gettime(CLOCK_MONOTONIC, clock_time))
-        clock_gettime(CLOCK_REALTIME, clock_time));
+        clock_gettime(CLOCK_REALTIME, clock_time);
 #endif
 
 #ifdef DEVELOPMENT
@@ -103,7 +117,7 @@ void precise_delay_f64(f64 delaySec) {
     for (f64 remaining = end - clock_elapsed_f64(); remaining > sleepMargin; remaining = end - clock_elapsed_f64()) {
         u32 sleepMs = (u32) ((remaining - sleepMargin) * 1000.0);
         if (sleepMs < 1) { break; } // not enough time to sleep
-        WAPI.delay(sleepMs);
+        gWindowApi->delay(sleepMs);
     }
 
     // busy-wait until the target time is hit
@@ -593,4 +607,119 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
             buffer_index += seperator_length;
         }
     }
+}
+
+#if defined(__linux__) || defined(__APPLE__)
+static s8 launch(const char* program, const char* arg) {
+    pid_t pid = fork();
+
+    if (pid < 0) { return -1; }
+
+    if (pid == 0) {
+        execlp(program, program, arg, (char*)NULL);
+        _exit(127);
+    }
+
+    s32 status;
+    waitpid(pid, &status, 0);
+    return WIFEXITED(status) && WEXITSTATUS(status) == 0 ? 0 : -1;
+}
+#endif
+
+
+void open_url(const char* url) {
+#if defined(_WIN32) || defined(_WIN64) // windows
+    ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+
+#elif __linux__ // linux
+    launch("xdg-open", url);
+
+#elif __APPLE__ // macOS
+    launch("open", url);
+
+#endif
+}
+
+void open_folder(const char* path) {
+#if defined(_WIN32) || defined(_WIN64) // windows
+    _mkdir(path);
+    ShellExecuteA(NULL, "open", path, NULL, NULL, SW_SHOWNORMAL);
+
+#elif __linux__ // linux
+    mkdir(path, 0777);
+    launch("xdg-open", path);
+
+#elif __APPLE__ // macOS
+    mkdir(path, 0777);
+    launch("open", path);
+#endif
+}
+
+const char *strstr_lowercased(const char *haystack, const char *needle) {
+    // sanity check
+    if (!*needle) {
+        return haystack;
+    }
+
+    while (*haystack) {
+        const char *h = haystack;
+        const char *n = needle;
+
+        while (*h && *n && tolower((unsigned char)*h) == tolower((unsigned char)*n)) {
+            ++h;
+            ++n;
+        }
+
+        if (!*n) {
+            return haystack;
+        }
+
+        ++haystack;
+    }
+
+    return NULL;
+}
+
+static char *get_update_path(void) {
+#ifdef _WIN32
+    char updateExecFilename[] = "coopdx_updater.exe";
+#else
+    char updateExecFilename[] = "coopdx_updater";
+#endif
+    static char sUpdateExecFilePath[SYS_MAX_PATH];
+    // this may truncate as sys_exe_path_dir is allocated to be of size SYS_MAX_SIZE, nonetheless such a limit should not be hit during normal use.
+    snprintf(sUpdateExecFilePath, sizeof(sUpdateExecFilePath), "%s%s%s", sys_exe_path_dir(), PATH_SEPARATOR, updateExecFilename);
+    return sUpdateExecFilePath;
+}
+
+bool can_update_game(void) {
+    // the file is not guaranteed to exist, so make sure we have the updater installed
+    return fs_sys_file_exists(get_update_path()) && gUpdateMessage;
+}
+
+void update_game(void) {
+    const char *updateExecFilePath = get_update_path();
+
+#ifdef _WIN32
+    STARTUPINFOA si = { 0 };
+    PROCESS_INFORMATION pi = { 0 };
+
+    si.cb = sizeof(si);
+
+    char commandBuf[SYS_MAX_PATH];
+    // this can truncate, but under normal use, SYS_MAX_PATH should not ever be filled up
+    snprintf(commandBuf, sizeof(commandBuf), "%s --game-update", updateExecFilePath);
+
+    if (CreateProcessA(NULL, commandBuf, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+    }
+    exit(0);
+#else
+    freopen("/dev/null", "r", stdin);
+    freopen("/dev/null", "w", stdout);
+    freopen("/dev/null", "w", stderr);
+    execl(updateExecFilePath, "coopdx_updater", "--game-update", NULL);
+    exit(1);
+#endif
 }

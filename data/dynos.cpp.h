@@ -22,7 +22,8 @@ extern "C" {
 #define FUNCTION_BHV    2
 #define FUNCTION_LVL    3
 
-#define MOD_PACK_INDEX 99
+#define MOD_PACK_INDEX -1 // the pack index for actors loaded from mods
+#define PACK_MOD_INDEX -1 // the mod index for actors loaded from packs
 
 //
 // Enums
@@ -210,6 +211,10 @@ private:
 
 template <typename T>
 class Array {
+    static_assert(
+        std::is_trivially_destructible_v<T>,
+        "DynOS Array can only be used with types that have trivial destructors."
+    );
 public:
     inline Array() : mBuffer(NULL), mCount(0), mCapacity(0) {
     }
@@ -537,12 +542,52 @@ struct DataNode : NoCopy {
     T* mData = NULL;
     u32 mSize = 0;
     Array<String> mTokens;
-    u64 mModelIdentifier = 0;
+    u64 mDataIdentifier = 0;
     u64 mLoadIndex = 0;
     u8 mFlags = 0;
 };
+
 template <typename T>
-using DataNodes = Array<DataNode<T>*>;
+class DataNodes : public Array<DataNode<T>*> {
+public:
+
+    // Find a node given a name.
+    // Return the first node found, ignoring the data identifier.
+    DataNode<T> *Find(const String &aName) {
+        for (auto &node : *this) {
+            if (aName == node->mName) {
+                return node;
+            }
+        }
+        return NULL;
+    }
+
+    // Find a node given a name and a data identifier.
+    // If a node with the same name and data identifier is not found,
+    // return the last loaded node with the same name.
+    DataNode<T> *Find(const String &aName, u64 aDataIdentifier) {
+        DataNode<T> *best = NULL;
+        for (auto &node : *this) {
+            if (aName == node->mName) {
+                if (aDataIdentifier == node->mDataIdentifier) {
+                    return node;
+                }
+                best = node;
+            }
+        }
+        return best;
+    }
+
+    // Find a node given a name and a data identifier.
+    DataNode<T> *FindExact(const String &aName, u64 aDataIdentifier) {
+        for (auto &node : *this) {
+            if (aName == node->mName && aDataIdentifier == node->mDataIdentifier) {
+                return node;
+            }
+        }
+        return NULL;
+    }
+};
 
 struct GfxContext {
     DataNode<TexData>* mCurrentTexture = NULL;
@@ -585,7 +630,7 @@ struct GfxData : NoCopy {
     // Current
     u64 mLoadIndex = 0;
     s32 mErrorCount = 0;
-    u32 mModelIdentifier = 0;
+    u64 mDataIdentifier = 0;
     s32 mModIndex = 0;
     s32 mModFileIndex = 0;
     SysPath mPackFolder;
@@ -612,57 +657,6 @@ struct PackData {
     std::vector<DataNode<TexData>*> mTextures;
     bool mLoaded;
 };
-
-typedef Pair<String, const u8 *> Label;
-struct DynosOption : NoCopy {
-    String mName;
-    String mConfigName; // Name used in the config file
-    Label mLabel;
-    Label mTitle; // Full caps label, displayed with colored font
-    DynosOption *mPrev;
-    DynosOption *mNext;
-    DynosOption *mParent;
-    bool mDynos; // true from create, false from convert
-    u8 mType;
-
-    // TOGGLE
-    struct Toggle : NoCopy {
-        bool *mTog;
-    } mToggle;
-
-    // CHOICE
-    struct Choice : NoCopy {
-        Array<Label> mChoices;
-        s32 *mIndex;
-    } mChoice;
-
-    // SCROLL
-    struct Scroll : NoCopy {
-        s32 mMin;
-        s32 mMax;
-        s32 mStep;
-        s32 *mValue;
-    } mScroll;
-
-    // BIND
-    struct Bind : NoCopy {
-        u32 mMask;
-        u32 *mBinds;
-        s32 mIndex;
-    } mBind;
-
-    // BUTTON
-    struct Button : NoCopy {
-        String mFuncName;
-    } mButton;
-
-    // SUBMENU
-    struct Submenu : NoCopy {
-        DynosOption *mChild;
-        bool mEmpty;
-    } mSubMenu;
-};
-typedef bool (*DynosLoopFunc)(DynosOption *, void *);
 
 struct LvlCmd {
     u8 mType;
@@ -749,10 +743,20 @@ void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArg
 }
 
 template <typename... Args>
+void PrintInfoNoNewLine(const char *aFmt, Args... aArgs) {
+    PrintNoNewLine(aFmt, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+}
+
+template <typename... Args>
+void PrintInfo(const char *aFmt, Args... aArgs) {
+    Print(aFmt, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+}
+
+template <typename... Args>
 void PrintError(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
-    printf("\r\n");
-    fflush(stdout);
+    Print(aFmt, aArgs...);
     PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \
@@ -794,6 +798,7 @@ void DynOS_UpdateGfx();
 bool DynOS_IsTransitionActive();
 void DynOS_Mod_Update();
 void DynOS_Mod_Shutdown();
+bool DynOS_Mod_IsShuttingDown();
 
 //
 // Gfx
@@ -825,6 +830,7 @@ s8 DynOS_Level_GetCourse(s32 aLevel);
 void DynOS_Level_Override(void* originalScript, void* newScript, s32 modIndex);
 void DynOS_Level_Unoverride();
 const void *DynOS_Level_GetScript(s32 aLevel);
+const void *DynOS_Level_GetVanillaScript(s32 aLevel);
 s32 DynOS_Level_GetModIndex(s32 aLevel);
 bool DynOS_Level_IsVanillaLevel(s32 aLevel);
 Collision *DynOS_Level_GetCollision(u32 aLevel, u16 aArea);
@@ -1027,6 +1033,8 @@ u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, const String& toke
 void DynOS_Gfx_GenerateModPacks(char* modPath);
 void DynOS_Gfx_GeneratePacks(const char* directory);
 s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func);
+
+u64 DynOS_NewDataIdentifier();
 void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);
 char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData);
 

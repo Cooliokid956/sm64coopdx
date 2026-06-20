@@ -236,13 +236,6 @@ s32 geo_switch_peach_eyes(s32 run, struct GraphNode *node, UNUSED s32 a2) {
     return 0;
 }
 
-// unused
-static void stub_is_textbox_active(u16 *a0) {
-    if (get_dialog_id() == DIALOG_NONE) {
-        *a0 = 0;
-    }
-}
-
 /**
  * get_star_collection_dialog: Determine what dialog should show when Mario
  * collects a star.
@@ -404,7 +397,7 @@ Checks if the dialog from a specified `object` should start or continue for this
 |descriptionEnd| */
 u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) {
     if (!m) { return FALSE; }
-    if (!m->visibleToEnemies) { return FALSE; }
+    if (!m->visibleToObjects) { return FALSE; }
     if (m->playerIndex == 0) { return TRUE; }
     return (gContinueDialogFunctionObject == object);
 }
@@ -2191,7 +2184,7 @@ static s32 act_intro_cutscene(struct MarioState *m) {
     return FALSE;
 }
 
-static void jumbo_star_offset(struct MarioState* m) {
+UNUSED static void jumbo_star_offset(struct MarioState* m) {
     if (!m) { return; }
     m->pos[0] += 300.0f * sins(m->faceAngle[1] + 0x4000 * m->playerIndex);
     m->pos[2] += 300.0f * coss(m->faceAngle[1] + 0x4000 * m->playerIndex);

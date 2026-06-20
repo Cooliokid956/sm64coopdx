@@ -3,16 +3,6 @@ import re
 import sys
 
 replacements = {
-    'BAD_RETURN(s8)':  'void',
-    'BAD_RETURN(s16)': 'void',
-    'BAD_RETURN(s32)': 'void',
-    'BAD_RETURN(s64)': 'void',
-    'BAD_RETURN(u8)':  'void',
-    'BAD_RETURN(u16)': 'void',
-    'BAD_RETURN(u32)': 'void',
-    'BAD_RETURN(u64)': 'void',
-    'BAD_RETURN(f32)': 'void',
-    'BAD_RETURN(f64)': 'void',
     'INLINE': '',
     'NOINLINE': '',
     'OPTIMIZE_O3': '',
@@ -144,12 +134,13 @@ def extract_functions(filename):
                             description_lines.insert(0, raw_lines[k].strip())
 
                     if found_description_start and description_lines:
-                        # Combine all lines, remove trailing |descriptionEnd| and normalize whitespace
-                        combined_description = ' '.join(description_lines)
-                        combined_description = re.sub(r'\|\s*descriptionEnd\s*\|.*', '', combined_description).strip()
-                        # Normalize whitespace
-                        combined_description = re.sub(r'\s+', ' ', combined_description).strip()
-                        descriptions[re.sub(r'\)\s*\{', ');', line)] = combined_description
+                        # Remove trailing |descriptionEnd|
+                        if description_lines[0] == '': description_lines.pop(0)
+                        description_lines[-1] = re.sub(r'\|\s*descriptionEnd\s*\|.*', '', description_lines[-1]).strip()
+                        if description_lines[-1] == '': description_lines.pop(-1)
+
+                        if len(description_lines) > 0:
+                            descriptions[re.sub(r'\)\s*\{', ');', line)] = description_lines
                 break
 
     # normalize function ending

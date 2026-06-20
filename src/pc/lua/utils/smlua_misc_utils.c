@@ -327,7 +327,17 @@ void game_unpause(void) {
 ///
 
 bool is_transition_playing(void) {
-    return sTransitionUpdate != NULL || gWarpTransition.isActive;
+    return gWarpTransition.isActive;
+}
+
+///
+
+s16 get_current_play_mode(void) {
+    return sCurrPlayMode;
+}
+
+s16 get_delayed_warp_op(void) {
+    return sDelayedWarpOp;
 }
 
 ///
@@ -622,8 +632,8 @@ LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory) {
     normalize_path(normalizedSubDir);
 
     size_t subDirLen = strlen(normalizedSubDir);
-    if (subDirLen > 0 && subDirLen + 1 < SYS_MAX_PATH && normalizedSubDir[subDirLen - 1] != '/') {
-        strcat(normalizedSubDir, "/");
+    if (subDirLen > 0 && subDirLen + 1 < SYS_MAX_PATH && normalizedSubDir[subDirLen - 1] != *PATH_SEPARATOR) {
+        strcat(normalizedSubDir, PATH_SEPARATOR);
         subDirLen = strlen(normalizedSubDir);
     }
 
@@ -658,17 +668,17 @@ LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory) {
 ///
 
 void set_window_title(const char* title) {
-    WAPI.set_window_title(title);
+    gWindowApi->set_window_title(title);
 }
 
 void reset_window_title(void) {
-    WAPI.reset_window_title();
+    gWindowApi->reset_window_title();
 }
 
 ///
 
 const char* get_os_name(void) {
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
     return "Windows";
 #elif __APPLE__ || __MACH__
     return "Mac OSX"; // should be macOS

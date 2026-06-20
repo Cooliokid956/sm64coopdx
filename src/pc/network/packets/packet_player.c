@@ -20,7 +20,7 @@
 
 #pragma pack(1)
 struct PacketPlayerData {
-    u32 rawData[OBJECT_NUM_REGULAR_FIELDS];
+    u32 rawData[OBJECT_NUM_FIELDS];
 
     s16 cRawStickX;
     s16 cRawStickY;
@@ -50,6 +50,7 @@ struct PacketPlayerData {
     u8  framesSinceB;
     u8  wallKickTimer;
     u8  doubleJumpTimer;
+    u8  specialTripleJump;
     Vec3s faceAngle;
     Vec3s angleVel;
     s16 slideYaw;
@@ -91,7 +92,7 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
 
     u8 customFlags     = SET_BIT((m->freeze > 0), 0);
 
-    memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * OBJECT_NUM_REGULAR_FIELDS);
+    memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
     data->nodeFlags    = m->marioObj->header.gfx.node.flags;
 
     data->cRawStickX      = m->controller->rawStickX;
@@ -120,6 +121,7 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     data->framesSinceB    = m->framesSinceB;
     data->wallKickTimer   = m->wallKickTimer;
     data->doubleJumpTimer = m->doubleJumpTimer;
+    data->specialTripleJump = m->specialTripleJump;
     memcpy(data->faceAngle, m->faceAngle, sizeof(s16) * 3);
     memcpy(data->angleVel,  m->angleVel,  sizeof(s16) * 3);
     data->slideYaw        = m->slideYaw;
@@ -156,7 +158,7 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
                               u8* customFlags, u32* heldSyncID, u32* heldBySyncID,
                               u32* riddenSyncID, u32* interactSyncID, u32* usedSyncID,
                               u32* platformSyncID) {
-    memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * OBJECT_NUM_REGULAR_FIELDS);
+    memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * OBJECT_NUM_FIELDS);
     m->marioObj->header.gfx.node.flags = data->nodeFlags;
 
     m->controller->rawStickX      = data->cRawStickX;
@@ -185,6 +187,7 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     m->framesSinceB    = data->framesSinceB;
     m->wallKickTimer   = data->wallKickTimer;
     m->doubleJumpTimer = data->doubleJumpTimer;
+    m->specialTripleJump = data->specialTripleJump;
     memcpy(m->faceAngle, data->faceAngle, sizeof(s16) * 3);
     memcpy(m->angleVel,  data->angleVel,  sizeof(s16) * 3);
     m->slideYaw        = data->slideYaw;

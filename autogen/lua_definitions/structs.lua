@@ -207,13 +207,10 @@
 --- @field public yaw integer
 --- @field public focus Vec3f
 --- @field public pos Vec3f
---- @field public unusedVec1 Vec3f
 --- @field public areaCenX number
 --- @field public areaCenZ number
 --- @field public cutscene integer
---- @field public filler31 integer[]
 --- @field public nextYaw integer
---- @field public filler3C integer[]
 --- @field public doorStatus integer
 --- @field public areaCenY number
 --- @field public mtx Mat4
@@ -558,6 +555,7 @@
 
 --- @class DjuiInteractableTheme
 --- @field public textColor DjuiColor
+--- @field public disabledTextColor DjuiColor
 --- @field public defaultRectColor DjuiColor
 --- @field public cursorDownRectColor DjuiColor
 --- @field public hoveredRectColor DjuiColor
@@ -799,7 +797,6 @@
 
 --- @class GraphNodeBackground
 --- @field public fnNode FnGraphNode
---- @field public unused integer
 --- @field public background integer
 --- @field public prevCameraPos Vec3f
 --- @field public prevCameraFocus Vec3f
@@ -832,7 +829,6 @@
 --- @class GraphNodeCullingRadius
 --- @field public node GraphNode
 --- @field public cullingRadius integer
---- @field public pad1E integer[]
 
 --- @class GraphNodeDisplayList
 --- @field public node GraphNode
@@ -861,7 +857,6 @@
 --- @class GraphNodeObject
 --- @field public node GraphNode
 --- @field public sharedChild GraphNode
---- @field public unk4C SpawnInfo
 --- @field public throwMatrix Pointer_Mat4
 --- @field public throwMatrixPrev Pointer_Mat4
 --- @field public prevThrowMatrix Mat4
@@ -897,7 +892,6 @@
 
 --- @class GraphNodePerspective
 --- @field public fnNode FnGraphNode
---- @field public unused integer
 --- @field public fov number
 --- @field public near integer
 --- @field public far integer
@@ -939,7 +933,6 @@
 
 --- @class GraphNodeSwitchCase
 --- @field public fnNode FnGraphNode
---- @field public unused integer
 --- @field public parameter integer
 --- @field public selectedCase integer
 
@@ -947,13 +940,21 @@
 --- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
 --- @field public translation Vec3s
---- @field public pad1E integer[]
 
 --- @class GraphNodeTranslationRotation
 --- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
 --- @field public translation Vec3s
 --- @field public rotation Vec3s
+
+--- @class HudDisplay
+--- @field public lives integer
+--- @field public coins integer
+--- @field public stars integer
+--- @field public wedges integer
+--- @field public keys integer
+--- @field public flags integer
+--- @field public timer integer
 
 --- @class InstantWarp
 --- @field public id integer
@@ -965,10 +966,8 @@
 --- @field public curPos Vec3f
 --- @field public goalFocus Vec3f
 --- @field public goalPos Vec3f
---- @field public filler30 integer[]
 --- @field public mode integer
 --- @field public defMode integer
---- @field public filler3E integer[]
 --- @field public focusDistance number
 --- @field public oldPitch integer
 --- @field public oldYaw integer
@@ -977,9 +976,6 @@
 --- @field public shakePitchPhase integer
 --- @field public shakePitchVel integer
 --- @field public shakePitchDecay integer
---- @field public unusedVec1 Vec3f
---- @field public unusedVec2 Vec3s
---- @field public filler72 integer[]
 --- @field public roll integer
 --- @field public yaw integer
 --- @field public nextYaw integer
@@ -1116,6 +1112,7 @@
 --- @field public doubleJumpTimer integer
 --- @field public specialTripleJump integer
 --- @field public fadeWarpOpacity integer
+--- @field public visibleToObjects boolean
 --- @field public wasNetworkVisible integer
 --- @field public dialogId integer
 --- @field public prevNumStarsForDialog integer
@@ -1192,13 +1189,17 @@
 --- @field public pausable boolean
 --- @field public ignoreScriptWarnings boolean
 --- @field public size integer
---- @field public customBehaviorIndex integer
 
 --- @class ModAudio
 --- @field public filepath string
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
+--- @field public position number
+--- @field public looping boolean
+--- @field public frequency number
+--- @field public volume number
+--- @field public channel integer
 
 --- @class ModFs
 --- @field public mod Mod
@@ -1222,6 +1223,7 @@
 --- @field public filepath string
 --- @field public size integer
 --- @field public offset integer
+--- @field public compressionLevel integer
 --- @field public isText boolean
 --- @field public isPublic boolean
 --- @field public read_bool fun(file: ModFsFile): boolean
@@ -1243,6 +1245,7 @@
 --- @field public erase fun(file: ModFsFile, length: integer): boolean
 --- @field public set_text_mode fun(file: ModFsFile, text: boolean): boolean
 --- @field public set_public fun(file: ModFsFile, pub: boolean): boolean
+--- @field public set_compression fun(file: ModFsFile, level: integer): boolean
 
 --- @class NametagsSettings
 --- @field public showHealth boolean
@@ -1278,9 +1281,6 @@
 --- @field public overrideLocation string
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
---- @field public paletteIndex integer
---- @field public overridePaletteIndex integer
---- @field public overridePaletteIndexLp integer
 
 --- @class Object
 --- @field public header ObjectNode
@@ -1291,9 +1291,8 @@
 --- @field public collidedObjs Object[]
 --- @field public collisionData Pointer_Collision
 --- @field public behavior Pointer_BehaviorScript
+--- @field public initBhvCommand Pointer_BehaviorScript
 --- @field public curBhvCommand Pointer_BehaviorScript
---- @field public bhvStack integer[]
---- @field public bhvStackIndex integer
 --- @field public bhvDelayTimer integer
 --- @field public activeFlags integer
 --- @field public collidedObjInteractTypes integer
@@ -1722,7 +1721,7 @@
 --- @field public oCameraLakituSpeed number
 --- @field public oCameraLakituCircleRadius number
 --- @field public oCameraLakituFinishedDialog integer
---- @field public oCameraLakituUnk104 integer
+--- @field public oCameraLakituMusicPlayed integer
 --- @field public oCameraLakituPitchVel integer
 --- @field public oCameraLakituYawVel integer
 --- @field public oEnemyLakituNumSpinies integer
@@ -2142,10 +2141,10 @@
 
 --- @class RomhackCameraSettings
 --- @field public enable RomhackCameraOverride
---- @field public centering integer
+--- @field public switchable integer
 --- @field public dpad integer
 --- @field public collisions integer
---- @field public slowFall integer
+--- @field public following integer
 --- @field public zoomedInDist integer
 --- @field public zoomedOutDist integer
 --- @field public zoomedInHeight integer
@@ -2156,8 +2155,8 @@
 --- @field public playerInteractions PlayerInteractions
 --- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public pvpType PvpType
+--- @field public stayInLevelAfterStar StarExitType
 --- @field public playerKnockbackStrength integer
---- @field public stayInLevelAfterStar integer
 --- @field public skipIntro integer
 --- @field public bubbleDeath integer
 --- @field public enablePlayersInLevelDisplay integer
@@ -2173,7 +2172,6 @@
 --- @field public areaIndex integer
 --- @field public activeAreaIndex integer
 --- @field public behaviorArg integer
---- @field public unk18 GraphNode
 --- @field public next SpawnInfo
 --- @field public syncID integer
 
@@ -2235,6 +2233,7 @@
 --- @field public type integer
 --- @field public flags integer
 --- @field public room integer
+--- @field public poolType integer
 --- @field public force integer
 --- @field public lowerY integer
 --- @field public upperY integer
@@ -2247,6 +2246,7 @@
 --- @field public normal Vec3f
 --- @field public originOffset number
 --- @field public modifiedTimestamp integer
+--- @field public socId integer
 --- @field public object Object
 
 --- @class TextureInfo

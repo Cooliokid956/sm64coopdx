@@ -27,10 +27,10 @@ enum RomhackCameraEnable {
 
 struct RomhackCameraSettings {
     enum RomhackCameraOverride enable;
-    u8 centering;
+    u8 switchable;
     u8 dpad;
     u8 collisions;
-    u8 slowFall;
+    u8 following;
     u32 zoomedInDist;
     u32 zoomedOutDist;
     u32 zoomedInHeight;
@@ -381,7 +381,7 @@ struct HandheldShakePoint
  * A function that is called by CameraTriggers and cutscene shots.
  * These are concurrent: multiple CameraEvents can occur on the same frame.
  */
-typedef BAD_RETURN(s32) (*CameraEvent)(struct Camera *c);
+typedef void (*CameraEvent)(struct Camera *c);
 /**
  * The same type as a CameraEvent, but because these are generally longer, and happen in sequential
  * order, they're are called "shots," a term taken from cinematography.

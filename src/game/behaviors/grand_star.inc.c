@@ -49,16 +49,16 @@ void bhv_grand_star_init(void) {
                 sync_object_init_field(o, o->oGraphYOffset);
             }
         }
-        return; 
+        return;
     }
-    
+
     obj_mark_for_deletion(o);
     if (gSecondCameraFocus == o) { gSecondCameraFocus = other; }
 }
 
 void bhv_grand_star_loop(void) {
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) { return; }
-    
+
     if (o->oAction == 0) {
         if (o->oTimer == 0) {
             obj_set_angle(o, 0, 0, 0);
@@ -73,7 +73,7 @@ void bhv_grand_star_loop(void) {
         if (o->oTimer == 0) {
             Vec3f empty;
             empty[0] = empty[1] = empty[2] = 0.0f;
-            
+
             cur_obj_play_sound_2(SOUND_GENERAL_GRAND_STAR);
             cutscene_object(CUTSCENE_STAR_SPAWN, o);
             o->oGrandStarUnk108 = arc_to_goal_pos(empty, &o->oPosX, 80.0f, -2.0f);

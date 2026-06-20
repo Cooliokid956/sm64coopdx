@@ -132,6 +132,42 @@ void djui_text_remove_colors(char *str) {
     }
 }
 
+void djui_text_remove_alpha(char *str) {
+    if (!str) { return; }
+    char *colorStart = str;
+    const char *strEnd = str + strlen(str);
+    while ((colorStart = strstr(colorStart, "\\#"))) {
+        char *colorEnd;
+        struct DjuiColor parsedColor;
+        if (djui_text_parse_color(colorStart, strEnd, false, NULL, &colorEnd, &parsedColor) && colorEnd > colorStart) {
+            u8 length = (u8) (colorEnd - colorStart) - 3;
+            switch (length) {
+
+                // #rgba -> #rgb
+                case 4: {
+                    snprintf(colorStart, strEnd - colorStart, "\\#%01x%01x%01x\\", parsedColor.r >> 4, parsedColor.g >> 4, parsedColor.b >> 4);
+                    colorStart = colorEnd - 1;
+                    memmove(colorStart, colorStart + 1, strlen(colorStart + 1) + 1);
+                } break;
+
+                // #rrggbbaa -> #rrggbb
+                case 8: {
+                    snprintf(colorStart, strEnd - colorStart, "\\#%02x%02x%02x\\", parsedColor.r, parsedColor.g, parsedColor.b);
+                    colorStart = colorEnd - 2;
+                    memmove(colorStart, colorStart + 2, strlen(colorStart + 2) + 1);
+                } break;
+
+                // Nothing to change
+                default: {
+                    colorStart = colorEnd;
+                } break;
+            }
+        } else {
+            colorStart++;
+        }
+    }
+}
+
 char *djui_text_get_uncolored_string(char *dest, size_t length, const char *str) {
     if (!dest) {
         dest = malloc(length * sizeof(char));
@@ -382,8 +418,10 @@ static void djui_text_render_line(struct DjuiText* text, char* c1, char* c2, f32
     for (char* c = c1; c < c2;) {
         struct DjuiColor parsedColor;
         if (djui_text_parse_color(c, c2, true, &sDjuiTextDefaultColor, &c, &parsedColor)) {
-            gDPSetEnvColor(gDisplayListHead++, parsedColor.r, parsedColor.g, parsedColor.b, parsedColor.a);
-            sDjuiTextCurrentColor = parsedColor;
+            sDjuiTextCurrentColor.r = parsedColor.r;
+            sDjuiTextCurrentColor.g = parsedColor.g;
+            sDjuiTextCurrentColor.b = parsedColor.b;
+            gDPSetEnvColor(gDisplayListHead++, sDjuiTextCurrentColor.r, sDjuiTextCurrentColor.g, sDjuiTextCurrentColor.b, sDjuiTextCurrentColor.a);
             continue;
         }
 
@@ -450,6 +488,7 @@ static bool djui_text_render(struct DjuiBase* base) {
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedFontSize, translatedFontSize, 1.0f);
 
     // set color
+    gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
     sDjuiTextCurrentColor = base->color;
 

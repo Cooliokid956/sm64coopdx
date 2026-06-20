@@ -15,6 +15,8 @@
 #include "pc/network/network.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/utils/misc.h"
+#include "pc/configfile.h"
+#include "audio/external.h"
 
 #ifndef bcopy
 #define bcopy(b1,b2,len) (memmove((b2), (b1), (len)), (void) 0)
@@ -460,8 +462,7 @@ void save_file_erase_current_backup_save(void) {
     save_file_do_save(gCurrSaveFileNum - 1, TRUE);
 }
 
-//! Needs to be s32 to match on -O2, despite no return value.
-BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex) {
+void save_file_copy(s32 srcFileIndex, s32 destFileIndex) {
     if (INVALID_FILE_INDEX(srcFileIndex)) { return; }
     if (INVALID_FILE_INDEX(destFileIndex)) { return; }
 
@@ -814,7 +815,8 @@ void save_file_set_sound_mode(u16 mode) {
 }
 
 u16 save_file_get_sound_mode(void) {
-    return gSaveBuffer.menuData[0].soundMode;
+    if (configSoundOutput > SOUND_MODE_HEADSET) { return SOUND_MODE_STEREO; }
+    return configSoundOutput;
 }
 
 void save_file_move_cap_to_default_location(void) {

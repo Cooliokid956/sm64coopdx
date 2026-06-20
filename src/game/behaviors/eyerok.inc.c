@@ -32,7 +32,7 @@ static struct Object* eyerok_nearest_targetable_player_to_object(s32 zDist) {
         struct MarioState *m = &gMarioStates[i];
         if (!m->marioObj) { continue; }
         if (m->marioObj == o) { continue; }
-        if (!m->visibleToEnemies) { continue; }
+        if (!m->visibleToObjects) { continue; }
         if (!is_player_active(m)) { continue; }
         f32 dist = dist_between_objects(o, m->marioObj);
         if (m->marioObj->oPosZ - o->oHomeZ < zDist) {
@@ -43,7 +43,7 @@ static struct Object* eyerok_nearest_targetable_player_to_object(s32 zDist) {
             nearestDist = dist;
         }
     }
-    
+
     return nearest;
 }
 
@@ -143,7 +143,7 @@ static void eyerok_boss_act_wake_up(void) {
     }
 }
 
-static u8 eyerok_boss_act_show_intro_text_continue_dialog(void) {
+UNUSED static u8 eyerok_boss_act_show_intro_text_continue_dialog(void) {
     return o->oAction == EYEROK_BOSS_ACT_SHOW_INTRO_TEXT;
 }
 

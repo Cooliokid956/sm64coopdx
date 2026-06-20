@@ -138,12 +138,12 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_ATTACK_OBJECT | Called when a player attacks an object. May be double-fired in some cases, you'll need to write special code for this | [MarioState](../structs.md#MarioState) attacker, [Object](../structs.md#Object) victim, `integer` interactionId |
 | HOOK_ON_LANGUAGE_CHANGED | Called when the language is changed | `string` language |
 | HOOK_ON_MODS_LOADED | Called directly after every mod file is loaded in by smlua | None |
-| HOOK_ON_NAMETAGS_RENDER | Called when nametags are rendered. Return a table with `name` and/or `pos` to override the nametag text and/or position. | `string` playerIndex, `Vec3f` pos |
+| HOOK_ON_NAMETAGS_RENDER | Called when nametags are rendered. Return a table with `name` and/or `pos` to override the nametag text and/or position. | `integer` playerIndex, `Vec3f` pos |
 | HOOK_ON_DJUI_THEME_CHANGED | Called when the DJUI theme is changed. Run `djui_menu_get_theme()` to get the new theme. | None |
 | HOOK_ON_GEO_PROCESS | Called when a GeoLayout is processed **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
 | HOOK_BEFORE_GEO_PROCESS | Called before a GeoLayout is processed **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
 | HOOK_ON_GEO_PROCESS_CHILDREN | Called when the children of a GeoLayout node is processed **Note:** You must set the `hookProcess` field of the parent graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
-| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | Called before running Mario's geometry input logic, return `false` to not run it. | [MarioState](../structs.md) m | 
+| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | Called before running Mario's geometry input logic, return `false` to not run it. | [MarioState](../structs.md) m |
 | HOOK_ON_INTERACTIONS | Called when the Mario interactions are processed | [MarioState](../structs.md#MarioState) mario |
 | HOOK_ALLOW_FORCE_WATER_ACTION | Called when executing a non-water action while under the water's surface, or vice versa. Return `false` to prevent the player from being forced out of the action at the water's surface | [MarioState](../structs.md#MarioState) mario, `boolean` isInWaterAction |
 | HOOK_BEFORE_WARP | Called before the local player warps. Return a table with `destLevel`, `destArea`, `destWarpNode`, to override the warp | `integer` destLevel, `integer` destArea, `integer` destWarpNode, `integer` arg |
@@ -157,6 +157,9 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_FIND_WATER_LEVEL | Called after water level detection completes. Return a number to override the water level | `number` x, `number` z, `number` waterLevel |
 | HOOK_ON_FIND_POISON_GAS_LEVEL | Called after poison gas level detection completes. Return a number to override the gas level | `number` x, `number` z, `number` gasLevel |
 | HOOK_ON_FIND_SURFACE_ON_RAY | Called after ray-surface intersection completes. Return `surface` to override the hit surface, or `surface, hitPos` to override both | `Vec3f` orig, `Vec3f` dir, [Surface](../structs.md#Surface) hitSurface, `Vec3f` hitPos |
+| HOOK_ON_DYNOS_PACK_TOGGLED | Called after a DynOS pack is toggled | `string` dynosPackName, `boolean` enabled |
+| HOOK_BEFORE_PLAY_MODE_UPDATE | Called before the play mode is ran. Return a number to override the play mode to be ran. | `number` playMode |
+| HOOK_ON_PLAY_MODE_UPDATE | Called after the play mode is ran. Return a number to override the change level. | `number` playMode |
 
 ### Parameters
 

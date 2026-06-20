@@ -51,7 +51,7 @@ static void gfx_dummy_wm_set_keyboard_callbacks(UNUSED kb_callback_t on_key_down
 static void gfx_dummy_wm_set_scroll_callback(UNUSED void (*on_scroll)(float, float)) {
 }
 
-static void gfx_dummy_wm_set_fullscreen(UNUSED bool enable) {
+UNUSED static void gfx_dummy_wm_set_fullscreen(UNUSED bool enable) {
 }
 
 static void gfx_dummy_wm_main_loop(void (*run_one_game_iter)(void)) {
@@ -192,6 +192,10 @@ static void gfx_dummy_renderer_end_frame(void) {
 static void gfx_dummy_renderer_finish_render(void) {
 }
 
+static const char* gfx_dummy_renderer_get_name(void) {
+    return "Headless";
+}
+
 static void gfx_dummy_renderer_shutdown(void) {
 }
 
@@ -242,5 +246,6 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_start_frame,
     gfx_dummy_renderer_end_frame,
     gfx_dummy_renderer_finish_render,
+    gfx_dummy_renderer_get_name,
     gfx_dummy_renderer_shutdown
 };

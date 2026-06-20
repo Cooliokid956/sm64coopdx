@@ -12,6 +12,7 @@ extern "C" {
 #include "game/area.h"
 #include "game/object_list_processor.h"
 #include "game/interaction.h"
+#include "pc/lua/smlua_hooks.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/lua/utils/smlua_collision_utils.h"
 
@@ -780,7 +781,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_bhvPointLight);
 
     // Define a special type for new ids that don't override.
-    if (_Arg == "id_bhvNewId") { return (BehaviorScript) (0xFFFF); }
+    if (_Arg == "id_bhvNewId") { return (BehaviorScript) LUA_BEHAVIOR_NEW_ID; }
 
     // Legacy behavior ids
     bhv_legacy_constant(id_bhvFish2, id_bhvManyBlueFishSpawner);
@@ -1374,7 +1375,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oCameraLakituCircleRadius);
     bhv_constant(oCameraLakituFinishedDialog);
 #ifndef VERSION_JP
-    bhv_constant(oCameraLakituUnk104);
+    bhv_constant(oCameraLakituMusicPlayed);
 #endif
     bhv_constant(oCameraLakituPitchVel);
     bhv_constant(oCameraLakituYawVel);
@@ -1912,23 +1913,8 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     return 0;
 }
 
-template <typename T>
-DataNode<T> *FindDataNode(DataNodes<T> &aDataNodes, String &aName, u32 aModelIdentifier) {
-    DataNode<T> *best = NULL;
-    for (auto& node : aDataNodes) {
-        if (aName == node->mName) {
-            if (aModelIdentifier == node->mModelIdentifier) {
-                return node;
-            }
-            best = node;
-        }
-    }
-    return best;
-}
-
 static BehaviorScript ParseBehaviorScriptSymbolArgInternal(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, u64 &aTokenIndex, bool *found) {
     String _Arg = aNode->mTokens[aTokenIndex++];
-    u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
 
     // Remove (de-)referencing
@@ -2288,7 +2274,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     }
 
     if (_Symbol == "LOAD_ANIMATIONS") {
-        u64 topTokenIndex = aTokenIndex;
+        //u64 topTokenIndex = aTokenIndex;
 
         bool foundAnimation = true;
 
@@ -2305,7 +2291,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
             //BehaviorScript _Bs[] = { LOAD_ANIMATIONS_EXT(field, animIndex) };
             //memcpy(aHead, _Bs, sizeof(_Bs));
             //aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
-            PrintDataError("  ERROR: : Custom external animations are currently not supported. Skipping LOAD_ANIMATIONS_EXT.");
+            PrintDataError("  ERROR: Custom external animations are currently not supported. Skipping LOAD_ANIMATIONS_EXT.");
         }
         return;
     }
@@ -2512,15 +2498,6 @@ DataNode<BehaviorScript> *DynOS_Bhv_Parse(GfxData *aGfxData, DataNode<BehaviorSc
     return aNode;
 }
 
-static DataNode<BehaviorScript> *GetBehaviorScript(GfxData *aGfxData, const String &aBhvRoot) {
-    for (DataNode<BehaviorScript> *_Node : aGfxData->mBehaviorScripts) {
-        if (_Node->mName == aBhvRoot) {
-            return _Node;
-        }
-    }
-    return NULL;
-}
-
   /////////////
  // Writing //
 /////////////
@@ -2658,6 +2635,7 @@ GfxData *DynOS_Bhv_LoadFromBinary(const SysPath &aFilename, const char *aBehavio
     GfxData *_GfxData = NULL;
     BinFile *_File = BinFile::OpenR(aFilename.c_str());
     if (_File != NULL) {
+        PrintInfo("Loading behavior '%s' from file: %s", aBehaviorName, aFilename.c_str());
         _GfxData = New<GfxData>();
         for (bool _Done = false; !_Done;) {
             switch (_File->Read<u8>()) {
@@ -2697,7 +2675,7 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
         // Init
         _GfxData->mLoadIndex                  = 0;
         _GfxData->mErrorCount                 = 0;
-        _GfxData->mModelIdentifier            = _BhvNode->mModelIdentifier;
+        _GfxData->mDataIdentifier             = _BhvNode->mDataIdentifier;
         _GfxData->mPackFolder                 = aPackFolder;
         _GfxData->mPointerList                = { NULL }; // The NULL pointer is needed, so we add it here
         _GfxData->mPointerOffsetList          = { };
@@ -2708,8 +2686,7 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
         _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
-        PrintNoNewLine("%s.bhv: Behavior identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bhv: Behavior identifier: %X - Processing... ", _BhvRootName.begin(), _GfxData->mModelIdentifier);
+        PrintInfoNoNewLine("%s.bhv: Behavior identifier: %llX - Processing... ", _BhvRootName.begin(), _GfxData->mDataIdentifier);
         DynOS_Bhv_Parse(_GfxData, _BhvNode, true);
 
         // Write if no error
@@ -2743,12 +2720,12 @@ void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder) {
 
     // Read the main folder.
     if (fs_sys_dir_exists(aPackFolder.c_str())) {
-        _GfxData->mModelIdentifier = 0;
+        _GfxData->mDataIdentifier = 0;
 
         DynOS_Read_Source(_GfxData, fstring("%s/behavior_data.c", aPackFolder.c_str()));
 
-        if (_GfxData->mModelIdentifier != 0) {
-            _BehaviorsFolders.Add({ _GfxData->mModelIdentifier, String(aPackFolder.c_str()) });
+        if (_GfxData->mDataIdentifier != 0) {
+            _BehaviorsFolders.Add({ _GfxData->mDataIdentifier, String(aPackFolder.c_str()) });
         }
     }
 
@@ -2766,12 +2743,12 @@ void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder) {
             // For each subfolder, read tokens from behavior_data.c
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
             if (fs_sys_dir_exists(_Folder.c_str())) {
-                _GfxData->mModelIdentifier = 0;
+                _GfxData->mDataIdentifier = 0;
 
                 DynOS_Read_Source(_GfxData, fstring("%s/behavior_data.c", _Folder.c_str()));
 
-                if (_GfxData->mModelIdentifier != 0) {
-                    _BehaviorsFolders.Add({ _GfxData->mModelIdentifier, String(_PackEnt->d_name) });
+                if (_GfxData->mDataIdentifier != 0) {
+                    _BehaviorsFolders.Add({ _GfxData->mDataIdentifier, String(_PackEnt->d_name) });
                 }
             }
         }

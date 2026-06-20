@@ -3031,6 +3031,9 @@ G_SETENVRGB = 0xd1
 --- @type integer
 G_PPARTTOCOLOR = 0xd3
 
+--- @type integer
+G_STATE_EXT = 0x10
+
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
 BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams
 BACKGROUND_UNDERWATER_CITY =  2 --- @type SkyBackgroundParams
@@ -3055,6 +3058,27 @@ BACKGROUND_CUSTOM          = 10 --- @type SkyBackgroundParams
 --- | `BACKGROUND_ABOVE_CLOUDS`
 --- | `BACKGROUND_PURPLE_SKY`
 --- | `BACKGROUND_CUSTOM`
+
+SHADER_FLAG_HUE           = 0 --- @type ShaderFlag
+SHADER_FLAG_SATURATION    = 1 --- @type ShaderFlag
+SHADER_FLAG_BRIGHTNESS    = 2 --- @type ShaderFlag
+SHADER_FLAG_CONTRAST      = 3 --- @type ShaderFlag
+SHADER_FLAG_EXPOSURE      = 4 --- @type ShaderFlag
+SHADER_FLAG_DITHERING     = 5 --- @type ShaderFlag
+SHADER_FLAG_POSTERIZATION = 6 --- @type ShaderFlag
+SHADER_FLAG_SCANLINES     = 7 --- @type ShaderFlag
+SHADER_FLAG_MAX           = 8 --- @type ShaderFlag
+
+--- @alias ShaderFlag
+--- | `SHADER_FLAG_HUE`
+--- | `SHADER_FLAG_SATURATION`
+--- | `SHADER_FLAG_BRIGHTNESS`
+--- | `SHADER_FLAG_CONTRAST`
+--- | `SHADER_FLAG_EXPOSURE`
+--- | `SHADER_FLAG_DITHERING`
+--- | `SHADER_FLAG_POSTERIZATION`
+--- | `SHADER_FLAG_SCANLINES`
+--- | `SHADER_FLAG_MAX`
 
 --- @type integer
 GRAPH_RENDER_ACTIVE = (1 << 0)
@@ -4641,6 +4665,15 @@ GRAB_POS_BOWSER    = 3 --- @type MarioGrabPosGSCId
 --- | `GRAB_POS_BOWSER`
 
 --- @type integer
+MOD_FS_COMPRESSION_MIN = 0
+
+--- @type integer
+MOD_FS_COMPRESSION_MAX = 9
+
+--- @type integer
+MOD_FS_COMPRESSION_DEFAULT = 1
+
+--- @type integer
 MOD_FS_MAX_SIZE = 0x2000000
 
 --- @type integer
@@ -4741,6 +4774,15 @@ PLAYER_PVP_REVAMPED = 1 --- @type PvpType
 --- @alias PvpType
 --- | `PLAYER_PVP_CLASSIC`
 --- | `PLAYER_PVP_REVAMPED`
+
+STAR_LEAVE_LEVEL   = 0 --- @type StarExitType
+STAR_STAY_IN_LEVEL = 1 --- @type StarExitType
+STAR_NON_STOP      = 2 --- @type StarExitType
+
+--- @alias StarExitType
+--- | `STAR_LEAVE_LEVEL`
+--- | `STAR_STAY_IN_LEVEL`
+--- | `STAR_NON_STOP`
 
 --- @type integer
 UNKNOWN_LOCAL_INDEX = (-1)
@@ -5625,6 +5667,12 @@ YOSHI_ACT_FINISH_JUMPING_AND_DESPAWN = 4
 
 --- @type integer
 YOSHI_ACT_GIVE_PRESENT = 5
+
+--- @type integer
+YOSHI_ACT_GONE = 6
+
+--- @type integer
+YOSHI_ACT_REAPPEAR = 7
 
 --- @type integer
 YOSHI_ACT_CREDITS = 10
@@ -8147,6 +8195,18 @@ VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD |
 --- @type integer
 C_BUTTONS = (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
+--- @type integer
+MOD_AUDIO_CHANNEL_MASTER = 0
+
+--- @type integer
+MOD_AUDIO_CHANNEL_MUSIC = 1
+
+--- @type integer
+MOD_AUDIO_CHANNEL_SFX = 2
+
+--- @type integer
+MOD_AUDIO_CHANNEL_ENV = 3
+
 HOOK_UPDATE                                 =  0 --- @type LuaHookedEventType
 HOOK_MARIO_UPDATE                           =  1 --- @type LuaHookedEventType
 HOOK_BEFORE_MARIO_UPDATE                    =  2 --- @type LuaHookedEventType
@@ -8213,7 +8273,10 @@ HOOK_ON_FIND_FLOOR                          = 62 --- @type LuaHookedEventType
 HOOK_ON_FIND_WATER_LEVEL                    = 63 --- @type LuaHookedEventType
 HOOK_ON_FIND_POISON_GAS_LEVEL               = 64 --- @type LuaHookedEventType
 HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
-HOOK_MAX                                    = 66 --- @type LuaHookedEventType
+HOOK_ON_DYNOS_PACK_TOGGLED                  = 66 --- @type LuaHookedEventType
+HOOK_BEFORE_PLAY_MODE_UPDATE                = 67 --- @type LuaHookedEventType
+HOOK_ON_PLAY_MODE_UPDATE                    = 68 --- @type LuaHookedEventType
+HOOK_MAX                                    = 69 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8282,10 +8345,10 @@ HOOK_MAX                                    = 66 --- @type LuaHookedEventType
 --- | `HOOK_ON_FIND_WATER_LEVEL`
 --- | `HOOK_ON_FIND_POISON_GAS_LEVEL`
 --- | `HOOK_ON_FIND_SURFACE_ON_RAY`
+--- | `HOOK_ON_DYNOS_PACK_TOGGLED`
+--- | `HOOK_BEFORE_PLAY_MODE_UPDATE`
+--- | `HOOK_ON_PLAY_MODE_UPDATE`
 --- | `HOOK_MAX`
-
---- @type integer
-MAX_HOOKED_BEHAVIORS = 1024
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
@@ -10603,6 +10666,15 @@ SOUND_OBJ2_BOSS_DIALOG_GRUNT = SOUND_ARG_LOAD(SOUND_BANK_OBJ2, 0x69, 0x40, SOUND
 SOUND_OBJ2_MRI_SPINNING = SOUND_ARG_LOAD(SOUND_BANK_OBJ2, 0x6B, 0x00, SOUND_DISCRETE)
 
 --- @type integer
+SURFACE_POOL_STATIC = 0
+
+--- @type integer
+SURFACE_POOL_DYNAMIC = 1
+
+--- @type integer
+SURFACE_POOL_SOC = 2
+
+--- @type integer
 SURFACE_DEFAULT = 0x0000
 
 --- @type integer
@@ -11174,19 +11246,16 @@ ANIM_FLAG_7 = (1 << 7)
 ANIM_FLAG_BONE_TRANS = (1 << 8)
 
 --- @type integer
+ANIM_FLAG_BONE_SCALE = (1 << 9)
+
+--- @type integer
 OBJECT_MAX_BHV_STACK = 16
 
 --- @type integer
-OBJECT_NUM_REGULAR_FIELDS = 0x50
+OBJECT_NUM_FIELDS = 0x50
 
 --- @type integer
-OBJECT_NUM_CUSTOM_FIELDS = 0x40
-
---- @type integer
-OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_REGULAR_FIELDS)
-
---- @type integer
-OBJECT_NUM_FIELDS = (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
+OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_FIELDS)
 
 MARIO_ANIM_PART_NONE          =  0 --- @type MarioAnimPart
 MARIO_ANIM_PART_ROOT          =  1 --- @type MarioAnimPart
@@ -11266,13 +11335,13 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.4.2"
+SM64COOPDX_VERSION = "v1.5.1"
 
 --- @type string
 VERSION_TEXT = "v"
 
 --- @type integer
-VERSION_NUMBER = 41
+VERSION_NUMBER = 42
 
 --- @type integer
 MINOR_VERSION_NUMBER = 1

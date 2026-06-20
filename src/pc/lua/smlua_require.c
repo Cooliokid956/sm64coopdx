@@ -49,7 +49,7 @@ void smlua_mark_module_as_loading(lua_State* L, struct Mod* mod, struct ModFile*
     lua_setfield(L, -2, file->relativePath);
     lua_pop(L, 1); // pop loaded table
 }
- 
+
 void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* file, s32 prevTop) {
     if (lua_gettop(L) == prevTop) {
         lua_pushboolean(L, 1);
@@ -121,7 +121,7 @@ static int smlua_custom_require(lua_State* L) {
         return 0;
     }
 
-    if (path_ends_with(moduleName, "/") || path_ends_with(moduleName, "\\")) {
+    if (path_ends_with(moduleName, PATH_SEPARATOR) || path_ends_with(moduleName, PATH_SEPARATOR_ALT)) {
         LOG_LUA_LINE("cannot require a directory");
         return 0;
     }

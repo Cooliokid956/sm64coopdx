@@ -31,6 +31,7 @@ in_files = [
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/game/paintings.h",
     "src/pc/djui/djui_types.h",
+    "src/game/level_update.h",
     "src/game/first_person_cam.h",
     "src/game/player_palette.h",
     "src/engine/graph_node.h",
@@ -86,25 +87,34 @@ override_field_mutable = {
 }
 
 override_field_invisible = {
-    "Mod": [ "files", "showedScriptWarning" ],
+    "Mod": [ "files", "showedScriptWarning", "customBehaviorIndex", "customObjectFields" ],
     "Camera": [ "paletteEditorCapState" ],
-    "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
     "GraphNodeMasterList": [ "listHeads", "listTails" ],
+    "GraphNodeCullingRadius": [ "pad1E" ],
+    "GraphNodeTranslation": [ "pad1E" ],
+    "GraphNodeBackground": [ "unused" ],
+    "GraphNodePerspective": [ "unused" ],
+    "GraphNodeSwitchCase": [ "unused" ],
+    "GraphNodeObject": [ "unk4C" ],
     "FnGraphNode": [ "luaTokenIndex" ],
-    "Object": [ "firstSurface" ],
+    "Object": [ "firstSurface", "customFields", "bhvStack", "bhvStackIndex" ],
     "Animation": [ "unusedBoneCount" ],
-    "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
+    "ModAudio": [ "alive", "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
     "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
     "ModFs": [ "files" ],
 }
 
-override_field_deprecated = {
+override_field_hidden = {
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
+    "ModAudio": [ "file", "relativePath" ], # compatibility band-aid
+    "Camera": [ "filler31", "filler3C", "unusedVec1" ],
+    "LakituState": [ "filler30", "filler3E", "filler72", "unusedVec1", "unusedVec2" ],
+    "SpawnInfo": [ "unk18" ],
 }
 
 override_field_immutable = {
@@ -115,6 +125,7 @@ override_field_immutable = {
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
     "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces", "bhvStack" ],
+    "Surface": [ "poolType", "socId" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "WaterDropletParams": [ "model" ],
@@ -148,13 +159,14 @@ override_field_immutable = {
 }
 
 override_field_version_excludes = {
-    "oCameraLakituUnk104": "VERSION_JP",
+    "oCameraLakituMusicPlayed": "VERSION_JP",
     "oCoinUnk1B0": "VERSION_JP",
 }
 
 override_allowed_structs = {
     "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
     "src/pc/djui/djui_types.h": [ "DjuiColor" ],
+    "src/game/level_update.h": [ "HudDisplay" ],
     "src/game/player_palette.h": [ "PlayerPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
     "include/PR/gbi.h": [ "Gfx", "Vtx" ],
@@ -264,10 +276,17 @@ def table_to_string(table):
 
     for row in table:
         for i in range(columns):
-            if '#' in row[i]:
+            if '#' in row[i] or row[i][-1] == '\\':
                 continue
             if len(row[i]) > column_width[i]:
                 column_width[i] = len(row[i])
+
+    for row in table:
+        for i in range(columns):
+            if row[i][-1] == '\\':
+                row[i] = row[i][:-1]
+                row[i+1] = row[i][column_width[i]:] + row[i+1]
+                row[i] = row[i][:column_width[i]]
 
     s = ''
     for row in table:
@@ -327,11 +346,20 @@ def parse_struct(struct_str, sortFields = False):
 
         # handle function members
         if field['type'].startswith(cobject_function_identifier):
-            field_function = field['identifier']
             field_type, field_id = field['type'].split()
+            field_function = field['identifier']
             field['type'] = field_type.strip()
-            field['identifier'] = field_id.strip('"').strip()
+            field['identifier'] = field_id.strip()
             field['function'] = field_function.strip()
+
+        # handle property members
+        if field['type'].startswith(cobject_property_identifier):
+            field_type, field_id, field_get = field['type'].split()
+            field_set = field['identifier']
+            field['type'] = field_type.strip()
+            field['identifier'] = field_id.strip()
+            field['get'] = field_get.strip()
+            field['set'] = field_set.strip()
 
         struct['fields'].append(field)
 
@@ -488,6 +516,9 @@ def get_struct_field_info(struct, field):
     if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt and 'TRAJECTORY' not in lvt:
         fimmutable = 'true'
 
+    if field.get('get') and field['set'] == 'NULL':
+        fimmutable = 'true'
+
     if sid in override_field_immutable:
         if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
             fimmutable = 'true'
@@ -495,9 +526,6 @@ def get_struct_field_info(struct, field):
     if sid in override_field_mutable:
         if fid in override_field_mutable[sid] or '*' in override_field_mutable[sid]:
             fimmutable = 'false'
-
-    if ftype == cobject_function_identifier:
-        fimmutable = 'true'
 
     if not ('char' in ftype and '[' in ftype and 'unsigned' not in ftype):
         array_match = re.search(r'\[([^\]]+)\]', ftype)
@@ -549,27 +577,28 @@ def build_struct(struct):
             startStr += '#ifndef ' + override_field_version_excludes[fid] + '\n'
             endStr += '\n#endif'
         startStr += '    { '
-        if ftype == cobject_function_identifier:
-            row.append(startStr                             )
-            row.append('"%s", '          % fid              )
-            row.append('%s, '            % lvt              )
-            row.append('(size_t) "%s", ' % field['function'])
-            row.append('%s, '            % fimmutable       )
-            row.append('%s, '            % lot              )
-            row.append('%s, '            % size             )
-            row.append('sizeof(const char *)'               )
-            row.append(endStr                               )
-            field_functions.append(field['function'])
+        row.append(startStr)
+        row.append('"%s", ' % fid)
+        row.append('%s, '   % lvt)
+        if field.get('function'):
+            row.append('.function = "%s"\\' % field['function'])
+        elif field.get('get'):
+            row.append('.get = "%s", ' % field['get'])
+            if fimmutable != 'true':
+                row.append('.set = "%s"\\' % field['set'])
+            else: row[-1] = row[-1][:-2] + "\\"
         else:
-            row.append(startStr                                                        )
-            row.append('"%s", '               % fid                                    )
-            row.append('%s, '                 % lvt                                    )
             row.append('offsetof(%s%s, %s), ' % (struct_str, name, field['identifier']))
-            row.append('%s, '                 % fimmutable                             )
-            row.append('%s, '                 % lot                                    )
-            row.append('%s, '                 % size                                   )
-            row.append('sizeof(%s)'           % ftype                                  )
-            row.append(endStr                                                          )
+            row.append('%s, '       % fimmutable)
+            row.append('%s, '       % lot       )
+            if size != 1:
+                row.append('%s, '       % size      )
+                row.append('sizeof(%s)' % ftype     )
+            else: row[-1] = row[-1][:-2]
+        row.extend(['\\'] * (8 - len(row)))
+        row.append(endStr)
+        if field.get('function'):
+            field_functions.append(field['function'])
         field_table.append(row)
 
     field_table_str, field_count = table_to_string(field_table)
@@ -713,8 +742,8 @@ def doc_struct_field(struct, field):
         if fid in override_field_invisible[sid]:
             return '', False
 
-    if sid in override_field_deprecated:
-        if fid in override_field_deprecated[sid]:
+    if sid in override_field_hidden:
+        if fid in override_field_hidden[sid]:
             return '', False
 
     if '???' in lvt or '???' in lot:
@@ -725,6 +754,10 @@ def doc_struct_field(struct, field):
     if ftype == cobject_function_identifier:
         flink = doc_find_function_link(field['function'])
         return '| %s | [`%s`](%s) |\n' % (fid, field['function'], flink), True
+
+    if ftype == cobject_property_identifier:
+        ftype = get_function_signature(field['get'])
+        ftype = f"`{ftype[ftype.rfind(':')+2:]}`"
 
     restrictions = ('', 'read-only')[fimmutable == 'true']
 
@@ -846,6 +879,10 @@ def def_struct(struct):
             if fid in override_field_invisible[sid]:
                 continue
 
+        if sid in override_field_hidden:
+            if fid in override_field_hidden[sid]:
+                continue
+
         if '???' in lvt or '???' in lot:
             continue
 
@@ -854,6 +891,9 @@ def def_struct(struct):
         # try to get the function signature
         if ftype == cobject_function_identifier:
             ftype = get_function_signature(field['function'])
+        elif ftype == cobject_property_identifier:
+            ftype = get_function_signature(field['get'])
+            ftype = f"{ftype[ftype.rfind(':')+2:]}"
         else:
             ftype = translate_to_def(ftype)
 

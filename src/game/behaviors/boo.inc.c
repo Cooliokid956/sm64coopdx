@@ -118,7 +118,7 @@ void bhv_courtyard_boo_triplet_init(void) {
         obj_mark_for_deletion(o);
         return;
     }
-    
+
     for (s32 i = 0; i < 3; i++) {
         struct Object *boo = spawn_object_relative(
             0x01,
@@ -338,7 +338,7 @@ static s32 obj_has_attack_type(u32 attackType) {
     if ((o->oInteractStatus & INT_STATUS_ATTACK_MASK) == attackType) {
         return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -654,7 +654,7 @@ static void big_boo_spawn_merry_go_round_star(void) {
 
     merryGoRound = cur_obj_nearest_object_with_behavior(bhvMerryGoRound);
     if (merryGoRound == NULL) { return; }
-    
+
     merryGoRound->oMerryGoRoundStopped = TRUE;
 }
 
@@ -827,10 +827,10 @@ void bhv_boo_with_cage_init(void) {
         obj_mark_for_deletion(o);
         return;
     }
-    
+
     struct Object *cage = spawn_object(o, MODEL_HAUNTED_CAGE, bhvBooCage);
     if (cage == NULL) { return; }
-    
+
     cage->oBehParams = o->oBehParams;
 }
 

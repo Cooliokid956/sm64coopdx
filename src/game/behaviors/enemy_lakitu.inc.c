@@ -33,7 +33,7 @@ static void enemy_lakitu_act_uninitialized(void) {
         cur_obj_unhide();
         o->oAction = ENEMY_LAKITU_ACT_MAIN;
     }
-}   
+}
 
 /**
  * Accelerate toward mario vertically.

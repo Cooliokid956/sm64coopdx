@@ -25,16 +25,16 @@ void DynOS_MovtexQC_Register(const char* name, s16 level, s16 area, s16 type) {
 
     // find it in the levels
     for (auto& lvlPair : DynOS_Lvl_GetArray()) {
-        for (auto& node : lvlPair.second->mMovtexQCs) {
-            if (node->mName == name) {
-                // add it
-                _DynosRegisteredMovtexQCs.push_back({
-                    .dataNode = node,
-                    .level    = level,
-                    .area     = area,
-                    .type     = type
-                });
-            }
+        auto node = lvlPair.second->mMovtexQCs.Find(name);
+        if (node) {
+            // add it
+            _DynosRegisteredMovtexQCs.push_back({
+                .dataNode = node,
+                .level    = level,
+                .area     = area,
+                .type     = type
+            });
+            return;
         }
     }
 }
@@ -70,8 +70,5 @@ DataNode<MovtexQC>* DynOS_MovtexQC_GetFromIndex(s32 index) {
 
 void DynOS_MovtexQC_ModShutdown() {
     auto& _DynosRegisteredMovtexQCs = DynosRegisteredMovtexQCs();
-    for (auto &registered : _DynosRegisteredMovtexQCs) {
-        Delete(registered.dataNode);
-    }
     _DynosRegisteredMovtexQCs.clear();
 }
