@@ -1,19 +1,18 @@
 import os, configparser
 
+dirty = False
 LANG_DIR = "./lang/"
-
-def pass_string(optionstr): return optionstr
 
 def open_lang(name):
     parser = configparser.ConfigParser()
-    parser.optionxform = pass_string
+    parser.optionxform = lambda str:str
     parser.read(LANG_DIR + name, "utf-8")
     return parser
 
 DEF_NAME = "English.ini"
 DEF_LANG = open_lang(DEF_NAME)
 
-for file in os.listdir(os.fsencode(LANG_DIR)):
+for file in os.listdir(LANG_DIR):
     filename = os.fsdecode(file)
     if filename == DEF_NAME: continue
 
@@ -24,6 +23,7 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
         warnings = { "Missing": [], "Extra:": [] }
 
         if lang.has_section(section):
+            # combine all entries (include extras)
             entries = list(dict.fromkeys(lang.options(section) + DEF_LANG.options(section)))
             for entry in entries:
                 if lang.has_option(section, entry):
@@ -38,6 +38,7 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
             sections[section] = warnings
 
     if len(sections) > 0:
+        dirty = True
         print(filename)
         for section, warnings in sections.items():
             print(f"  [{section}]", end="")
@@ -49,4 +50,4 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
                     s = "    "
         print()
 
-    
+if not dirty: print("All clear!")
