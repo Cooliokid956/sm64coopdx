@@ -16,17 +16,14 @@ Dutch.ini
   [DYNOS] Missing OPEN_DYNOS_FOLDER
   [HOST_MODS] Missing BROWSE_MODS, OPEN_MOD_FOLDER
 
-French.ini
-  [CONTROLS] Missing CHAT
-  [HOST_SETTINGS] Missing ENABLE_CHEATS
-  [PAUSE] Missing CHEATS
-
 German.ini
   [HOST_MESSAGE] Missing WARN_SOCKET_HIDE
+  [HOST_SETTINGS] Extra: ENABLE_CHEATS
+  [PAUSE] Extra: CHEATS
 
-Polish.ini
-  [DYNOS] Missing OPEN_DYNOS_FOLDER
-  [HOST_MODS] Missing BROWSE_MODS, OPEN_MOD_FOLDER
+Italian.ini
+  [HOST_SETTINGS] Extra: ENABLE_CHEATS
+  [PAUSE] Extra: CHEATS
 ```
 
 ## Conventions
@@ -44,7 +41,7 @@ If an entry has not yet been translated, comment it out:
 ```ini
 [HOST_MOD_CATEGORIES]
 ALL = "すべて"
-;ENABLED = "Enabled"
+; ENABLED = "Enabled"
 MISC = "その他"
 ROMHACKS = "ロムハック系"
 GAMEMODES = "ゲームモード系"
