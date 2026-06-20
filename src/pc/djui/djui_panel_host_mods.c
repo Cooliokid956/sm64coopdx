@@ -15,9 +15,29 @@
 #include "pc/thread.h"
 
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
-#define MOD_CATEGORY_ALL 0
-#define MOD_CATEGORY_MISC 1
-#define MOD_CATEGORY_START 2
+
+struct ModCategory sCategories[] = {
+    // lang key, mod category
+    { "ALL", NULL },
+    { "ENABLED", NULL },
+    { "MISC", NULL },
+    { "ROMHACKS", "romhack" },
+    { "GAMEMODES", "gamemode" },
+    { "MOVESETS", "moveset" },
+    { "GRAPHICS", "graphics" },
+    { "QOL", "qol" },
+    { "UTILITY", "utility" },
+    { "AUDIO", "audio" },
+    { "CHARACTERS", "character" }
+};
+
+enum ModCategories {
+    MOD_CATEGORY_ALL,
+    MOD_CATEGORY_ENABLED,
+    MOD_CATEGORY_MISC,
+    MOD_CATEGORY_START,
+    MOD_CATEGORY_COUNT = ARRAY_COUNT(sCategories)
+};
 
 static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
@@ -30,21 +50,6 @@ static unsigned int sSelectedCategory = MOD_CATEGORY_ALL;
 static bool sWarned = false;
 
 struct ThreadHandle gModRefreshThread = { 0 };
-
-struct ModCategory sCategories[] = {
-    // lang key, mod category
-    { "ALL", NULL },
-    { "MISC", NULL },
-    { "ROMHACKS", "romhack" },
-    { "GAMEMODES", "gamemode" },
-    { "MOVESETS", "moveset" },
-    { "GRAPHICS", "graphics" },
-    { "QOL", "qol" },
-    { "UTILITY", "utility" },
-    { "AUDIO", "audio" },
-    { "CHARACTERS", "character" }
-};
-static const int numCategories = sizeof(sCategories) / sizeof(sCategories[0]);
 
 void djui_panel_host_mods_create(struct DjuiBase* caller);
 
@@ -146,10 +151,14 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
 
         switch (sSelectedCategory) {
             case MOD_CATEGORY_ALL: { break; }
+            case MOD_CATEGORY_ENABLED: {
+                if (!mod->enabled) { continue; }
+                break;
+            }
             case MOD_CATEGORY_MISC: {
                 bool doContinue = false;
                 if (category) {
-                    for (int i = MOD_CATEGORY_START; i < numCategories; i++) {
+                    for (int i = MOD_CATEGORY_START; i < MOD_CATEGORY_COUNT; i++) {
                         if (strstr(category, sCategories[i].category)) {
                             doContinue = true;
                             break;
@@ -245,10 +254,10 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         sSearchInputbox = searchbox->inputbox;
 
         char* categoryChoices[sizeof(sCategories)];
-        for (int i = 0; i < numCategories; i++) {
+        for (int i = 0; i < MOD_CATEGORY_COUNT; i++) {
             categoryChoices[i] = djui_language_get("HOST_MOD_CATEGORIES", sCategories[i].langKey);
         }
-        djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, numCategories, &sSelectedCategory, djui_panel_rebuild_mods_list);
+        djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, MOD_CATEGORY_COUNT, &sSelectedCategory, djui_panel_rebuild_mods_list);
 
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         paginated->showMaxCount = true;
