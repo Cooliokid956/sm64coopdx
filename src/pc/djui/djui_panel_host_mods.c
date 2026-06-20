@@ -16,25 +16,18 @@
 
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
 
+struct ModCategory {
+    const char* langKey;
+    const char* category;
+};
+
 struct ModCategory sCategories[] = {
-    // lang key, mod category
-    { "ALL", NULL },
-    { "ENABLED", NULL },
-    { "MISC", NULL },
-    { "ROMHACKS", "romhack" },
-    { "GAMEMODES", "gamemode" },
-    { "MOVESETS", "moveset" },
-    { "GRAPHICS", "graphics" },
-    { "QOL", "qol" },
-    { "UTILITY", "utility" },
-    { "AUDIO", "audio" },
-    { "CHARACTERS", "character" }
+    #include "mod_categories.h"
 };
 
 enum ModCategories {
-    MOD_CATEGORY_ALL,
-    MOD_CATEGORY_ENABLED,
-    MOD_CATEGORY_MISC,
+    #define MC_ENUM
+    #include "mod_categories.h"
     MOD_CATEGORY_START,
     MOD_CATEGORY_COUNT = ARRAY_COUNT(sCategories)
 };
