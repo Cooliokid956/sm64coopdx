@@ -253,7 +253,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         struct DjuiSearchbox* searchbox = djui_searchbox_create(body, djui_panel_rebuild_mods_list);
         sSearchInputbox = searchbox->inputbox;
 
-        char* categoryChoices[sizeof(sCategories)];
+        char* categoryChoices[MOD_CATEGORY_COUNT];
         for (int i = 0; i < MOD_CATEGORY_COUNT; i++) {
             categoryChoices[i] = djui_language_get("HOST_MOD_CATEGORIES", sCategories[i].langKey);
         }

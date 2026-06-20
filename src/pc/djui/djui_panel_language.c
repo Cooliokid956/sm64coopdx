@@ -16,7 +16,7 @@
 extern bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath);
 static bool sTrue = true;
 static bool sFalse = false;
-static char* sLastLang = NULL;
+static const char *sLastLang = NULL;
 static struct DjuiBase* sLayoutBase = NULL;
 bool gPanelLanguageOnStartup = false;
 
@@ -35,7 +35,7 @@ static void select_language(struct DjuiBase* caller) {
     }
 
     sLastLang = checkbox->text->message;
-    char* key = djui_language_find_key("LANGUAGE", sLastLang);
+    const char *key = djui_language_find_key("LANGUAGE", sLastLang);
     if (key) sLastLang = key;
 
     checkbox->value = &sTrue;
@@ -44,7 +44,7 @@ static void select_language(struct DjuiBase* caller) {
 
 static bool djui_panel_language_set(UNUSED struct DjuiBase* caller) {
     // god this is so hacky and terrible
-    if (strcmp(configLanguage, sLastLang)) {
+    if (sLastLang != NULL && strcmp(configLanguage, sLastLang)) {
         snprintf(configLanguage, MAX_CONFIG_STRING, "%s", sLastLang);
         smlua_call_event_hooks(HOOK_ON_LANGUAGE_CHANGED, configLanguage);
         sLastLang = NULL;
