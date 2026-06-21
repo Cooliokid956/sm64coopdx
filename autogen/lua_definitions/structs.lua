@@ -1564,6 +1564,7 @@
 --- @field public oCoinUnkF4 integer
 --- @field public oCoinUnkF8 integer
 --- @field public oCoinUnk110 number
+--- @field public oCoinBaseYVel number
 --- @field public oCoinUnk1B0 integer
 --- @field public oCollisionParticleUnkF4 number
 --- @field public oControllablePlatformUnkF8 integer
