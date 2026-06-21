@@ -22,12 +22,12 @@ struct ModCategory {
 };
 
 struct ModCategory sCategories[] = {
-    #include "mod_categories.h"
+    #include "mod_categories.inl"
 };
 
 enum ModCategories {
     #define MC_ENUM
-    #include "mod_categories.h"
+    #include "mod_categories.inl"
     MOD_CATEGORY_START,
     MOD_CATEGORY_COUNT = ARRAY_COUNT(sCategories)
 };
