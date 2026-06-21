@@ -32,7 +32,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -64,7 +64,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -91,11 +91,8 @@ jobs:
                     unzip
                     make
                     git
-                    mingw-w64-i686-gcc
                     mingw-w64-x86_64-gcc
-                    mingw-w64-i686-glew
                     mingw-w64-x86_64-glew
-                    mingw-w64-i686-SDL2
                     mingw-w64-x86_64-SDL2
                     python3
                     zip
@@ -112,7 +109,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Windows.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+                zip -r sm64coopdx_Windows.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4

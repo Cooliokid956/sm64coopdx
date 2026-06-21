@@ -743,10 +743,20 @@ void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArg
 }
 
 template <typename... Args>
+void PrintInfoNoNewLine(const char *aFmt, Args... aArgs) {
+    PrintNoNewLine(aFmt, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+}
+
+template <typename... Args>
+void PrintInfo(const char *aFmt, Args... aArgs) {
+    Print(aFmt, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+}
+
+template <typename... Args>
 void PrintError(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
-    printf("\r\n");
-    fflush(stdout);
+    Print(aFmt, aArgs...);
     PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \
@@ -788,6 +798,7 @@ void DynOS_UpdateGfx();
 bool DynOS_IsTransitionActive();
 void DynOS_Mod_Update();
 void DynOS_Mod_Shutdown();
+bool DynOS_Mod_IsShuttingDown();
 
 //
 // Gfx
@@ -819,6 +830,7 @@ s8 DynOS_Level_GetCourse(s32 aLevel);
 void DynOS_Level_Override(void* originalScript, void* newScript, s32 modIndex);
 void DynOS_Level_Unoverride();
 const void *DynOS_Level_GetScript(s32 aLevel);
+const void *DynOS_Level_GetVanillaScript(s32 aLevel);
 s32 DynOS_Level_GetModIndex(s32 aLevel);
 bool DynOS_Level_IsVanillaLevel(s32 aLevel);
 Collision *DynOS_Level_GetCollision(u32 aLevel, u16 aArea);
