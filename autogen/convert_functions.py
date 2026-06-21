@@ -700,7 +700,7 @@ def build_param_after(param, i):
         return ''
 
 def build_param_check(param, i):
-    ptype = alter_type(param['type'])
+    ptype = param['type']
 
     if "struct TextureInfo" in ptype and "*" in ptype:
         return 'smlua_is_cobject(L, %d, LOT_TEXTUREINFO);\n' % (i)
