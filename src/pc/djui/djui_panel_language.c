@@ -105,7 +105,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
             char buffer[512] = "";
             sys_swap_backslashes(lpath);
-            snprintf(buffer, 512, "\\#ffa0a0\\Failed to load language folder:\n\\#dcdcdc\\%s", lpath);
+            snprintf(buffer, 512, "\\#ffa0a0\\Failed to load language folder:\n\\#\\%s", lpath);
             struct DjuiText* text = djui_text_create(body, buffer);
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
             djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
