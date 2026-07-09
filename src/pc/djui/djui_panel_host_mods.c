@@ -224,6 +224,14 @@ static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
     }
 }
 
+static void djui_mod_website_open(UNUSED struct DjuiBase* caller) {
+    open_url("https://mods.sm64coopdx.com/mods/");
+}
+
+static void djui_mod_folder_open(UNUSED struct DjuiBase* caller) {
+    open_folder(fs_get_write_path("/mods"));
+}
+
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
 
     mods_update_selectable();
@@ -250,16 +258,24 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         sModPaginated = paginated;
 
         if (gNetworkType == NT_NONE) {
-            struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
+            struct DjuiRect* rect1 = djui_rect_container_create(body, 45);
+            struct DjuiRect* rect2 = djui_rect_container_create(body, 45);
             {
                 sBackButton = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
                 sRefreshButton = djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_menu_refresh);
+                djui_base_set_size(&sBackButton->base, 0.485f, 45);
+                djui_base_set_size(&sRefreshButton->base, 0.485f, 45);
+
+                struct DjuiButton* button1 = djui_button_left_create(&rect2->base, DLANG(HOST_MODS, BROWSE_MODS), DJUI_BUTTON_STYLE_NORMAL, djui_mod_website_open);
+                struct DjuiButton* button2 = djui_button_right_create(&rect2->base, DLANG(HOST_MODS, OPEN_MOD_FOLDER), DJUI_BUTTON_STYLE_NORMAL, djui_mod_folder_open);
+                djui_base_set_size(&button1->base, 0.485f, 45);
+                djui_base_set_size(&button2->base, 0.485f, 45);
             }
         } else {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
         }
 
-        panel->bodySize.value = paginated->base.height.value + 64 + 64 + 64;
+        djui_three_panel_recalculate_body_size(panel);
     }
 
     panel->base.destroy = djui_panel_host_mods_destroy;

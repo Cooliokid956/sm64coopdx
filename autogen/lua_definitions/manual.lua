@@ -106,11 +106,11 @@ gHudDisplay = {}
 -----------
 
 --- @param behaviorId BehaviorId | integer?  The behavior id of the object to modify. Pass in as `nil` to create a custom object
---- @param objectList ObjectList | integer Object list
---- @param replaceBehavior boolean Whether or not to completely replace the behavior
+--- @param objectList ObjectList | integer | nil Object list. Pass in as `nil` to use the vanilla object list or the already assigned object list in case of multiple hooks
+--- @param replaceBehavior boolean Whether or not to completely replace the behavior (ignored for non-vanilla behaviors, which are always replaced)
 --- @param initFunction? fun(obj:Object) Run on object creation
 --- @param loopFunction? fun(obj:Object) Run every frame
---- @param behaviorName? string Optional
+--- @param behaviorName? string Optional, name to give to the behavior to be able to retrieve it with `get_id_from_behavior_name`
 --- @return BehaviorId BehaviorId Use if creating a custom object, otherwise can be ignored
 --- Modify an object's behavior or create a new custom object
 function hook_behavior(behaviorId, objectList, replaceBehavior, initFunction, loopFunction, behaviorName)
@@ -240,8 +240,8 @@ end
 -- functions --
 ---------------
 
---- @param objFieldTable table<any, "u32"|"s32"|"f32">
---- Keys must start with `o` and values must be `"u32"`, `"s32"`, or `"f32"`
+--- @param objFieldTable table<any, "u32"|"s32"|"f32"|table>
+--- Keys must start with `o` and values must be `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`
 function define_custom_obj_fields(objFieldTable)
     -- ...
 end

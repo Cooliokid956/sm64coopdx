@@ -53,7 +53,7 @@
    - [play_penguin_walking_sound](functions-2.md#play_penguin_walking_sound)
    - [update_angle_from_move_flags](functions-2.md#update_angle_from_move_flags)
    - [cur_obj_spawn_strong_wind_particles](functions-2.md#cur_obj_spawn_strong_wind_particles)
-   - [bhv_star_door_loop_2](functions-2.md#bhv_star_door_loop_2)
+   - [bhv_star_door_loop_update_render_state](functions-2.md#bhv_star_door_loop_update_render_state)
    - [bhv_cap_switch_loop](functions-2.md#bhv_cap_switch_loop)
    - [bhv_tiny_star_particles_init](functions-2.md#bhv_tiny_star_particles_init)
    - [bhv_grindel_thwomp_loop](functions-2.md#bhv_grindel_thwomp_loop)
@@ -632,6 +632,7 @@
    - [get_id_from_behavior](functions-3.md#get_id_from_behavior)
    - [get_id_from_vanilla_behavior](functions-3.md#get_id_from_vanilla_behavior)
    - [get_behavior_from_id](functions-3.md#get_behavior_from_id)
+   - [get_vanilla_behavior_from_id](functions-3.md#get_vanilla_behavior_from_id)
    - [get_behavior_name_from_id](functions-3.md#get_behavior_name_from_id)
    - [get_id_from_behavior_name](functions-3.md#get_id_from_behavior_name)
 
@@ -750,6 +751,12 @@
 
 - djui_console.h
    - [djui_console_toggle](functions-3.md#djui_console_toggle)
+   - [djui_console_is_open](functions-3.md#djui_console_is_open)
+
+<br />
+
+- djui_gfx.h
+   - [djui_gfx_get_scale](functions-3.md#djui_gfx_get_scale)
 
 <br />
 
@@ -1191,7 +1198,6 @@
    - [stopping_step](functions-4.md#stopping_step)
    - [landing_step](functions-4.md#landing_step)
    - [check_common_landing_cancels](functions-4.md#check_common_landing_cancels)
-   - [mario_exit_palette_editor](functions-4.md#mario_exit_palette_editor)
    - [check_common_stationary_cancels](functions-4.md#check_common_stationary_cancels)
    - [mario_execute_stationary_action](functions-4.md#mario_execute_stationary_action)
 
@@ -1214,6 +1220,7 @@
    - [bhv_unlock_door_star_loop](functions-4.md#bhv_unlock_door_star_loop)
    - [geo_get_mario_state](functions-4.md#geo_get_mario_state)
    - [geo_get_body_state](functions-4.md#geo_get_body_state)
+   - [geo_get_mario_object](functions-4.md#geo_get_mario_object)
 
 <br />
 
@@ -1458,7 +1465,6 @@
 
 - obj_behaviors.c
    - [set_yoshi_as_not_dead](functions-5.md#set_yoshi_as_not_dead)
-   - [absf_2](functions-5.md#absf_2)
    - [obj_find_wall](functions-5.md#obj_find_wall)
    - [turn_obj_away_from_steep_floor](functions-5.md#turn_obj_away_from_steep_floor)
    - [obj_orient_graph](functions-5.md#obj_orient_graph)
@@ -1602,7 +1608,6 @@
    - [cur_obj_hide](functions-6.md#cur_obj_hide)
    - [cur_obj_set_pos_relative](functions-6.md#cur_obj_set_pos_relative)
    - [cur_obj_set_pos_relative_to_parent](functions-6.md#cur_obj_set_pos_relative_to_parent)
-   - [cur_obj_enable_rendering_2](functions-6.md#cur_obj_enable_rendering_2)
    - [cur_obj_unused_init_on_floor](functions-6.md#cur_obj_unused_init_on_floor)
    - [obj_set_face_angle_to_move_angle](functions-6.md#obj_set_face_angle_to_move_angle)
    - [get_object_list_from_behavior](functions-6.md#get_object_list_from_behavior)
@@ -1722,17 +1727,14 @@
    - [cur_obj_push_mario_away](functions-6.md#cur_obj_push_mario_away)
    - [cur_obj_push_mario_away_from_cylinder](functions-6.md#cur_obj_push_mario_away_from_cylinder)
    - [bhv_dust_smoke_loop](functions-6.md#bhv_dust_smoke_loop)
-   - [stub_obj_helpers_3](functions-6.md#stub_obj_helpers_3)
    - [cur_obj_scale_over_time](functions-6.md#cur_obj_scale_over_time)
    - [cur_obj_set_pos_to_home_with_debug](functions-6.md#cur_obj_set_pos_to_home_with_debug)
-   - [stub_obj_helpers_4](functions-6.md#stub_obj_helpers_4)
    - [cur_obj_is_mario_on_platform](functions-6.md#cur_obj_is_mario_on_platform)
    - [cur_obj_is_any_player_on_platform](functions-6.md#cur_obj_is_any_player_on_platform)
    - [cur_obj_shake_y_until](functions-6.md#cur_obj_shake_y_until)
    - [cur_obj_move_up_and_down](functions-6.md#cur_obj_move_up_and_down)
    - [spawn_star_with_no_lvl_exit](functions-6.md#spawn_star_with_no_lvl_exit)
    - [spawn_base_star_with_no_lvl_exit](functions-6.md#spawn_base_star_with_no_lvl_exit)
-   - [bit_shift_left](functions-6.md#bit_shift_left)
    - [cur_obj_mario_far_away](functions-6.md#cur_obj_mario_far_away)
    - [is_mario_moving_fast_or_in_air](functions-6.md#is_mario_moving_fast_or_in_air)
    - [is_item_in_array](functions-6.md#is_item_in_array)
@@ -1750,7 +1752,6 @@
    - [set_time_stop_flags_if_alone](functions-6.md#set_time_stop_flags_if_alone)
    - [clear_time_stop_flags](functions-6.md#clear_time_stop_flags)
    - [cur_obj_can_mario_activate_textbox](functions-6.md#cur_obj_can_mario_activate_textbox)
-   - [cur_obj_can_mario_activate_textbox_2](functions-6.md#cur_obj_can_mario_activate_textbox_2)
    - [cur_obj_end_dialog](functions-6.md#cur_obj_end_dialog)
    - [cur_obj_has_model](functions-6.md#cur_obj_has_model)
    - [cur_obj_align_gfx_with_floor](functions-6.md#cur_obj_align_gfx_with_floor)
@@ -1789,8 +1790,12 @@
    - [queue_rumble_data](functions-6.md#queue_rumble_data)
    - [queue_rumble_data_object](functions-6.md#queue_rumble_data_object)
    - [queue_rumble_data_mario](functions-6.md#queue_rumble_data_mario)
+   - [queue_rumble_decay](functions-6.md#queue_rumble_decay)
+   - [is_rumble_finished_and_queue_empty](functions-6.md#is_rumble_finished_and_queue_empty)
    - [reset_rumble_timers](functions-6.md#reset_rumble_timers)
-   - [reset_rumble_timers_2](functions-6.md#reset_rumble_timers_2)
+   - [reset_rumble_timers_vibrate](functions-6.md#reset_rumble_timers_vibrate)
+   - [queue_rumble_submerged](functions-6.md#queue_rumble_submerged)
+   - [cancel_rumble](functions-6.md#cancel_rumble)
 
 <br />
 
@@ -1919,25 +1924,26 @@
    - [camera_config_set_deceleration](functions-6.md#camera_config_set_deceleration)
    - [camera_get_checking_surfaces](functions-6.md#camera_get_checking_surfaces)
    - [camera_set_checking_surfaces](functions-6.md#camera_set_checking_surfaces)
+   - [center_free_camera](functions-6.md#center_free_camera)
 
 <br />
 
 - smlua_collision_utils.h
-   - [collision_find_floor](functions-6.md#collision_find_floor)
-   - [collision_find_ceil](functions-6.md#collision_find_ceil)
-   - [get_water_surface_pseudo_floor](functions-6.md#get_water_surface_pseudo_floor)
-   - [smlua_collision_util_get](functions-6.md#smlua_collision_util_get)
-   - [collision_get_temp_wall_collision_data](functions-6.md#collision_get_temp_wall_collision_data)
-   - [get_surface_from_wcd_index](functions-6.md#get_surface_from_wcd_index)
-   - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
-   - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
-   - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
-   - [smlua_collision_add_surface](functions-6.md#smlua_collision_add_surface)
-   - [smlua_collision_move_surface](functions-6.md#smlua_collision_move_surface)
-   - [smlua_collision_delete_surface](functions-6.md#smlua_collision_delete_surface)
-   - [surface_is_quicksand](functions-6.md#surface_is_quicksand)
-   - [surface_is_not_hard](functions-6.md#surface_is_not_hard)
-   - [surface_is_painting_warp](functions-6.md#surface_is_painting_warp)
+   - [collision_find_floor](functions-7.md#collision_find_floor)
+   - [collision_find_ceil](functions-7.md#collision_find_ceil)
+   - [get_water_surface_pseudo_floor](functions-7.md#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_get](functions-7.md#smlua_collision_util_get)
+   - [collision_get_temp_wall_collision_data](functions-7.md#collision_get_temp_wall_collision_data)
+   - [get_surface_from_wcd_index](functions-7.md#get_surface_from_wcd_index)
+   - [smlua_collision_util_get_current_terrain_collision](functions-7.md#smlua_collision_util_get_current_terrain_collision)
+   - [smlua_collision_util_get_level_collision](functions-7.md#smlua_collision_util_get_level_collision)
+   - [smlua_collision_util_find_surface_types](functions-7.md#smlua_collision_util_find_surface_types)
+   - [smlua_collision_add_surface](functions-7.md#smlua_collision_add_surface)
+   - [smlua_collision_move_surface](functions-7.md#smlua_collision_move_surface)
+   - [smlua_collision_delete_surface](functions-7.md#smlua_collision_delete_surface)
+   - [surface_is_quicksand](functions-7.md#surface_is_quicksand)
+   - [surface_is_not_hard](functions-7.md#surface_is_not_hard)
+   - [surface_is_painting_warp](functions-7.md#surface_is_painting_warp)
 
 <br />
 
@@ -1953,6 +1959,8 @@
    - [get_global_shader_flags_enabled](functions-7.md#get_global_shader_flags_enabled)
    - [set_global_shader_flags_enabled](functions-7.md#set_global_shader_flags_enabled)
    - [clear_all_shader_flags](functions-7.md#clear_all_shader_flags)
+   - [get_shading_fullbright_enabled](functions-7.md#get_shading_fullbright_enabled)
+   - [set_shading_fullbright_enabled](functions-7.md#set_shading_fullbright_enabled)
    - [set_override_fov](functions-7.md#set_override_fov)
    - [set_override_near](functions-7.md#set_override_near)
    - [set_override_far](functions-7.md#set_override_far)
@@ -2063,6 +2071,8 @@
    - [game_pause](functions-7.md#game_pause)
    - [game_unpause](functions-7.md#game_unpause)
    - [is_transition_playing](functions-7.md#is_transition_playing)
+   - [get_current_play_mode](functions-7.md#get_current_play_mode)
+   - [get_delayed_warp_op](functions-7.md#get_delayed_warp_op)
    - [allocate_mario_action](functions-7.md#allocate_mario_action)
    - [get_hand_foot_pos_x](functions-7.md#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](functions-7.md#get_hand_foot_pos_y)
@@ -2153,6 +2163,7 @@
    - [obj_set_field_s32](functions-7.md#obj_set_field_s32)
    - [obj_set_field_f32](functions-7.md#obj_set_field_f32)
    - [obj_set_field_s16](functions-7.md#obj_set_field_s16)
+   - [obj_get_field_info_from_name](functions-7.md#obj_get_field_info_from_name)
    - [obj_get_temp_spawn_particles_info](functions-7.md#obj_get_temp_spawn_particles_info)
    - [obj_get_temp_water_droplet_params](functions-7.md#obj_get_temp_water_droplet_params)
    - [get_temp_object_hitbox](functions-7.md#get_temp_object_hitbox)
@@ -2226,11 +2237,9 @@
 <br />
 
 - spawn_sound.h
-   - [cur_obj_play_sound_1](functions-7.md#cur_obj_play_sound_1)
-   - [cur_obj_play_sound_2](functions-7.md#cur_obj_play_sound_2)
+   - [cur_obj_play_sound_if_visible](functions-7.md#cur_obj_play_sound_if_visible)
+   - [cur_obj_play_sound_and_rumble_if_visible](functions-7.md#cur_obj_play_sound_and_rumble_if_visible)
    - [create_sound_spawner](functions-7.md#create_sound_spawner)
-   - [calc_dist_to_volume_range_1](functions-7.md#calc_dist_to_volume_range_1)
-   - [calc_dist_to_volume_range_2](functions-7.md#calc_dist_to_volume_range_2)
 
 <br />
 
@@ -2273,10 +2282,20 @@
 
 Defines a custom set of overlapping object fields.
 
-The `fieldTable` table's keys must start with the letter `o` and the values must be either `u32`, `s32`, or `f32`.
+The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
+If, for a field, `global` is `true`, the field will be defined for all mods.
 
 ### Lua Example
-`define_custom_obj_fields({ oCustomField1 = 'u32', oCustomField2 = 's32', oCustomField3 = 'f32' })`
+```lua
+define_custom_obj_fields({
+    oCustomField1 = 'u32',
+    oCustomField2 = 's32',
+    oCustomField3 = 'f32',
+    oCustomField4 = { type = 'u32', global = true },
+    oCustomField5 = { type = 's32', global = true },
+    oCustomField6 = { type = 'f32', global = true },
+})
+```
 
 ### Parameters
 | Field | Type |

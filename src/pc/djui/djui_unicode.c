@@ -244,7 +244,7 @@ void djui_unicode_init(void) {
         assert(key > 127);
         hmap_put(sCharMap, key, glyph);
     }
-    
+
     //add japanese glyphs
     size_t jpCount = sizeof(sSmCodeGlyphs_JP) / sizeof(sSmCodeGlyphs_JP[0]);
     for (size_t i = 0; i < jpCount; i++) {

@@ -88,6 +88,7 @@ bool smlua_to_boolean(lua_State* L, int index) {
         gSmLuaConvertSuccess = false;
         return 0;
     }
+    gSmLuaConvertSuccess = true;
     return lua_toboolean(L, index) ? true : false;
 }
 

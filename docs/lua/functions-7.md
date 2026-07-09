@@ -6,6 +6,374 @@
 
 
 ---
+# functions from smlua_collision_utils.h
+
+<br />
+
+
+## [collision_find_floor](#collision_find_floor)
+
+### Description
+Finds a potential floor at the given `x`, `y`, and `z` values
+
+### Lua Example
+`local surfaceValue = collision_find_floor(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_floor(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_find_ceil](#collision_find_ceil)
+
+### Description
+Finds a potential ceiling at the given `x`, `y`, and `z` values
+
+### Lua Example
+`local surfaceValue = collision_find_ceil(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
+
+### Description
+Gets the generated water floor surface used when riding a shell
+
+### Lua Example
+`local surfaceValue = get_water_surface_pseudo_floor()`
+
+### Parameters
+- None
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_water_surface_pseudo_floor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get](#smlua_collision_util_get)
+
+### Description
+Gets the `Collision` with `name`
+
+### Lua Example
+`local pointerValue = smlua_collision_util_get(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collision_get_temp_wall_collision_data](#collision_get_temp_wall_collision_data)
+
+### Description
+Returns a temporary wall collision data pointer
+
+### Lua Example
+`local wallCollisionDataValue = collision_get_temp_wall_collision_data()`
+
+### Parameters
+- None
+
+### Returns
+- [WallCollisionData](structs.md#WallCollisionData)
+
+### C Prototype
+`struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_surface_from_wcd_index](#get_surface_from_wcd_index)
+
+### Description
+Gets the surface corresponding to `index` from `wcd`
+
+### Lua Example
+`local surfaceValue = get_surface_from_wcd_index(wcd, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| wcd | [WallCollisionData](structs.md#WallCollisionData) |
+| index | `integer` |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get_current_terrain_collision](#smlua_collision_util_get_current_terrain_collision)
+
+### Description
+Gets the current level terrain collision
+
+### Lua Example
+`local pointerValue = smlua_collision_util_get_current_terrain_collision()`
+
+### Parameters
+- None
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get_current_terrain_collision(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get_level_collision](#smlua_collision_util_get_level_collision)
+
+### Description
+Gets the `level` terrain collision from `area`
+
+### Lua Example
+`local pointerValue = smlua_collision_util_get_level_collision(level, area)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| level | `integer` |
+| area | `integer` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_find_surface_types](#smlua_collision_util_find_surface_types)
+
+### Description
+Gets a table of the surface types from `data`
+
+### Lua Example
+`smlua_collision_util_find_surface_types(data)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| data | `Pointer` <`Collision`> |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_util_find_surface_types(Collision* data);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_add_surface](#smlua_collision_add_surface)
+
+### Description
+Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition.
+Returns the new surface, or `nil` if the triangle is degenerate (zero area).
+Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
+
+### Lua Example
+`local surfaceValue = smlua_collision_add_surface(dynamic, surfaceType, vertex1, vertex2, vertex3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dynamic | `boolean` |
+| surfaceType | `integer` |
+| vertex1 | [Vec3s](structs.md#Vec3s) |
+| vertex2 | [Vec3s](structs.md#Vec3s) |
+| vertex3 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* smlua_collision_add_surface(bool dynamic, s16 surfaceType, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_move_surface](#smlua_collision_move_surface)
+
+### Description
+Moves an existing collision surface to new vertex positions.
+Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells.
+The previous vertices are preserved for interpolation
+
+### Lua Example
+`smlua_collision_move_surface(surface, vertex1, vertex2, vertex3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surface | [Surface](structs.md#Surface) |
+| vertex1 | [Vec3s](structs.md#Vec3s) |
+| vertex2 | [Vec3s](structs.md#Vec3s) |
+| vertex3 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_move_surface(struct Surface *surface, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_delete_surface](#smlua_collision_delete_surface)
+
+### Description
+Fully deletes a collision surface: removes it from the spatial partitions and frees its pool slot.
+
+### Lua Example
+`smlua_collision_delete_surface(surface)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surface | [Surface](structs.md#Surface) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_delete_surface(struct Surface *surface);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_quicksand](#surface_is_quicksand)
+
+### Description
+Checks if the surface is quicksand
+
+### Lua Example
+`local booleanValue = surface_is_quicksand(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_quicksand(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_not_hard](#surface_is_not_hard)
+
+### Description
+Checks if the surface is not a hard surface
+
+### Lua Example
+`local booleanValue = surface_is_not_hard(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_not_hard(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_painting_warp](#surface_is_painting_warp)
+
+### Description
+Checks if the surface is a painting warp
+
+### Lua Example
+`local booleanValue = surface_is_painting_warp(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_painting_warp(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_deprecated.h
+
+<br />
+
+
+---
 # functions from smlua_gfx_utils.h
 
 <br />
@@ -165,6 +533,55 @@ Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer
 
 ### C Prototype
 `void clear_all_shader_flags(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_shading_fullbright_enabled](#get_shading_fullbright_enabled)
+
+### Description
+Gets if fullbright mode is enabled for shaded materials (`G_LIGHTING`)
+
+### Lua Example
+`local booleanValue = get_shading_fullbright_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_shading_fullbright_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_shading_fullbright_enabled](#set_shading_fullbright_enabled)
+
+### Description
+Enables fullbright mode for shaded materials (`G_LIGHTING`.)
+If a light color is completely black, the rendered color will default to the shade color.
+This is for already fullbright materials that set their shade color to something and their light color to black.
+This visually corrects rendering on materials such as Mario's emblem.
+Useful for using the lighting engine and having entirely your own shading without the game's own systems
+and compatibility with most models, not having to used specialized env/prim color approaches for example
+
+### Lua Example
+`set_shading_fullbright_enabled(enabled)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enabled | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_shading_fullbright_enabled(bool enabled);`
 
 [:arrow_up_small:](#)
 
@@ -2509,6 +2926,48 @@ Checks if a screen transition is playing
 
 <br />
 
+## [get_current_play_mode](#get_current_play_mode)
+
+### Description
+Gets the current play mode (`PLAY_MODE_*`)
+
+### Lua Example
+`local integerValue = get_current_play_mode()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_current_play_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_delayed_warp_op](#get_delayed_warp_op)
+
+### Description
+Gets the delayed warp operation type (`WARP_OP_*`)
+
+### Lua Example
+`local integerValue = get_delayed_warp_op()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_delayed_warp_op(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [allocate_mario_action](#allocate_mario_action)
 
 ### Description
@@ -3645,7 +4104,7 @@ You can change the fields of the object in `objSetupFunction`
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
+`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 
@@ -3674,7 +4133,7 @@ You can change the fields of the object in `objSetupFunction`
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
+`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 
@@ -4219,7 +4678,7 @@ Gets the corresponding collided object to an index from `o`
 ## [obj_get_field_u32](#obj_get_field_u32)
 
 ### Description
-Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+Gets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `local integerValue = obj_get_field_u32(o, fieldIndex)`
@@ -4243,7 +4702,7 @@ Gets the unsigned 32-bit integer value from the field corresponding to `fieldInd
 ## [obj_get_field_s32](#obj_get_field_s32)
 
 ### Description
-Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+Gets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `local integerValue = obj_get_field_s32(o, fieldIndex)`
@@ -4267,7 +4726,7 @@ Gets the signed 32-bit integer value from the field corresponding to `fieldIndex
 ## [obj_get_field_f32](#obj_get_field_f32)
 
 ### Description
-Sets the float value from the field corresponding to `fieldIndex`
+Gets the float value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `local numberValue = obj_get_field_f32(o, fieldIndex)`
@@ -4291,7 +4750,7 @@ Sets the float value from the field corresponding to `fieldIndex`
 ## [obj_get_field_s16](#obj_get_field_s16)
 
 ### Description
-Gets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+Gets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 
 ### Lua Example
 `local integerValue = obj_get_field_s16(o, fieldIndex, fieldSubIndex)`
@@ -4316,7 +4775,7 @@ Gets the signed 32-bit integer value from the sub field corresponding to `fieldS
 ## [obj_set_field_u32](#obj_set_field_u32)
 
 ### Description
-Sets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+Sets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `obj_set_field_u32(o, fieldIndex, value)`
@@ -4341,7 +4800,7 @@ Sets the unsigned 32-bit integer value from the field corresponding to `fieldInd
 ## [obj_set_field_s32](#obj_set_field_s32)
 
 ### Description
-Sets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+Sets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `obj_set_field_s32(o, fieldIndex, value)`
@@ -4366,7 +4825,7 @@ Sets the signed 32-bit integer value from the field corresponding to `fieldIndex
 ## [obj_set_field_f32](#obj_set_field_f32)
 
 ### Description
-Sets the float value from the field corresponding to `fieldIndex`
+Sets the float value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `obj_set_field_f32(o, fieldIndex, value)`
@@ -4391,7 +4850,7 @@ Sets the float value from the field corresponding to `fieldIndex`
 ## [obj_set_field_s16](#obj_set_field_s16)
 
 ### Description
-Sets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+Sets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 
 ### Lua Example
 `obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)`
@@ -4409,6 +4868,35 @@ Sets the signed 32-bit integer value from the sub field corresponding to `fieldS
 
 ### C Prototype
 `void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_info_from_name](#obj_get_field_info_from_name)
+
+### Description
+Gets the object field info (index, sub-index and type) from a field name and a specific mod (if provided). Returns `true` if the field is found, `false` otherwise.
+Supported types are `s32`, `u32`, `f32`, `s16`.
+This function works with custom object fields as well and is meant to be used with functions that take a field index as parameter, like `obj_get_first_with_behavior_id_and_field_s32` or `obj_get_field_s32`
+
+### Lua Example
+`local booleanValue, fieldIndex, fieldSubIndex, fieldType = obj_get_field_info_from_name(fieldName, mod)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fieldName | `string` |
+| mod | [Mod](structs.md#Mod) |
+
+### Returns
+- `boolean`
+- `integer`
+- `integer`
+- `string`
+
+### C Prototype
+`bool obj_get_field_info_from_name(const char *fieldName, OPTIONAL struct Mod *mod, RET s32 *fieldIndex, RET s32 *fieldSubIndex, RET const char **fieldType);`
 
 [:arrow_up_small:](#)
 
@@ -5844,13 +6332,13 @@ Stops cap music completely
 <br />
 
 
-## [cur_obj_play_sound_1](#cur_obj_play_sound_1)
+## [cur_obj_play_sound_if_visible](#cur_obj_play_sound_if_visible)
 
 ### Description
 Plays a sound if the current object is visible
 
 ### Lua Example
-`cur_obj_play_sound_1(soundMagic)`
+`cur_obj_play_sound_if_visible(soundMagic)`
 
 ### Parameters
 | Field | Type |
@@ -5861,19 +6349,19 @@ Plays a sound if the current object is visible
 - None
 
 ### C Prototype
-`void cur_obj_play_sound_1(s32 soundMagic);`
+`void cur_obj_play_sound_if_visible(s32 soundMagic);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [cur_obj_play_sound_2](#cur_obj_play_sound_2)
+## [cur_obj_play_sound_and_rumble_if_visible](#cur_obj_play_sound_and_rumble_if_visible)
 
 ### Description
-Plays a sound if the current object is visible and queues rumble for specific sounds
+Plays a sound if the current object is visible and queues rumble for the following sounds: `SOUND_OBJ_BOWSER_WALK`, `SOUND_OBJ_POUNDING_LOUD`, `SOUND_OBJ_WHOMP_LOWPRIO`
 
 ### Lua Example
-`cur_obj_play_sound_2(soundMagic)`
+`cur_obj_play_sound_and_rumble_if_visible(soundMagic)`
 
 ### Parameters
 | Field | Type |
@@ -5884,7 +6372,7 @@ Plays a sound if the current object is visible and queues rumble for specific so
 - None
 
 ### C Prototype
-`void cur_obj_play_sound_2(s32 soundMagic);`
+`void cur_obj_play_sound_and_rumble_if_visible(s32 soundMagic);`
 
 [:arrow_up_small:](#)
 
@@ -5909,56 +6397,6 @@ Create a sound spawner for objects that need a sound play once.
 
 ### C Prototype
 `void create_sound_spawner(s32 soundMagic);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
-
-### Description
-Unused vanilla function, calculates a volume based on `distance`.
-If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124.
-What an even more strange and confusing function
-
-### Lua Example
-`local integerValue = calc_dist_to_volume_range_1(distance)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| distance | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 calc_dist_to_volume_range_1(f32 distance);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
-
-### Description
-Unused vanilla function, calculates a volume based on `distance`.
-If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127.
-What a strange and confusing function
-
-### Lua Example
-`local integerValue = calc_dist_to_volume_range_2(distance)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| distance | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 calc_dist_to_volume_range_2(f32 distance);`
 
 [:arrow_up_small:](#)
 

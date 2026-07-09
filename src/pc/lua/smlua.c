@@ -15,6 +15,8 @@
 #include "pc/djui/djui.h"
 #include "pc/fs/fmem.h"
 
+extern void smlua_free_custom_field(void *p);
+
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
 u8 gSmLuaSuppressErrors = 0;
@@ -25,6 +27,7 @@ struct Mod* gLuaLastHookMod = NULL;
 
 void smlua_mod_error(void) {
     struct Mod* mod = gLuaActiveMod;
+    if (mod == NULL) { mod = gLuaLoadingMod; }
     if (mod == NULL) { mod = gLuaLastHookMod; }
     if (mod == NULL) { return; }
     char txt[255] = { 0 };
@@ -33,15 +36,19 @@ void smlua_mod_error(void) {
     djui_lua_error(txt, color);
 }
 
-void smlua_mod_warning(void) {
+bool smlua_mod_warning(bool once) {
     struct Mod* mod = gLuaActiveMod;
+    if (mod == NULL) { mod = gLuaLoadingMod; }
     if (mod == NULL) { mod = gLuaLastHookMod; }
-    if (mod == NULL) { return; }
-    if (mod->ignoreScriptWarnings) { return; }
+    if (mod == NULL) { return true; }
+    if (mod->ignoreScriptWarnings) { return false; }
+    if (once && mod->showedScriptWarning) { return false; }
+    if (once) { mod->showedScriptWarning = true; }
     char txt[255] = { 0 };
     snprintf(txt, 254, "'%s\\#ffe600\\' has script warnings!", mod->name);
     static const struct DjuiColor color = { 255, 230, 0, 255 };
     djui_lua_error(txt, color);
+    return true;
 }
 
 int smlua_error_handler(lua_State* L) {
@@ -315,7 +322,7 @@ void smlua_init(void) {
 
     // load libraries
     luaopen_base(L);
-#if defined(DEVELOPMENT)
+#if defined(DEVELOPMENT) && defined(LUA_UNSAFE)
     luaL_requiref(L, "debug", luaopen_debug, 1);
     luaL_requiref(L, "io", luaopen_io, 1);
     luaL_requiref(L, "os", luaopen_os, 1);
@@ -334,11 +341,12 @@ void smlua_init(void) {
     smlua_bind_sync_table();
     smlua_init_require_system();
 
-    extern char gSmluaConstants[];
+    extern const char gSmluaConstants[];
     smlua_exec_str(gSmluaConstants);
 
     smlua_cobject_init_globals();
     smlua_model_util_initialize();
+    smlua_init_custom_fields();
 
     // load scripts
     mods_size_enforce(&gActiveMods);
@@ -350,6 +358,7 @@ void smlua_init(void) {
         gLuaActiveMod = mod;
         gLuaLastHookMod = mod;
         gLuaLoadingMod->customBehaviorIndex = 0;
+        gLuaLoadingMod->customObjectFields = growing_array_init(gLuaLoadingMod->customObjectFields, 4, malloc, smlua_free_custom_field);
         gPcDebug.lastModRun = gLuaActiveMod;
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
@@ -384,6 +393,8 @@ void smlua_init(void) {
         gLuaLoadingMod = NULL;
     }
 
+    smlua_index_custom_fields();
+
     smlua_call_event_hooks(HOOK_ON_MODS_LOADED);
 }
 
@@ -415,11 +426,12 @@ void smlua_shutdown(void) {
     hardcoded_reset_default_values();
     smlua_text_utils_reset_all();
     smlua_audio_utils_reset_all();
-    audio_custom_shutdown();
+    smlua_audio_custom_deinit();
     smlua_clear_hooks();
     smlua_model_util_clear();
     smlua_level_util_reset();
     smlua_anim_util_reset();
+    smlua_clear_custom_fields();
     mod_storage_shutdown();
     mod_fs_shutdown();
     lua_State* L = gLuaState;

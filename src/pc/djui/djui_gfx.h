@@ -44,6 +44,7 @@ extern bool gCombinerUpdated;
 extern bool gCombinerOverride;
 void djui_gfx_update_combine_mode(enum CombinerSource mode);
 
+/* |description|Gets the current visual scaling factor of DJUI|descriptionEnd| */
 f32 djui_gfx_get_scale(void);
 
 void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, bool filter);

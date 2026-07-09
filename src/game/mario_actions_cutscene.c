@@ -397,7 +397,7 @@ Checks if the dialog from a specified `object` should start or continue for this
 |descriptionEnd| */
 u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) {
     if (!m) { return FALSE; }
-    if (!m->visibleToEnemies) { return FALSE; }
+    if (!m->visibleToObjects) { return FALSE; }
     if (m->playerIndex == 0) { return TRUE; }
     return (gContinueDialogFunctionObject == object);
 }
@@ -1271,7 +1271,6 @@ s32 act_spawn_spin_airborne(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
-        m->freeze = 2;
         return set_water_plunge_action(m);
     }
 
@@ -1304,7 +1303,6 @@ s32 act_spawn_spin_landing(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
-        m->freeze = 2;
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;
@@ -1557,7 +1555,6 @@ s32 act_spawn_no_spin_landing(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
-        m->freeze = 2;
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;
@@ -1690,7 +1687,7 @@ s32 act_teleport_fade_out(struct MarioState *m) {
     if (m->actionTimer == 0) {
         queue_rumble_data_mario(m, 30, 70);
         if (m->playerIndex == 0) {
-            func_sh_8024C89C(2);
+            queue_rumble_decay(2);
         }
     }
 
@@ -1720,7 +1717,7 @@ s32 act_teleport_fade_in(struct MarioState *m) {
     if (m->actionTimer == 0) {
         queue_rumble_data_mario(m, 30, 70);
         if (m->playerIndex == 0) {
-            func_sh_8024C89C(2);
+            queue_rumble_decay(2);
         }
     }
 

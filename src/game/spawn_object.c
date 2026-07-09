@@ -85,7 +85,7 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
     struct ObjectNode *nextObj = NULL;
 
     if (destList == NULL || freeList == NULL) {
-        fprintf(stderr, "FATAL ERROR: Failed to try and allocate a object because either the destList %p or freeList %p was NULL!\n", destList, freeList);
+        LOG_ERROR("Failed to try and allocate a object because either the destList %p or freeList %p was NULL!", destList, freeList);
         return NULL;
     }
 
@@ -99,7 +99,7 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
         if (destList->prev != NULL) {
             destList->prev->next = nextObj;
         } else {
-            fprintf(stderr, "ERROR: The previous object in the destination list %p was NULL! Unexpected errors may occur.\n", destList);
+            LOG_ERROR("The previous object in the destination list %p was NULL! Unexpected errors may occur.", destList);
         }
         destList->prev = nextObj;
     } else {
@@ -193,7 +193,7 @@ UNUSED static void unused_delete_leaf_nodes(struct Object *obj) {
         unused_delete_leaf_nodes(children);
     } else {
         // No children
-        mark_obj_for_deletion(obj);
+        obj_mark_for_deletion(obj);
     }
 
     while ((sibling = (struct Object *) obj->header.gfx.node.next) != obj0) {
@@ -247,6 +247,8 @@ void unload_object(struct Object *obj) {
 
     smlua_call_event_hooks(HOOK_ON_OBJECT_UNLOAD, obj);
 
+    obj->customFields = NULL;
+
     deallocate_object(&gFreeObjectList, &obj->header);
 }
 
@@ -293,6 +295,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
 
     memset(&obj->rawData, 0, sizeof(obj->rawData));
     memset(&obj->ptrData, 0, sizeof(obj->ptrData));
+    smlua_init_object_custom_fields(obj);
 
     obj->unused1 = 0;
     obj->bhvStackIndex = 0;
@@ -374,7 +377,6 @@ static void snap_object_to_floor(struct Object *obj) {
 struct Object *create_object(const BehaviorScript *bhvScript) {
     if (!bhvScript) { return NULL; }
     s32 objListIndex = OBJ_LIST_DEFAULT;
-    bool luaBehavior = smlua_is_behavior_hooked(bhvScript);
     const BehaviorScript *behavior = smlua_override_behavior(bhvScript);
 
     // If the first behavior script command is "begin <object list>", then
@@ -384,7 +386,7 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     }
 
     if (objListIndex >= NUM_OBJ_LISTS) {
-        fprintf(stderr, "Failed to create object with non-existent object list index %i with behavior script %p.\n", objListIndex, bhvScript);
+        LOG_ERROR("Failed to create object with non-existent object list index %i with behavior script %p.", objListIndex, bhvScript);
         return NULL;
     }
 
@@ -392,7 +394,8 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     struct Object *obj = allocate_object(objList);
     if (obj == NULL) { return NULL; }
 
-    obj->curBhvCommand = luaBehavior ? bhvScript : behavior;
+    obj->initBhvCommand = smlua_get_behavior_command(bhvScript);
+    obj->curBhvCommand = obj->initBhvCommand;
     obj->behavior = behavior;
 
     if (objListIndex == OBJ_LIST_UNIMPORTANT) {
@@ -417,13 +420,4 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     smlua_call_event_hooks(HOOK_ON_OBJECT_LOAD, obj);
 
     return obj;
-}
-
-/**
- * Mark an object to be unloaded at the end of the frame.
- */
-void mark_obj_for_deletion(struct Object *obj) {
-    if (!obj) { return; }
-    //! Same issue as obj_mark_for_deletion
-    obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
 }
