@@ -4030,7 +4030,9 @@ end
 --- @param b? CombinerSource
 --- @param c? CombinerSource
 --- @param d? CombinerSource
---- Sets the current DJUI HUD combiner. Each part uses the following equation: `P = (A - B) * C + D`. Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+--- Sets the current DJUI HUD combiner.<br>
+--- Each part uses the following equation: `P = (A - B) * C + D`.<br>
+--- Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
 function djui_hud_set_combiner(cycle, alpha, a, b, c, d)
     -- ...
 end
