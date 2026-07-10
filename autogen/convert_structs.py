@@ -205,6 +205,11 @@ def parse_struct(struct_str, sortFields = False):
         if len(field_str.strip()) == 0:
             continue
 
+        is_c_array = False
+        if cobject_c_array_identifier in field_str:
+            field_str = field_str.replace(cobject_c_array_identifier, '').strip()
+            is_c_array = True
+
         if '*' in field_str:
             field_type, field_id = field_str.strip().rsplit('*', 1)
             field_type = field_type.strip() + '*'
@@ -223,6 +228,7 @@ def parse_struct(struct_str, sortFields = False):
         field['type'] = field_type.strip()
         field['identifier'] = field_id.strip()
         field['field_str'] = field_str
+        field['is_c_array'] = is_c_array
 
         # handle function members
         if field['type'].startswith(cobject_function_identifier):
@@ -291,7 +297,7 @@ def output_fuzz_struct(struct):
 
     s_out += '    local funcs = {\n'
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
         if fimmutable == 'true':
             continue
 
@@ -418,7 +424,7 @@ def get_struct_field_info(struct, field):
             else:
                 lvt, lot = 'LVT_???', "LOT_???" # array size not provided, so not supported
 
-    return fid, ftype, fimmutable, lvt, lot, size
+    return fid, ftype, fimmutable, lvt, lot, size, field.get('is_c_array', False)
 
 def build_struct(struct):
     # debug print out lua fuzz functions
@@ -431,7 +437,7 @@ def build_struct(struct):
     field_table = []
     field_functions = []
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
 
         if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
             continue
@@ -469,10 +475,13 @@ def build_struct(struct):
             row.append('%s, '       % fimmutable)
             row.append('%s, '       % lot       )
             if size != 1:
-                row.append('%s, '       % size      )
-                row.append('sizeof(%s)' % ftype     )
+                row.append('%s, '         % size )
+                row.append('sizeof(%s), ' % ftype)
+                if field['is_c_array']:
+                    row.append('true')
+                else: row[-1] = row[-1][:-2]
             else: row[-1] = row[-1][:-2]
-        row.extend(['\\'] * (8 - len(row)))
+        row.extend(['\\'] * (9 - len(row)))
         row.append(endStr)
         if field.get('function'):
             field_functions.append(field['function'])
@@ -612,7 +621,7 @@ def doc_struct_index(structs):
     return s
 
 def doc_struct_field(struct, field):
-    fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+    fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
     sid = struct['identifier']
 
     if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
@@ -634,7 +643,12 @@ def doc_struct_field(struct, field):
         ftype = get_function_signature(field['get'])
         ftype = f"`{ftype[ftype.rfind(':')+2:]}`"
 
-    restrictions = ('', 'read-only')[fimmutable == 'true']
+    restrictions = []
+
+    if fimmutable == 'true': restrictions.append('read-only')
+    if is_c_array: restrictions.append('starts at index 0')
+
+    restrictions = ", ".join(restrictions)
 
     global total_fields
     total_fields += 1
@@ -748,7 +762,7 @@ def def_struct(struct):
     s = '\n--- @class %s\n' % stype
 
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
 
         if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
             continue
