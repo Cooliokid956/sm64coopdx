@@ -22,12 +22,20 @@ struct ModCategory {
 };
 
 struct ModCategory sCategories[] = {
-    #include "mod_categories.inl"
+#define MOD_CATEGORY_DEF(key) { #key, NULL },
+#define MOD_CATEGORY(key, category) { #key, category },
+#include "mod_categories.inl"
+#undef MOD_CATEGORY_DEF
+#undef MOD_CATEGORY
 };
 
 enum ModCategories {
-    #define MC_ENUM
-    #include "mod_categories.inl"
+#define MOD_CATEGORY_DEF(key) MOD_CATEGORY_ ## key,
+#define MOD_CATEGORY(key, category)
+#include "mod_categories.inl"
+#undef MOD_CATEGORY_DEF
+#undef MOD_CATEGORY
+
     MOD_CATEGORY_START,
     MOD_CATEGORY_COUNT = ARRAY_COUNT(sCategories)
 };
