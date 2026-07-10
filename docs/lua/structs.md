@@ -2172,6 +2172,7 @@
 | oCoinUnkF4 | `integer` |  |
 | oCoinUnkF8 | `integer` |  |
 | oCoinUnk110 | `number` |  |
+| oCoinBaseYVel | `number` |  |
 | oCoinUnk1B0 | `integer` |  |
 | oCollisionParticleUnkF4 | `number` |  |
 | oControllablePlatformUnkF8 | `integer` |  |
