@@ -1081,7 +1081,9 @@ s32 act_bubbled(struct MarioState* m) {
             if (m->actionState++ == 60) {
                 level_trigger_warp(m, WARP_OP_EXIT);
             }
-        } else { m->actionState = 0; }
+        } else {
+            m->actionState = 0;
+        }
     }
 
     // create bubble
