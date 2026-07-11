@@ -1261,6 +1261,7 @@
    - [mtxf_inverse](functions-4.md#mtxf_inverse)
    - [mtxf_inverse_non_affine](functions-4.md#mtxf_inverse_non_affine)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
+   - [get_world_mtx_from_transform](functions-4.md#get_world_mtx_from_transform)
 
 <br />
 
@@ -2076,6 +2077,7 @@
    - [get_hand_foot_pos_z](functions-7.md#get_hand_foot_pos_z)
    - [get_mario_anim_part_pos](functions-7.md#get_mario_anim_part_pos)
    - [get_mario_anim_part_rot](functions-7.md#get_mario_anim_part_rot)
+   - [get_mario_anim_part_mtx](functions-7.md#get_mario_anim_part_mtx)
    - [get_current_save_file_num](functions-7.md#get_current_save_file_num)
    - [save_file_get_using_backup_slot](functions-7.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-7.md#save_file_set_using_backup_slot)

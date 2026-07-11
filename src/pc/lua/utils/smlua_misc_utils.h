@@ -38,8 +38,8 @@ enum ActSelectHudPart {
     ACT_SELECT_HUD_STAR_NUM = 1 << 4,
     ACT_SELECT_HUD_PLAYERS_IN_LEVEL = 1 << 5,
 
-	ACT_SELECT_HUD_NONE = 0,
-	ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
+    ACT_SELECT_HUD_NONE = 0,
+    ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
 };
 
 struct DateTime {
@@ -178,6 +178,10 @@ bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, VEC_OUT Vec3f p
 Retrieves the animated part rotation associated to `animPart` from the MarioState `m` and stores it into `rot`. Returns `true` on success or `false` on failure
 |descriptionEnd| */
 bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s rot);
+/* |description|
+Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure 
+|descriptionEnd| */
+bool get_mario_anim_part_mtx(struct MarioState *m, u32 animPart, VEC_OUT Mat4 mtx);
 
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
 s16 get_current_save_file_num(void);

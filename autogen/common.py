@@ -9,6 +9,7 @@ typedef_pointers = ['BehaviorScript', 'ObjectAnimPointer', 'Collision', 'LevelSc
 cobject_function_identifier = 'FUNCTION'
 cobject_property_identifier = 'PROPERTY'
 cobject_overload_identifier = 'OVERLOAD'
+cobject_c_array_identifier = 'C_ARRAY'
 
 type_mappings = {
     'char': 's8',

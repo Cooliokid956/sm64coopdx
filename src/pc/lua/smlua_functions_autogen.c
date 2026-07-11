@@ -15821,15 +15821,20 @@ int smlua_func_mario_set_bubbled(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mario_set_bubbled", 1, top);
+    if (top < 1 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "mario_set_bubbled", 1, 2, top);
         return 0;
     }
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_set_bubbled"); return 0; }
+    bool stayAlive = (bool) 0;
+    if (top >= 2) {
+        stayAlive = smlua_to_boolean(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mario_set_bubbled"); return 0; }
+    }
 
-    mario_set_bubbled(m);
+    mario_set_bubbled(m, stayAlive);
 
     return 1;
 }
@@ -19439,6 +19444,35 @@ int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
     smlua_push_vec3f(dest, 1);
 
     lua_settop(L, 1);
+    return 1;
+}
+
+int smlua_func_get_world_mtx_from_transform(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_world_mtx_from_transform", 3, top);
+        return 0;
+    }
+
+
+    Mat4 dest;
+    smlua_get_mat4(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_world_mtx_from_transform"); return 0; }
+
+    Mat4 objMtx;
+    smlua_get_mat4(objMtx, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_world_mtx_from_transform"); return 0; }
+
+    Mat4 camMtx;
+    smlua_get_mat4(camMtx, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_world_mtx_from_transform"); return 0; }
+
+    get_world_mtx_from_transform(dest, objMtx, camMtx);
+
+    smlua_push_mat4(dest, 1);
+
     return 1;
 }
 
@@ -32930,6 +32964,31 @@ int smlua_func_get_mario_anim_part_rot(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_mario_anim_part_mtx(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_mario_anim_part_mtx", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mario_anim_part_mtx"); return 0; }
+    u32 animPart = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_mario_anim_part_mtx"); return 0; }
+
+    Mat4 mtx;
+    smlua_get_mat4(mtx, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_mario_anim_part_mtx"); return 0; }
+
+    lua_pushboolean(L, get_mario_anim_part_mtx(m, animPart, mtx));
+
+    smlua_push_mat4(mtx, 3);
+
+    return 1;
+}
+
 int smlua_func_get_current_save_file_num(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37017,6 +37076,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mtxf_inverse", smlua_func_mtxf_inverse);
     smlua_bind_function(L, "mtxf_inverse_non_affine", smlua_func_mtxf_inverse_non_affine);
     smlua_bind_function(L, "get_pos_from_transform_mtx", smlua_func_get_pos_from_transform_mtx);
+    smlua_bind_function(L, "get_world_mtx_from_transform", smlua_func_get_world_mtx_from_transform);
 
     // math_util.inl
     smlua_bind_function(L, "replace_value_if_not_zero", smlua_func_replace_value_if_not_zero);
@@ -37793,6 +37853,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
     smlua_bind_function(L, "get_mario_anim_part_pos", smlua_func_get_mario_anim_part_pos);
     smlua_bind_function(L, "get_mario_anim_part_rot", smlua_func_get_mario_anim_part_rot);
+    smlua_bind_function(L, "get_mario_anim_part_mtx", smlua_func_get_mario_anim_part_mtx);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);

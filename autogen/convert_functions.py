@@ -902,11 +902,11 @@ def build_function(function, do_extern):
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
         elif 'OPTIONAL' in param:
             sparam = build_param(fid, param, i)
-            param_var, param_value = sparam.split('=')
-            param_type = param_var.replace(pid, '').strip()
-            s += '    %s = (%s) %s;\n' % (param_var.strip(), param_type, "NULL" if '*' in param_type else "0")
+            param_var, param_value = sparam.strip().split(' = ')
+            param_type = param['type']
+            s += '    %s = (%s) %s;\n' % (param_var, param_type, "NULL" if '*' in param_type else "0")
             s += '    if (top >= %d) {\n' % (i)
-            s += '        %s = %s\n' % (pid, param_value.strip())
+            s += '        %s = %s\n' % (pid, param_value)
             s += '        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
             s += '    }\n'
         else:
