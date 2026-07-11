@@ -12503,12 +12503,12 @@ int smlua_func_djui_hud_set_combiner(lua_State* L) {
         a = smlua_to_integer(L, 3);
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_combiner"); return 0; }
     }
-    enum CombinerSource b = (enum CominerSource) 0;
+    enum CombinerSource b = (enum CombinerSource) 0;
     if (top >= 4) {
         b = smlua_to_integer(L, 4);
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_combiner"); return 0; }
     }
-    enum CombinerSource c = (enum CombinerSoure) 0;
+    enum CombinerSource c = (enum CombinerSource) 0;
     if (top >= 5) {
         c = smlua_to_integer(L, 5);
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_set_combiner"); return 0; }
