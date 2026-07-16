@@ -489,8 +489,8 @@ void djui_hud_set_viewport(f32 ulx, f32 uly, f32 lrx, f32 lry) {
     Vp *vp = alloc_display_list(sizeof(Vp));
     if (vp == NULL) { return; }
     Vp_t *viewport = &vp->vp;
-    viewport->vscale[0] = lrx * 2;
-    viewport->vscale[1] = lry * 2;
+    viewport->vscale[0] = (lrx - ulx) * 2;
+    viewport->vscale[1] = (lry - uly) * 2;
     viewport->vscale[2] = 511;
     viewport->vtrans[0] = (lrx + ulx) * 2;
     viewport->vtrans[1] = (lry + uly) * 2;
