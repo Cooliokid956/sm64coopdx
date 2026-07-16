@@ -12043,16 +12043,16 @@ int smlua_func_djui_hud_set_viewport(lua_State* L) {
         return 0;
     }
 
-    f32 x = smlua_to_number(L, 1);
+    f32 ulx = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_viewport"); return 0; }
-    f32 y = smlua_to_number(L, 2);
+    f32 uly = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_viewport"); return 0; }
-    f32 width = smlua_to_number(L, 3);
+    f32 lrx = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_viewport"); return 0; }
-    f32 height = smlua_to_number(L, 4);
+    f32 lry = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_viewport"); return 0; }
 
-    djui_hud_set_viewport(x, y, width, height);
+    djui_hud_set_viewport(ulx, uly, lrx, lry);
 
     return 1;
 }
@@ -12080,16 +12080,16 @@ int smlua_func_djui_hud_set_scissor(lua_State* L) {
         return 0;
     }
 
-    f32 x = smlua_to_number(L, 1);
+    f32 ulx = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_scissor"); return 0; }
-    f32 y = smlua_to_number(L, 2);
+    f32 uly = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_scissor"); return 0; }
-    f32 width = smlua_to_number(L, 3);
+    f32 lrx = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_scissor"); return 0; }
-    f32 height = smlua_to_number(L, 4);
+    f32 lry = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_scissor"); return 0; }
 
-    djui_hud_set_scissor(x, y, width, height);
+    djui_hud_set_scissor(ulx, uly, lrx, lry);
 
     return 1;
 }
@@ -19456,21 +19456,14 @@ int smlua_func_get_world_mtx_from_transform(lua_State* L) {
         return 0;
     }
 
-
-    Mat4 dest;
-    smlua_get_mat4(dest, 1);
+    Mat4 dest; smlua_get_mat4(dest, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_world_mtx_from_transform"); return 0; }
-
-    Mat4 objMtx;
-    smlua_get_mat4(objMtx, 2);
+    Mat4 objMtx; smlua_get_mat4(objMtx, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_world_mtx_from_transform"); return 0; }
-
-    Mat4 camMtx;
-    smlua_get_mat4(camMtx, 3);
+    Mat4 camMtx; smlua_get_mat4(camMtx, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_world_mtx_from_transform"); return 0; }
 
     get_world_mtx_from_transform(dest, objMtx, camMtx);
-
     smlua_push_mat4(dest, 1);
 
     return 1;
@@ -32977,13 +32970,10 @@ int smlua_func_get_mario_anim_part_mtx(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mario_anim_part_mtx"); return 0; }
     u32 animPart = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_mario_anim_part_mtx"); return 0; }
-
-    Mat4 mtx;
-    smlua_get_mat4(mtx, 3);
+    Mat4 mtx; smlua_get_mat4(mtx, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_mario_anim_part_mtx"); return 0; }
 
     lua_pushboolean(L, get_mario_anim_part_mtx(m, animPart, mtx));
-
     smlua_push_mat4(mtx, 3);
 
     return 1;

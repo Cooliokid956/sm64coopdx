@@ -131,7 +131,7 @@ static void djui_hud_size_translate(f32* size) {
     }
 }
 
-// Translates position and scale to N64 anti-aspect resolution
+// Translates corners to N64 anti-aspect resolution
 static void djui_hud_translate_corners(f32 *ulx, f32 *uly, f32 *lrx, f32 *lry) {
     // translate corners
     djui_hud_scale_translate(ulx, uly);

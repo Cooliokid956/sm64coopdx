@@ -4133,12 +4133,12 @@ function djui_hud_get_mouse_scroll_y()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param width number
---- @param height number
---- Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
-function djui_hud_set_viewport(x, y, width, height)
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Sets the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
+function djui_hud_set_viewport(ulx, uly, lrx, lry)
     -- ...
 end
 
@@ -4147,12 +4147,12 @@ function djui_hud_reset_viewport()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param width number
---- @param height number
---- Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
-function djui_hud_set_scissor(x, y, width, height)
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Sets the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
+function djui_hud_set_scissor(ulx, uly, lrx, lry)
     -- ...
 end
 

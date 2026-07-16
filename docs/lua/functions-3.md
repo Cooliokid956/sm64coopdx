@@ -3610,24 +3610,24 @@ Returns the amount scrolled vertically (-down/up+)
 ## [djui_hud_set_viewport](#djui_hud_set_viewport)
 
 ### Description
-Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
+Sets the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
 
 ### Lua Example
-`djui_hud_set_viewport(x, y, width, height)`
+`djui_hud_set_viewport(ulx, uly, lrx, lry)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | `number` |
-| y | `number` |
-| width | `number` |
-| height | `number` |
+| ulx | `number` |
+| uly | `number` |
+| lrx | `number` |
+| lry | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);`
+`void djui_hud_set_viewport(f32 ulx, f32 uly, f32 lrx, f32 lry);`
 
 [:arrow_up_small:](#)
 
@@ -3657,24 +3657,24 @@ Resets the viewport to a fullscreen state
 ## [djui_hud_set_scissor](#djui_hud_set_scissor)
 
 ### Description
-Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
+Sets the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
 
 ### Lua Example
-`djui_hud_set_scissor(x, y, width, height)`
+`djui_hud_set_scissor(ulx, uly, lrx, lry)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | `number` |
-| y | `number` |
-| width | `number` |
-| height | `number` |
+| ulx | `number` |
+| uly | `number` |
+| lrx | `number` |
+| lry | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);`
+`void djui_hud_set_scissor(f32 ulx, f32 uly, f32 lrx, f32 lry);`
 
 [:arrow_up_small:](#)
 
