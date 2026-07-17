@@ -140,6 +140,18 @@ static void djui_hud_translate_corners(f32 *ulx, f32 *uly, f32 *lrx, f32 *lry) {
     // negate aspect correction
     *ulx *= gfx_current_dimensions.x_adjust_ratio;
     *lrx *= gfx_current_dimensions.x_adjust_ratio;
+
+    // swap corners if needed
+    if (*ulx > *lrx) {
+        f32 tmp = *ulx;
+        *ulx = *lrx;
+        *lrx = tmp;
+    }
+    if (*uly > *lry) {
+        f32 tmp = *uly;
+        *uly = *lry;
+        *lry = tmp;
+    }
 }
 
   ////////////
