@@ -8,6 +8,8 @@ We're all sorry to see the game go, but we've recently come under fire from seve
 
 --------------------------------------------------------
 
-Wishlist Nitro Thrash on Steam! https://store.steampowered.com/app/3290330/Nitro_Thrash/
-Learn more at https://djoslin.info/projects/nitro-thrash/
-Join for updates https://discord.gg/HqWTq9X86g
+Wishlist Nitro Thrash on [Steam](https://store.steampowered.com/app/3290330/Nitro_Thrash/)!
+
+Learn more at [djoslin.info](https://djoslin.info/projects/nitro-thrash/)
+
+Join the [Discord guild](https://discord.gg/HqWTq9X86g) for updates!
