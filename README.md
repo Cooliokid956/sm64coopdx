@@ -4,4 +4,4 @@ sm64coopdx was an online multiplayer project for the Super Mario 64 PC port that
 
 See what the future holds [here](https://discord.gg/TJVKHS4).
 
-We're sorry to see the game go, but we've recently come under fire from several legal entities and have made the difficult decision to close down. We wish you the best in your next phase.
+We're all sorry to see the game go, but we've recently come under fire from several legal entities and have made the difficult decision to close down. We wish you the best in your next phase.
