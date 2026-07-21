@@ -3633,6 +3633,36 @@ Sets the viewport to the specified corners (upper left, lower right), this will 
 
 <br />
 
+## [djui_hud_set_viewport_interpolated](#djui_hud_set_viewport_interpolated)
+
+### Description
+Interpolates the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
+
+### Lua Example
+`djui_hud_set_viewport_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pulx | `number` |
+| puly | `number` |
+| plrx | `number` |
+| plry | `number` |
+| ulx | `number` |
+| uly | `number` |
+| lrx | `number` |
+| lry | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_viewport_interpolated(f32 pulx, f32 puly, f32 plrx, f32 plry, f32 ulx, f32 uly, f32 lrx, f32 lry);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_reset_viewport](#djui_hud_reset_viewport)
 
 ### Description
@@ -3675,6 +3705,36 @@ Sets the scissor rectangle to the specified corners (upper left, lower right), t
 
 ### C Prototype
 `void djui_hud_set_scissor(f32 ulx, f32 uly, f32 lrx, f32 lry);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_scissor_interpolated](#djui_hud_set_scissor_interpolated)
+
+### Description
+Interpolates the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
+
+### Lua Example
+`djui_hud_set_scissor_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pulx | `number` |
+| puly | `number` |
+| plrx | `number` |
+| plry | `number` |
+| ulx | `number` |
+| uly | `number` |
+| lrx | `number` |
+| lry | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_scissor_interpolated(f32 pulx, f32 puly, f32 plrx, f32 plry, f32 ulx, f32 uly, f32 lrx, f32 lry);`
 
 [:arrow_up_small:](#)
 

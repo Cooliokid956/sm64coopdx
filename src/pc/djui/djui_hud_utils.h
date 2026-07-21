@@ -130,10 +130,14 @@ f32 djui_hud_get_mouse_scroll_x(void);
 f32 djui_hud_get_mouse_scroll_y(void);
 /* |description|Sets the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics|descriptionEnd| */
 void djui_hud_set_viewport(f32 ulx, f32 uly, f32 lrx, f32 lry);
+/* |description|Interpolates the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics|descriptionEnd| */
+void djui_hud_set_viewport_interpolated(f32 pulx, f32 puly, f32 plrx, f32 plry, f32 ulx, f32 uly, f32 lrx, f32 lry);
 /* |description|Resets the viewport to a fullscreen state|descriptionEnd| */
 void djui_hud_reset_viewport(void);
 /* |description|Sets the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle|descriptionEnd| */
 void djui_hud_set_scissor(f32 ulx, f32 uly, f32 lrx, f32 lry);
+/* |description|Interpolates the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle|descriptionEnd| */
+void djui_hud_set_scissor_interpolated(f32 pulx, f32 puly, f32 plrx, f32 plry, f32 ulx, f32 uly, f32 lrx, f32 lry);
 /* |description|Resets the scissor rectangle to a fullscreen state|descriptionEnd| */
 void djui_hud_reset_scissor(void);
 
