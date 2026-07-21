@@ -1,6 +1,6 @@
 ![sm64coopdx Logo](textures/segment2/custom_coopdx_logo.rgba32.png)
 
-sm64coopdx was an online multiplayer project for the Super Mario 64 PC port that synchronizes all entities and every level for multiple players. The project was started by the Coop Deluxe Team, but unfortnuately has ceased operations starting July 20, 2026.
+sm64coopdx was an online multiplayer project for the Super Mario 64 PC port that synchronized all entities and every level for multiple players. The project was started by the Coop Deluxe Team, but unfortunately has ceased operations starting July 20, 2026.
 
 See what the future holds [here](https://discord.gg/TJVKHS4).
 
