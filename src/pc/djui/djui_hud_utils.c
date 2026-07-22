@@ -514,7 +514,7 @@ static void djui_hud_set_viewport_internal(f32 ulx, f32 uly, f32 lrx, f32 lry, s
     Vp_t *viewport = &vp->vp;
     viewport->vscale[0] = (lrx - ulx) * 2;
     viewport->vscale[1] = (lry - uly) * 2;
-    viewport->vscale[2] = 511;
+    // viewport->vscale[2] = 511; // unused by interpreter
     viewport->vtrans[0] = (lrx + ulx) * 2;
     viewport->vtrans[1] = (lry + uly) * 2;
     if (interp) {
