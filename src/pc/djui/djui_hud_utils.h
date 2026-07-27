@@ -80,6 +80,8 @@ void djui_hud_set_font(s8 fontType);
 struct DjuiColor* djui_hud_get_color(void);
 /* |description|Sets the current DJUI HUD global color|descriptionEnd| */
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);
+/* |description|Interpolates the current DJUI HUD global color|descriptionEnd| */
+void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 r, u8 g, u8 b, u8 a);
 /* |description|Resets the current DJUI HUD global color|descriptionEnd| */
 void djui_hud_reset_color(void);
 /* |description|Gets the current DJUI HUD text default color. This color is overridden by color codes|descriptionEnd| */
@@ -92,13 +94,13 @@ void djui_hud_reset_text_color(void);
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);
 /* |description|Sets the current DJUI HUD rotation|descriptionEnd| */
 void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);
-/* |description|Sets the current DJUI HUD rotation interpolated|descriptionEnd| */
+/* |description|Interpolates the current DJUI HUD rotation|descriptionEnd| */
 void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY);
 /* |description|Gets the current DJUI HUD text alignment|descriptionEnd| */
 void djui_hud_get_text_alignment(RET f32 *textHAlign, RET f32 *textVAlign);
 /* |description|Sets the current DJUI HUD text alignment|descriptionEnd| */
 void djui_hud_set_text_alignment(f32 textHAlign, f32 textVAlign);
-/* |description|Sets the current DJUI HUD text alignment interpolated|descriptionEnd| */
+/* |description|Interpolates the current DJUI HUD text alignment|descriptionEnd| */
 void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVAlign, f32 textHAlign, f32 textVAlign);
 
 /* |description|Gets the screen width in the current DJUI HUD resolution|descriptionEnd| */

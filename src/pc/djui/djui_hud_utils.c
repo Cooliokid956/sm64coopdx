@@ -169,6 +169,7 @@ enum InterpHudType {
     INTERP_HUD_NEW_LINE,
     INTERP_HUD_VIEWPORT,
     INTERP_HUD_SCISSOR,
+    INTERP_HUD_COLOR,
 };
 
 typedef struct {
@@ -286,6 +287,10 @@ void patch_djui_hud(f32 delta) {
                 case INTERP_HUD_SCISSOR: {
                     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, x, y, scaleW, scaleH);
                 } break;
+                
+                case INTERP_HUD_COLOR: {
+                    gDPSetEnvColor(gDisplayListHead++, x, y, scaleW, scaleH);
+                } break;
             }
         }
     }
@@ -375,6 +380,20 @@ void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
     sHudUtilsState.color.b = b;
     sHudUtilsState.color.a = a;
     gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
+}
+
+void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 r, u8 g, u8 b, u8 a) {
+    struct InterpHud *interp = djui_hud_create_interp();
+    if (interp) {
+        INTERP_SET(interp->posX, prevR, r);
+        INTERP_SET(interp->posY, prevG, g);
+        INTERP_SET(interp->scaleX, prevB, b);
+        INTERP_SET(interp->scaleY, prevA, a);
+
+        djui_hud_create_interp_gfx(interp, INTERP_HUD_COLOR);
+    }
+
+    djui_hud_set_color(r, g, b, a);
 }
 
 void djui_hud_reset_color(void) {

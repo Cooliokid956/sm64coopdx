@@ -3129,6 +3129,36 @@ Sets the current DJUI HUD global color
 
 <br />
 
+## [djui_hud_set_color_interpolated](#djui_hud_set_color_interpolated)
+
+### Description
+Interpolates the current DJUI HUD global color
+
+### Lua Example
+`djui_hud_set_color_interpolated(prevR, prevG, prevB, prevA, r, g, b, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| prevR | `integer` |
+| prevG | `integer` |
+| prevB | `integer` |
+| prevA | `integer` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_reset_color](#djui_hud_reset_color)
 
 ### Description
@@ -3269,7 +3299,7 @@ Sets the current DJUI HUD rotation
 ## [djui_hud_set_rotation_interpolated](#djui_hud_set_rotation_interpolated)
 
 ### Description
-Sets the current DJUI HUD rotation interpolated
+Interpolates the current DJUI HUD rotation
 
 ### Lua Example
 `djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)`
@@ -3343,7 +3373,7 @@ Sets the current DJUI HUD text alignment
 ## [djui_hud_set_text_alignment_interpolated](#djui_hud_set_text_alignment_interpolated)
 
 ### Description
-Sets the current DJUI HUD text alignment interpolated
+Interpolates the current DJUI HUD text alignment
 
 ### Lua Example
 `djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign)`
