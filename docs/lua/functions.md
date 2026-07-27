@@ -25,8 +25,6 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
-   - [djui_hud_print_text](#djui_hud_print_text)
-   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 <br />
 
@@ -744,6 +742,11 @@
 
 <br />
 
+- commands.h
+   - [command_message_create](functions-3.md#command_message_create)
+
+<br />
+
 - djui_chat_message.h
    - [djui_chat_message_create](functions-3.md#djui_chat_message_create)
 
@@ -797,14 +800,18 @@
    - [djui_hud_get_mouse_scroll_x](functions-3.md#djui_hud_get_mouse_scroll_x)
    - [djui_hud_get_mouse_scroll_y](functions-3.md#djui_hud_get_mouse_scroll_y)
    - [djui_hud_set_viewport](functions-3.md#djui_hud_set_viewport)
+   - [djui_hud_set_viewport_interpolated](functions-3.md#djui_hud_set_viewport_interpolated)
    - [djui_hud_reset_viewport](functions-3.md#djui_hud_reset_viewport)
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
+   - [djui_hud_set_scissor_interpolated](functions-3.md#djui_hud_set_scissor_interpolated)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_transform](functions-3.md#djui_hud_transform)
    - [djui_hud_transform_interpolated](functions-3.md#djui_hud_transform_interpolated)
    - [djui_hud_close_transform](functions-3.md#djui_hud_close_transform)
    - [djui_hud_reset_transform](functions-3.md#djui_hud_reset_transform)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
+   - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
+   - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
    - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
    - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
@@ -1419,6 +1426,7 @@
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
    - [mod_fs_file_set_compression](functions-5.md#mod_fs_file_set_compression)
    - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
+   - [mod_fs_get_last_error_code](functions-5.md#mod_fs_get_last_error_code)
    - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
 <br />
@@ -1850,26 +1858,31 @@
    - [smlua_audio_utils_reset_all](functions-6.md#smlua_audio_utils_reset_all)
    - [smlua_audio_utils_replace_sequence](functions-6.md#smlua_audio_utils_replace_sequence)
    - [smlua_audio_utils_allocate_sequence](functions-6.md#smlua_audio_utils_allocate_sequence)
-   - [audio_stream_load](functions-6.md#audio_stream_load)
-   - [audio_stream_destroy](functions-6.md#audio_stream_destroy)
-   - [audio_stream_play](functions-6.md#audio_stream_play)
-   - [audio_stream_pause](functions-6.md#audio_stream_pause)
-   - [audio_stream_stop](functions-6.md#audio_stream_stop)
-   - [audio_stream_get_position](functions-6.md#audio_stream_get_position)
-   - [audio_stream_set_position](functions-6.md#audio_stream_set_position)
-   - [audio_stream_get_looping](functions-6.md#audio_stream_get_looping)
-   - [audio_stream_set_looping](functions-6.md#audio_stream_set_looping)
-   - [audio_stream_set_loop_points](functions-6.md#audio_stream_set_loop_points)
-   - [audio_stream_get_frequency](functions-6.md#audio_stream_get_frequency)
-   - [audio_stream_set_frequency](functions-6.md#audio_stream_set_frequency)
-   - [audio_stream_get_volume](functions-6.md#audio_stream_get_volume)
-   - [audio_stream_set_volume](functions-6.md#audio_stream_set_volume)
-   - [audio_stream_get_volume_channel](functions-6.md#audio_stream_get_volume_channel)
-   - [audio_stream_set_volume_channel](functions-6.md#audio_stream_set_volume_channel)
-   - [audio_sample_load](functions-6.md#audio_sample_load)
-   - [audio_sample_destroy](functions-6.md#audio_sample_destroy)
-   - [audio_sample_stop](functions-6.md#audio_sample_stop)
-   - [audio_sample_play](functions-6.md#audio_sample_play)
+   - [audio_load](functions-6.md#audio_load)
+   - [audio_play](functions-6.md#audio_play)
+   - [audio_pause](functions-6.md#audio_pause)
+   - [audio_stop](functions-6.md#audio_stop)
+   - [audio_destroy](functions-6.md#audio_destroy)
+   - [audio_reload](functions-6.md#audio_reload)
+   - [audio_copy](functions-6.md#audio_copy)
+   - [audio_get_volume](functions-6.md#audio_get_volume)
+   - [audio_set_volume](functions-6.md#audio_set_volume)
+   - [audio_get_pan](functions-6.md#audio_get_pan)
+   - [audio_set_pan](functions-6.md#audio_set_pan)
+   - [audio_get_length](functions-6.md#audio_get_length)
+   - [audio_get_position](functions-6.md#audio_get_position)
+   - [audio_set_position](functions-6.md#audio_set_position)
+   - [audio_get_looping](functions-6.md#audio_get_looping)
+   - [audio_set_looping](functions-6.md#audio_set_looping)
+   - [audio_get_playing](functions-6.md#audio_get_playing)
+   - [audio_set_playing](functions-6.md#audio_set_playing)
+   - [audio_get_loop_points](functions-6.md#audio_get_loop_points)
+   - [audio_set_loop_points](functions-6.md#audio_set_loop_points)
+   - [audio_get_frequency](functions-6.md#audio_get_frequency)
+   - [audio_set_frequency](functions-6.md#audio_set_frequency)
+   - [audio_get_volume_channel](functions-6.md#audio_get_volume_channel)
+   - [audio_set_volume_channel](functions-6.md#audio_set_volume_channel)
+   - [audio_get_sample_rate](functions-6.md#audio_get_sample_rate)
 
 <br />
 
@@ -2028,6 +2041,7 @@
 
 - smlua_misc_utils.h
    - [get_network_area_timer](functions-7.md#get_network_area_timer)
+   - [get_network_area_random_seed](functions-7.md#get_network_area_random_seed)
    - [get_area_update_counter](functions-7.md#get_area_update_counter)
    - [get_temp_s32_pointer](functions-7.md#get_temp_s32_pointer)
    - [deref_s32_pointer](functions-7.md#deref_s32_pointer)
@@ -2195,6 +2209,9 @@
    - [smlua_text_utils_dialog_restore](functions-7.md#smlua_text_utils_dialog_restore)
    - [smlua_text_utils_dialog_is_replaced](functions-7.md#smlua_text_utils_dialog_is_replaced)
    - [smlua_text_utils_allocate_dialog](functions-7.md#smlua_text_utils_allocate_dialog)
+   - [smlua_text_utils_dialog_get_type](functions-7.md#smlua_text_utils_dialog_get_type)
+   - [smlua_text_utils_dialog_set_type](functions-7.md#smlua_text_utils_dialog_set_type)
+   - [smlua_text_utils_dialog_reset_type](functions-7.md#smlua_text_utils_dialog_reset_type)
    - [smlua_text_utils_course_acts_replace](functions-7.md#smlua_text_utils_course_acts_replace)
    - [smlua_text_utils_secret_star_replace](functions-7.md#smlua_text_utils_secret_star_replace)
    - [smlua_text_utils_course_name_replace](functions-7.md#smlua_text_utils_course_name_replace)
@@ -2270,6 +2287,7 @@
 <br />
 
 - sync_object.h
+   - [sync_object_get_random_seed](functions-7.md#sync_object_get_random_seed)
    - [sync_object_get_object](functions-7.md#sync_object_get_object)
    - [sync_object_is_initialized](functions-7.md#sync_object_is_initialized)
    - [sync_object_is_owned_locally](functions-7.md#sync_object_is_owned_locally)
@@ -2770,64 +2788,6 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 ### C Prototype
 N/A
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_print_text](#djui_hud_print_text)
-
-### Description
-Prints DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text(message, x, y, scaleX, scaleY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| x | `number` |
-| y | `number` |
-| scaleX | `number` |
-| scaleY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
-
-### Description
-Prints interpolated DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| prevX | `number` |
-| prevY | `number` |
-| prevScaleX | `number` |
-| prevScaleY | `number` |
-| x | `number` |
-| y | `number` |
-| scaleX | `number` |
-| scaleY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
 
 [:arrow_up_small:](#)
 
