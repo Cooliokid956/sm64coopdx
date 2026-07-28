@@ -1,6 +1,8 @@
 #ifndef DJUI_HUD_UTILS_H
 #define DJUI_HUD_UTILS_H
 
+#include "pc/djui/djui_gfx.h"
+
 // Common pivot values for rotation
 #define ROTATION_PIVOT_X_LEFT       0.0
 #define ROTATION_PIVOT_X_CENTER     0.5
@@ -90,6 +92,16 @@ struct DjuiColor* djui_hud_get_text_color(void);
 void djui_hud_set_text_color(u8 r, u8 g, u8 b, u8 a);
 /* |description|Resets the current DJUI HUD text default color. This color is overridden by color codes|descriptionEnd| */
 void djui_hud_reset_text_color(void);
+/* |description|Sets the number of cycles used by the combiner|descriptionEnd| */
+void djui_hud_set_combiner_cycles(u8 cycles);
+/* |description|
+Sets the current DJUI HUD combiner.
+Each part uses the following equation: `P = (A - B) * C + D`.
+Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+|descriptionEnd| */
+void djui_hud_set_combiner(u8 cycle, bool alpha, enum CombinerSource a, enum CombinerSource b, enum CombinerSource c, enum CombinerSource d);
+/* |description|Resets the current DJUI HUD combiner|descriptionEnd| */
+void djui_hud_reset_combiner();
 /* |description|Gets the current DJUI HUD rotation|descriptionEnd| */
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);
 /* |description|Sets the current DJUI HUD rotation|descriptionEnd| */

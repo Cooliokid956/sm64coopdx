@@ -426,6 +426,29 @@ void djui_hud_reset_text_color(void) {
     sHudUtilsState.textColor.a = 255;
 }
 
+void djui_hud_set_combiner_cycles(u8 cycles) {
+    gCombinerState.cycles = cycles != 2 ? 1 : 2;
+}
+
+void djui_hud_set_combiner(u8 cycle, bool alpha,
+    enum CombinerSource a, enum CombinerSource b, enum CombinerSource c, enum CombinerSource d) {
+    if (--cycle > 1) { return; }
+
+    struct CombinerPart *part = (struct CombinerPart*) gCombinerState.cycle[cycle][alpha];
+    part->a = a;
+    part->b = b;
+    part->c = c;
+    part->d = d;
+
+    gCombinerUpdated = true;
+    gCombinerOverride = true;
+}
+
+void djui_hud_reset_combiner() {
+    gCombinerState.cycles = 1;
+    gCombinerOverride = false;
+}
+
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY) {
     *rotation = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
     *pivotX = sHudUtilsState.rotation.pivotX.curr;
@@ -1007,6 +1030,7 @@ static void djui_hud_render_rect_internal(f32 x, f32 y, f32 width, f32 height, s
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedW, translatedH, 1.0f);
 
     // render
+    djui_gfx_update_combine_mode(CS_COLOR);
     gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // pop
