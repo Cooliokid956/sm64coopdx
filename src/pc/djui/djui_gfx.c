@@ -56,11 +56,11 @@ static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum Combiner
             case CS_COLOR:          return G_CCMUX_ENVIRONMENT;
             case CS_TEXT:           return G_CCMUX_PRIMITIVE;
             case CS_COMBINED:       return G_CCMUX_COMBINED;
-            case CS_NOISE:          return G_CCMUX_NOISE;
             case CS_TEXTURE_ALPHA:  return cycle ? G_CCMUX_TEXEL1_ALPHA : G_CCMUX_TEXEL0_ALPHA;
             case CS_COLOR_ALPHA:    return G_CCMUX_ENV_ALPHA;
             case CS_TEXT_ALPHA:     return G_CCMUX_PRIMITIVE_ALPHA;
             case CS_COMBINED_ALPHA: return G_CCMUX_COMBINED_ALPHA;
+            case CS_NOISE:          return G_CCMUX_NOISE;
         }
     } else {
         switch (source) {
@@ -75,7 +75,6 @@ static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum Combiner
             case CS_COMBINED:
             case CS_COMBINED_ALPHA: return G_ACMUX_COMBINED;
         }
-
     }
 }
 
@@ -86,7 +85,7 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
         cycleType = (gCombinerState.cycles - 1) << G_MDSFT_CYCLETYPE;
 
         if (gCombinerUpdated) {
-            u8 p[16];
+            u8 p[16] = { 0 };
             for (u8 i = 0; i < 8 * gCombinerState.cycles; i++) {
                 p[i] = djui_gfx_translate_combiner_source(i >> 3, i >> 2 & 1,
                     gCombinerState.cycle[i >> 3][i >> 2 & 1][i & 3]);
