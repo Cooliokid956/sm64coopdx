@@ -766,7 +766,7 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
             // cancel out the line translation and move to the next line
             // this is needed because otherwise the text would be rendered in a staircase way
             InterpHudGfx *newlineGfx = djui_hud_create_interp_gfx(interp, INTERP_HUD_NEW_LINE);
-            create_dl_translation_matrix(DJUI_MTX_NOPUSH, -lineWidth * (1.f - sHudUtilsState.textAlignment.h.curr), -font->lineHeight, 0);
+            create_dl_translation_matrix(DJUI_MTX_NOPUSH, -lineWidth * (1.f - sHudUtilsState.textAlignment.h.curr), font->lineHeight, 0);
             if (newlineGfx) { newlineGfx->params[0] = lineWidth; }
             lineWidth = 0;
             textHeight += font->lineHeight;
