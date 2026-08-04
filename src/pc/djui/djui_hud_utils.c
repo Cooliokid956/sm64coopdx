@@ -418,25 +418,22 @@ void djui_hud_reset_text_color(void) {
 }
 
 void djui_hud_set_combiner_cycles(u8 cycles) {
-    gCombinerState.cycles = cycles != 2 ? 1 : 2;
+    gCombinerState.is2cycle = cycles > 1;
 }
 
 void djui_hud_set_combiner(u8 cycle, bool alpha,
     enum CombinerSource a, enum CombinerSource b, enum CombinerSource c, enum CombinerSource d) {
     if (--cycle > 1) { return; }
 
-    struct CombinerPart *part = (struct CombinerPart*) gCombinerState.cycle[cycle][alpha];
-    part->a = a;
-    part->b = b;
-    part->c = c;
-    part->d = d;
+    enum CombinerSource *part = gCombinerState.cycle[cycle][alpha];
+    part[0] = a; part[1] = b; part[2] = c; part[3] = d;
 
     gCombinerUpdated = true;
     gCombinerOverride = true;
 }
 
 void djui_hud_reset_combiner() {
-    gCombinerState.cycles = 1;
+    gCombinerState.is2cycle = false;
     gCombinerOverride = false;
 }
 
@@ -476,21 +473,21 @@ void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVA
 u32 djui_hud_get_screen_width(void) {
     if (sHudUtilsState.resolution == RESOLUTION_N64) {
         return SCREEN_HEIGHT * GFX_DIMENSIONS_ASPECT_RATIO;
-    } else {
-        u32 windowWidth, windowHeight;
-        gfx_get_dimensions(&windowWidth, &windowHeight);
-        return windowWidth / djui_gfx_get_scale();
     }
+
+    u32 windowWidth, windowHeight;
+    gfx_get_dimensions(&windowWidth, &windowHeight);
+    return windowWidth / djui_gfx_get_scale();
 }
 
 u32 djui_hud_get_screen_height(void) {
     if (sHudUtilsState.resolution == RESOLUTION_N64) {
         return SCREEN_HEIGHT;
-    } else {
-        u32 windowWidth, windowHeight;
-        gfx_get_dimensions(&windowWidth, &windowHeight);
-        return windowHeight / djui_gfx_get_scale();
     }
+
+    u32 windowWidth, windowHeight;
+    gfx_get_dimensions(&windowWidth, &windowHeight);
+    return windowHeight / djui_gfx_get_scale();
 }
 
 f32 djui_hud_get_mouse_x(void) {

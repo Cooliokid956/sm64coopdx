@@ -27,15 +27,11 @@ enum CombinerSource {
     CS_COMBINED_ALPHA, // COMBINED_ALPHA
 };
 
-struct CombinerPart {
-    enum CombinerSource a, b, c, d;
-};
-
 typedef enum CombinerSource CombinerCycle[2][4];
 
 struct CombinerState {
     CombinerCycle cycle[2];
-    u8 cycles;
+    bool is2cycle;
 };
 
 extern struct CombinerState gCombinerState;

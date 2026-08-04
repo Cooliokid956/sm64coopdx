@@ -41,14 +41,27 @@ void djui_gfx_displaylist_end(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
 }
 
-struct CombinerState gCombinerState = { .cycles = 1 };
+struct CombinerState gCombinerState = { 0 };
 bool gCombinerUpdated = false;
 bool gCombinerOverride = false;
 static Gfx sDjuiCombineMode = { 0 };
 static u32 sCombinerCycleType = G_CYC_1CYCLE;
 
 static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum CombinerSource source) {
-    if (!alpha) {
+    if (alpha) {
+        switch (source) {
+            default:                return G_ACMUX_0;
+            case CS_1:              return G_ACMUX_1;
+            case CS_TEXTURE:
+            case CS_TEXTURE_ALPHA:  return cycle ? G_ACMUX_TEXEL1 : G_ACMUX_TEXEL0;
+            case CS_COLOR:
+            case CS_COLOR_ALPHA:    return G_ACMUX_ENVIRONMENT;
+            case CS_TEXT:
+            case CS_TEXT_ALPHA:     return G_ACMUX_PRIMITIVE;
+            case CS_COMBINED:
+            case CS_COMBINED_ALPHA: return G_ACMUX_COMBINED;
+        }
+    } else {
         switch (source) {
             default:                return G_CCMUX_0;
             case CS_1:              return G_CCMUX_1;
@@ -62,19 +75,6 @@ static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum Combiner
             case CS_COMBINED_ALPHA: return G_CCMUX_COMBINED_ALPHA;
             case CS_NOISE:          return G_CCMUX_NOISE;
         }
-    } else {
-        switch (source) {
-            default:                return G_ACMUX_0;
-            case CS_1:              return G_ACMUX_1;
-            case CS_TEXTURE:
-            case CS_TEXTURE_ALPHA:  return cycle ? G_ACMUX_TEXEL1 : G_ACMUX_TEXEL0;
-            case CS_COLOR:
-            case CS_COLOR_ALPHA:    return G_ACMUX_ENVIRONMENT;
-            case CS_TEXT:
-            case CS_TEXT_ALPHA:     return G_ACMUX_PRIMITIVE;
-            case CS_COMBINED:
-            case CS_COMBINED_ALPHA: return G_ACMUX_COMBINED;
-        }
     }
 }
 
@@ -82,13 +82,13 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
     u32 cycleType = G_CYC_1CYCLE;
 
     if (gCombinerOverride) {
-        cycleType = (gCombinerState.cycles - 1) << G_MDSFT_CYCLETYPE;
+        cycleType = gCombinerState.is2cycle << G_MDSFT_CYCLETYPE;
 
         if (gCombinerUpdated) {
-            u8 p[16] = { 0 };
-            for (u8 i = 0; i < 8 * gCombinerState.cycles; i++) {
-                p[i] = djui_gfx_translate_combiner_source(i >> 3, i >> 2 & 1,
-                    gCombinerState.cycle[i >> 3][i >> 2 & 1][i & 3]);
+            u8 p[16] = { 0 }; // i >> 3 = cycle, (i >> 2) & 1 = alpha, i & 3 = component
+            for (u8 i = 0; i < 8 * (gCombinerState.is2cycle + 1); i++) {
+                p[i] = djui_gfx_translate_combiner_source(i >> 3, (i >> 2) & 1,
+                    gCombinerState.cycle[i >> 3][(i >> 2) & 1][i & 3]);
             }
 
             gDPSetCombineLERPNoString(&sDjuiCombineMode,
