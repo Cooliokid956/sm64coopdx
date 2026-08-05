@@ -333,9 +333,6 @@ void get_texture_coords_4_vertices(s8 vertexNum, s16 *textureX, s16 *textureY) {
  */
 void make_shadow_vertex_at_xyz(Vtx *vertices, s8 index, f32 relX, f32 relY, f32 relZ, u8 alpha,
                                s8 shadowVertexType) {
-    s16 vtxX = round_float(relX);
-    s16 vtxY = round_float(relY);
-    s16 vtxZ = round_float(relZ);
     s16 textureX, textureY;
 
     switch (shadowVertexType) {
@@ -349,11 +346,11 @@ void make_shadow_vertex_at_xyz(Vtx *vertices, s8 index, f32 relX, f32 relY, f32 
 
     // Move the shadow up and over slightly while standing on a flying carpet.
     if (sMarioOnFlyingCarpet) {
-        vtxX += 5;
-        vtxY += 5;
-        vtxZ += 5;
+        relX += 5;
+        relY += 5;
+        relZ += 5;
     }
-    make_vertex(vertices, index, vtxX, vtxY, vtxZ, (u16)textureX << 5, (u16)textureY << 5, 255, 255, 255,
+    make_vertex(vertices, index, relX, relY, relZ, (u16)textureX << 5, (u16)textureY << 5, 255, 255, 255,
                 alpha // shadows are black
     );
 }

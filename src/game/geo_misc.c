@@ -144,7 +144,7 @@ void patch_carpet_interpolated(f32 delta) {
             row = n / 3;
             col = n % 3;
 
-            verts[n].v.ob[1] = round_float(sins(timer + (row << 12) + (col << 14)) * 20.0);
+            verts[n].v.ob[1] = sins(timer + (row << 12) + (col << 14)) * 20.0;
         }
     }
 }
@@ -177,7 +177,7 @@ Gfx *geo_exec_flying_carpet_create(s32 callContext, struct GraphNode *node, UNUS
                 col = n % 3;
     
                 x = vertexData[n * 4 + 0];
-                y = round_float(sins(sFlyingCarpetRippleTimer + (row << 12) + (col << 14)) * 20.0);
+                y = sins(sFlyingCarpetRippleTimer + (row << 12) + (col << 14)) * 20.0;
                 z = vertexData[n * 4 + 1];
                 tx = vertexData[n * 4 + 2];
                 ty = vertexData[n * 4 + 3];
