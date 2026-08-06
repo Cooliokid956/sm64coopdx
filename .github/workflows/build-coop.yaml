@@ -15,7 +15,6 @@ jobs:
             platform:
               - name: Windows
                 os: windows-latest
-                shell: msys2 {0}
                 make: make -j$(nproc)
                 exe: .exe
                 zip: dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
@@ -56,7 +55,7 @@ jobs:
         runs-on: ${{ matrix.platform.os }}
         defaults:
             run:
-                shell: ${{ matrix.platform.shell }}
+                shell: ${{ case(matrix.platform.name == 'Windows', 'msys2 {0}', 'sh') }}
 
         steps:
             - name: Checkout repository
