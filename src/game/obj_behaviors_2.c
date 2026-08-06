@@ -419,8 +419,8 @@ s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 tur
     return targetPitch;
 }
 
-/* |description|Approaches a `target` for `px` using `delta`|descriptionEnd| */
-s32 approach_f32_ptr(f32 *px, f32 target, f32 delta) {
+/* |description|Approaches a `target` for `px` using `delta`. Returns TRUE if `px` reaches `target`|descriptionEnd| */
+s32 approach_f32_ptr(INOUT f32 *px, f32 target, f32 delta) {
     if (!px) { return FALSE; }
     if (*px > target) {
         delta = -delta;
@@ -495,9 +495,8 @@ s32 obj_face_roll_approach(s16 targetRoll, s16 deltaRoll) {
     return FALSE;
 }
 
-/* |description|Smoothly turns the `angle` integer pointer using parameters, although usage in Lua is difficult due to the amount of pointers needed|descriptionEnd| */
-s32 obj_smooth_turn(s16 *angleVel, s32 *angle, s16 targetAngle, f32 targetSpeedProportion,
-                           s16 accel, s16 minSpeed, s16 maxSpeed) {
+/* |description|Smoothly turns `angle` and adjust `angleVel` using parameters. Returns TRUE if `angle` reaches `targetAngle`|descriptionEnd| */
+s32 obj_smooth_turn(INOUT s16 *angleVel, INOUT s32 *angle, s16 targetAngle, f32 targetSpeedProportion, s16 accel, s16 minSpeed, s16 maxSpeed) {
     s16 currentSpeed;
     s16 currentAngle = (s16)(*angle);
 
@@ -537,13 +536,12 @@ s16 obj_random_fixed_turn(s16 delta) {
 }
 
 /* |description|
-Begin by increasing the current object's scale by `*scaleVel`, and slowly decreasing
-`scaleVel`. Once the object starts to shrink, wait a bit, and then begin to
-scale the object toward `endScale`. The first time it reaches below
-`shootFireScale` during this time, return 1.
+Begin by increasing the current object's scale by `scaleVel`, and slowly decreasing `scaleVel`.
+Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`.
+The first time it reaches below `shootFireScale` during this time, return 1.
 Return -1 once it's reached endScale
 |descriptionEnd| */
-s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale) {
+s32 obj_grow_then_shrink(INOUT f32 *scaleVel, f32 shootFireScale, f32 endScale) {
     if (!o) { return 0; }
     if (o->oTimer < 2) {
         o->header.gfx.scale[0] += *scaleVel;
@@ -563,9 +561,8 @@ s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale) {
     return 0;
 }
 
-/* |description||descriptionEnd| */
-s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 accel,
-                            f32 slowdown) {
+/* |description|Oscillates `value` towards `target`. Returns TRUE when `value` reaches `target`|descriptionEnd| */
+s32 oscillate_toward(INOUT s32 *value, INOUT f32 *vel, s32 target, f32 velCloseToZero, f32 accel, f32 slowdown) {
     if (value == NULL || vel == NULL) { return FALSE; }
     s32 startValue = *value;
     *value += (s32) *vel;
@@ -591,8 +588,7 @@ s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 a
 }
 
 /* |description|Update the current object's blinking through `oAnimState`|descriptionEnd| */
-void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRange,
-                                s16 blinkLength) {
+void obj_update_blinking(INOUT s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRange, s16 blinkLength) {
     if (!o) { return; }
     if (*blinkTimer != 0) {
         *blinkTimer -= 1;
@@ -607,8 +603,8 @@ void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRa
     }
 }
 
-/* |description|Resolves "collisions" with the current object and other objects by offsetting the current object's position|descriptionEnd| */
-s32 obj_resolve_object_collisions(s32 *targetYaw) {
+/* |description|Resolves "collisions" with the current object and other objects by offsetting the current object's position. Returns TRUE and the target yaw if there is collision|descriptionEnd| */
+s32 obj_resolve_object_collisions(RET s32 *targetYaw) {
     if (!o) { return 0; }
     struct Object *otherObject;
     f32 dx;
@@ -655,8 +651,8 @@ s32 obj_resolve_object_collisions(s32 *targetYaw) {
     return FALSE;
 }
 
-/* |description|Bounces the current object off of walls, edges, and objects using `*targetYaw`|descriptionEnd| */
-s32 obj_bounce_off_walls_edges_objects(s32 *targetYaw) {
+/* |description|Bounces the current object off of walls, edges, and objects. Returns TRUE and the target yaw if there is collision|descriptionEnd| */
+s32 obj_bounce_off_walls_edges_objects(RET s32 *targetYaw) {
     if (!o) { return 0; }
     if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
         *targetYaw = cur_obj_reflect_move_angle_off_wall();
@@ -749,7 +745,7 @@ void obj_set_squished_action(void) {
     o->oAction = OBJ_ACT_SQUISHED;
 }
 
-/* |description||descriptionEnd| */
+/* |description|Checks if the object is above lava and has non-positive health. Kills the object if true and returns `TRUE` if above lava|descriptionEnd| */
 s32 obj_die_if_above_lava_and_health_non_positive(void) {
     if (!o) { return 0; }
     if (o->oMoveFlags & OBJ_MOVE_UNDERWATER_ON_GROUND) {
@@ -772,8 +768,8 @@ s32 obj_die_if_above_lava_and_health_non_positive(void) {
     return TRUE;
 }
 
-s32 obj_handle_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction,
-                              u8 *attackHandlers) {
+/* |description|Sets the object's hitbox, handles attack interactions by calling appropriate attack handlers, and returns the attack type or 0|descriptionEnd| */
+s32 obj_handle_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction, u8 *attackHandlers) {
     if (!o) { return 0; }
     s32 attackType;
 
@@ -838,6 +834,7 @@ s32 obj_handle_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction,
     return 0;
 }
 
+/* |description|Handles the knockback action by updating floor/walls, extending animation, checking lava, and moving the object|descriptionEnd| */
 void obj_act_knockback(UNUSED f32 baseScale) {
     if (!o) { return; }
     cur_obj_update_floor_and_walls();
@@ -856,6 +853,7 @@ void obj_act_knockback(UNUSED f32 baseScale) {
     cur_obj_move_standard(-78);
 }
 
+/* |description|Handles the squished action by scaling the object vertically and horizontally while checking if it's time to die|descriptionEnd| */
 void obj_act_squished(f32 baseScale) {
     if (!o) { return; }
     f32 targetScaleY = baseScale * 0.3f;
@@ -878,6 +876,7 @@ void obj_act_squished(f32 baseScale) {
     cur_obj_move_standard(-78);
 }
 
+/* |description|Updates standard object actions like knockback and squished. Returns TRUE if action is less than 100, `FALSE` otherwise|descriptionEnd| */
 s32 obj_update_standard_actions(f32 scale) {
     if (!o) { return 0; }
     if (o->oAction < 100) {
@@ -961,7 +960,8 @@ s32 obj_move_for_one_second(s32 endAction) {
  * attack Mario (e.g. fly guy shooting fire or lunging), especially when combined
  * with partial updates.
  */
-void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToPlayer) {
+/* |description|Treats far home as Mario. Returns the distance and angle to the nearest player|descriptionEnd| */
+void treat_far_home_as_mario(f32 threshold, RET s32* distanceToPlayer, RET s32* angleToPlayer) {
     if (!o) { return; }
     f32 dx = o->oHomeX - o->oPosX;
     f32 dy = o->oHomeY - o->oPosY;
@@ -1000,25 +1000,25 @@ void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToP
     }
 }
 
-#include "behaviors/koopa.inc.c" // TODO: Text arg field name
+#include "behaviors/koopa.inc.c"
 #include "behaviors/pokey.inc.c"
 #include "behaviors/swoop.inc.c"
 #include "behaviors/fly_guy.inc.c"
 #include "behaviors/goomba.inc.c"
-#include "behaviors/chain_chomp.inc.c" // TODO: chain_chomp_sub_act_lunge documentation
-#include "behaviors/wiggler.inc.c"     // TODO
+#include "behaviors/chain_chomp.inc.c"
+#include "behaviors/wiggler.inc.c"
 #include "behaviors/spiny.inc.c"
-#include "behaviors/enemy_lakitu.inc.c" // TODO
+#include "behaviors/enemy_lakitu.inc.c"
 #include "behaviors/cloud.inc.c"
-#include "behaviors/camera_lakitu.inc.c" // TODO: 104 label, follow cam documentation
-#include "behaviors/monty_mole.inc.c"    // TODO
+#include "behaviors/camera_lakitu.inc.c"
+#include "behaviors/monty_mole.inc.c"
 #include "behaviors/platform_on_track.inc.c"
 #include "behaviors/seesaw_platform.inc.c"
 #include "behaviors/ferris_wheel.inc.c"
-#include "behaviors/water_bomb.inc.c" // TODO: Shadow position
+#include "behaviors/water_bomb.inc.c"
 #include "behaviors/ttc_rotating_solid.inc.c"
 #include "behaviors/ttc_pendulum.inc.c"
-#include "behaviors/ttc_treadmill.inc.c" // TODO
+#include "behaviors/ttc_treadmill.inc.c"
 #include "behaviors/ttc_moving_bar.inc.c"
 #include "behaviors/ttc_cog.inc.c"
 #include "behaviors/ttc_pit_block.inc.c"
@@ -1038,11 +1038,8 @@ void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToP
 #include "behaviors/mad_piano.inc.c"
 #include "behaviors/flying_bookend_switch.inc.c"
 
-/**
- * Used by bowser, fly guy, piranha plant, and fire spitters.
- */
-struct Object* obj_spit_fire(s16 relativePosX, s16 relativePosY, s16 relativePosZ, f32 scale, s32 model,
-                   f32 startSpeed, f32 endSpeed, s16 movePitch) {
+/* |description|Spawns a small piranha flame object with the given parameters. Used by Bowser, Fly Guy, Piranha Plant, and Fire Spitters|descriptionEnd| */
+struct Object* obj_spit_fire(s16 relativePosX, s16 relativePosY, s16 relativePosZ, f32 scale, s32 model, f32 startSpeed, f32 endSpeed, s16 movePitch) {
     struct Object *obj = spawn_object_relative_with_scale(1, relativePosX, relativePosY, relativePosZ,
                                                            scale, o, model, bhvSmallPiranhaFlame);
 

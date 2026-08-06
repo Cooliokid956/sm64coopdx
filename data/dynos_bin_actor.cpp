@@ -93,7 +93,11 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
     GfxData *_GfxData = NULL;
     BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
+        PrintInfo("Loading actor '%s' from file: %s", aActorName, aFilename.c_str());
         _GfxData = New<GfxData>();
+        if (aAddToPack) {
+            _GfxData->mModIndex = PACK_MOD_INDEX;
+        }
         for (bool _Done = false; !_Done;) {
             switch (_File->Read<u8>()) {
                 case DATA_TYPE_LIGHT:           DynOS_Lights_Load    (_File, _GfxData); break;
@@ -112,6 +116,13 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
             }
         }
         BinFile::Close(_File);
+    }
+
+    // If something went wrong, do not register actor
+    if (_GfxData && _GfxData->mErrorCount > 0) {
+        PrintError("  %u error(s) occurred during loading: Actor '%s' will not be enabled", _GfxData->mErrorCount, aActorName);
+        DynOS_Gfx_Free(_GfxData);
+        return NULL;
     }
 
     // Add data to cache, even if not loaded
@@ -149,7 +160,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
 
         // If there is an existing binary file for this actor, skip and go to the next actor
-        String _ActorFolder = DynOS_GetActorFolder(_ActorsFolders, _GeoNode->mModelIdentifier);
+        String _ActorFolder = DynOS_GetActorFolder(_ActorsFolders, _GeoNode->mDataIdentifier);
         SysPath _SrcFolder = fstring("%s/%s", aPackFolder.c_str(), _ActorFolder.begin());
         if (DynOS_GenFileExistsAndIsNewerThanFolder(_BinFilename, _SrcFolder)) {
             // Remember that we skipped this folder, so we can skip it again in the future.
@@ -163,7 +174,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         // Init
         _GfxData->mLoadIndex                  = 0;
         _GfxData->mErrorCount                 = 0;
-        _GfxData->mModelIdentifier            = _GeoNode->mModelIdentifier;
+        _GfxData->mDataIdentifier             = _GeoNode->mDataIdentifier;
         _GfxData->mPackFolder                 = aPackFolder;
         _GfxData->mPointerList                = { NULL }; // The NULL pointer is needed, so we add it here
         _GfxData->mPointerOffsetList          = { };
@@ -174,8 +185,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
-        PrintNoNewLine("%s.bin: Model identifier: %X - Processing... ", _GeoRootName.begin(), _GfxData->mModelIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bin: Model identifier: %X - Processing... ", _GeoRootName.begin(), _GfxData->mModelIdentifier);
+        PrintInfoNoNewLine("%s.bin: Model identifier: %llX - Processing... ", _GeoRootName.begin(), _GfxData->mDataIdentifier);
         DynOS_Geo_Parse(_GfxData, _GeoNode, true);
 
         // Init animation data
@@ -196,7 +206,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
             _GfxData->mAnimationTable.Resize(256);
             for (s32 i = 0; i != 256; ++i) {
                 String _AnimName("anim_%02X", i);
-                if (_GfxData->mAnimations.FindIf([&_AnimName](const DataNode<AnimData> *aNode) { return aNode->mName == _AnimName; }) != -1) {
+                if (_GfxData->mAnimations.Find(_AnimName, _GfxData->mDataIdentifier)) {
                     _GfxData->mAnimationTable[i] = { _AnimName, NULL };
                 } else {
                     _GfxData->mAnimationTable[i] = { "NULL", NULL };
@@ -261,22 +271,24 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
             // For each subfolder, read tokens from model.inc.c and geo.inc.c
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
             if (fs_sys_dir_exists(_Folder.c_str())) {
-                _GfxData->mModelIdentifier = 0;
-
-                // Remember the geo layout count
-                s32 prevGeoLayoutCount = _GfxData->mGeoLayouts.Count();
+                _GfxData->mDataIdentifier = 0;
 
                 DynOS_Read_Source(_GfxData, fstring("%s/texture.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/model.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/geo.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/collision.inc.c", _Folder.c_str()));
 
-                if (_GfxData->mModelIdentifier != 0) {
-                    _ActorsFolders.Add({ _GfxData->mModelIdentifier, String(_PackEnt->d_name) });
+                if (_GfxData->mDataIdentifier != 0) {
+                    _ActorsFolders.Add({ _GfxData->mDataIdentifier, String(_PackEnt->d_name) });
                 }
             }
         }
         closedir(aPackDir);
+    }
+
+    // Prevent generating actors with Lua variables if it's a DynOS pack
+    if (aPackFolder.find(DYNOS_PACKS_FOLDER) != SysPath::npos) {
+        _GfxData->mModIndex = PACK_MOD_INDEX;
     }
 
     // Generate a binary file for each actor found in the GfxData

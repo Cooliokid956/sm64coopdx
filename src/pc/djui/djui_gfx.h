@@ -13,10 +13,19 @@ extern const Gfx dl_djui_img_end[];
 void djui_gfx_displaylist_begin(void);
 void djui_gfx_displaylist_end(void);
 
+/* |description|Gets the current visual scaling factor of DJUI|descriptionEnd| */
 f32 djui_gfx_get_scale(void);
 
 void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, bool filter);
-void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter, bool font);
+void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter);
+
+void djui_gfx_render_texture_font_begin();
+void djui_gfx_render_texture_font(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz);
+void djui_gfx_render_texture_font_end();
+
+void djui_gfx_render_texture_tile_font_begin();
+void djui_gfx_render_texture_tile_font(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, u32 tileX, u32 tileY, u32 tileW, u32 tileH);
+void djui_gfx_render_texture_tile_font_end();
 
 void gfx_get_dimensions(u32* width, u32* height);
 

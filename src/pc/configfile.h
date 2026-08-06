@@ -43,11 +43,20 @@ enum RefreshRateMode {
     RRM_MAX
 };
 
+enum GraphicsBackend {
+    GAPI_GL,
+#if defined(_WIN32)
+    GAPI_D3D11,
+#endif
+    GAPI_MAX
+};
+
 extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 
 // display settings
 extern ConfigWindow configWindow;
 extern ConfigStick configStick;
+extern enum GraphicsBackend configGraphicsBackend;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configShowPing;
@@ -62,6 +71,7 @@ extern unsigned int configSfxVolume;
 extern unsigned int configEnvVolume;
 extern bool         configFadeoutDistantSounds;
 extern bool         configMuteFocusLoss;
+extern unsigned int configSoundOutput;
 // control binds
 extern unsigned int configKeyA[MAX_BINDS];
 extern unsigned int configKeyB[MAX_BINDS];
@@ -93,6 +103,7 @@ extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
+extern bool         configExtendedReports;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
 extern bool         configSmoothScrolling;
@@ -112,9 +123,9 @@ extern unsigned int configFreeCameraDegrade;
 extern unsigned int configEnableRomhackCamera;
 extern bool         configRomhackCameraBowserFights;
 extern bool         configRomhackCameraHasCollision;
-extern bool         configRomhackCameraHasCentering;
+extern bool         configRomhackCameraSwitchable;
 extern bool         configRomhackCameraDPadBehavior;
-extern bool         configRomhackCameraSlowFall;
+extern bool         configRomhackCameraFollowing;
 // common camera settings
 extern bool         configCameraInvertX;
 extern bool         configCameraInvertY;
@@ -170,6 +181,7 @@ extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 // other
 extern unsigned int configRulesVersion;
+extern bool         configHideSocketWarning;
 extern bool         configCompressOnStartup;
 extern bool         configSkipPackGeneration;
 
@@ -178,6 +190,7 @@ extern bool configExCoopTheme;
 
 void enable_queued_mods(void);
 void enable_queued_dynos_packs(void);
+void configfile_reset_keybinds(bool extra);
 void configfile_load(void);
 void configfile_save(const char *filename);
 const char *configfile_name(void);

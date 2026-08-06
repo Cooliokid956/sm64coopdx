@@ -1,6 +1,7 @@
 #include "smlua_camera_utils.h"
 #include "game/bettercamera.h"
 #include "game/object_list_processor.h"
+#include "game/level_update.h"
 
 struct CameraOverride {
     u32 value;
@@ -57,8 +58,8 @@ void camera_set_romhack_override(enum RomhackCameraOverride rco) {
     gRomhackCameraSettings.enable = rco;
 }
 
-void camera_romhack_allow_centering(u8 allow) {
-    gRomhackCameraSettings.centering = allow;
+void camera_romhack_allow_switchable(u8 allow) {
+    gRomhackCameraSettings.switchable = allow;
 }
 
 void camera_allow_toxic_gas_camera(u8 allow) {
@@ -69,7 +70,7 @@ void camera_romhack_allow_dpad_usage(u8 allow) {
     gRomhackCameraSettings.dpad = allow;
 }
 
-void rom_hack_cam_set_collisions(u8 enable) {
+void camera_romhack_set_collisions(u8 enable) {
     gRomhackCameraSettings.collisions = enable;
 }
 
@@ -109,8 +110,8 @@ enum RomhackCameraOverride camera_get_romhack_override(void) {
     return gRomhackCameraSettings.enable;
 }
 
-u8 camera_romhack_get_allow_centering(void) {
-    return gRomhackCameraSettings.centering;
+u8 camera_romhack_get_allow_switchable(void) {
+    return gRomhackCameraSettings.switchable;
 }
 
 u8 camera_get_allow_toxic_gas_camera(void) {
@@ -261,4 +262,9 @@ bool camera_get_checking_surfaces(void) {
 
 void camera_set_checking_surfaces(bool value) {
     gCheckingSurfaceCollisionsForCamera = value;
+}
+
+void center_free_camera(void) {
+    gNewCamera.yawTarget = -gMarioState->statusForCamera->faceAngle[1] - 0x4000;
+    gNewCamera.centering = true;
 }

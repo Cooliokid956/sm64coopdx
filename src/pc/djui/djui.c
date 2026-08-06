@@ -5,6 +5,7 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
+#include "djui_panel_confirm.h"
 #include "djui_ctx_display.h"
 #include "djui_fps_display.h"
 #include "djui_lua_profiler.h"
@@ -152,6 +153,17 @@ void djui_connect_menu_open(void) {
     djui_panel_join_message_create(NULL);
 }
 
+static void djui_update_game(UNUSED struct DjuiBase *caller) {
+    update_game();
+}
+
+void djui_open_update_panel(void) {
+    djui_panel_shutdown();
+    gDjuiInMainMenu = true;
+    djui_panel_main_create(NULL);
+    djui_panel_confirm_create(NULL, DLANG(UPDATE, UPDATE_TITLE), DLANG(UPDATE, UPDATE_AVAILABLE), djui_update_game);
+}
+
 void djui_lua_error(char* text, struct DjuiColor color) {
     if (!sDjuiLuaError) { return; }
     djui_base_set_color(&sDjuiLuaError->base, color.r, color.g, color.b, color.a);
@@ -168,8 +180,10 @@ void djui_lua_error_clear(void) {
 void djui_reset_hud_params(void) {
     djui_hud_set_resolution(RESOLUTION_DJUI);
     djui_hud_set_font(FONT_NORMAL);
-    djui_hud_set_rotation(0, 0, 0);
+    djui_hud_set_rotation(0, ROTATION_PIVOT_X_LEFT, ROTATION_PIVOT_Y_TOP);
+    djui_hud_set_text_alignment(TEXT_HALIGN_LEFT, TEXT_VALIGN_TOP);
     djui_hud_reset_color();
+    djui_hud_reset_text_color();
     djui_hud_set_filter(FILTER_NEAREST);
     djui_hud_reset_viewport();
     djui_hud_reset_scissor();

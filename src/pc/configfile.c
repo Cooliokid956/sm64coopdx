@@ -66,7 +66,7 @@ char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
 };
 
 // Video/audio stuff
-ConfigWindow configWindow       = {
+ConfigWindow configWindow = {
     .x = WAPI_WIN_CENTERPOS,
     .y = WAPI_WIN_CENTERPOS,
     .w = DESIRED_SCREEN_WIDTH,
@@ -82,13 +82,14 @@ ConfigWindow configWindow       = {
 ConfigStick configStick = { 0 };
 
 // display settings
+enum GraphicsBackend configGraphicsBackend        = GAPI_GL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
 enum RefreshRateMode configFramerateMode          = RRM_AUTO;
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
-unsigned int configDrawDistance                   = 4;
+unsigned int configDrawDistance                   = 6;
 // sound settings
 unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume                    = MAX_VOLUME;
@@ -96,7 +97,35 @@ unsigned int configSfxVolume                      = MAX_VOLUME;
 unsigned int configEnvVolume                      = MAX_VOLUME;
 bool         configFadeoutDistantSounds           = false;
 bool         configMuteFocusLoss                  = false;
+unsigned int configSoundOutput                    = 0; // 0 = Stereo, 1 = Mono, 2 = Headset
 // control binds
+static const unsigned int defaultConfigKeyA[MAX_BINDS]          = { 0x0026,     0x1000,     0x1103     };
+static const unsigned int defaultConfigKeyB[MAX_BINDS]          = { 0x0033,     0x1001,     0x1101     };
+static const unsigned int defaultConfigKeyX[MAX_BINDS]          = { 0x0017,     0x1002,     VK_INVALID };
+static const unsigned int defaultConfigKeyY[MAX_BINDS]          = { 0x0032,     0x1003,     VK_INVALID };
+static const unsigned int defaultConfigKeyStart[MAX_BINDS]      = { 0x0039,     0x1006,     VK_INVALID };
+static const unsigned int defaultConfigKeyL[MAX_BINDS]          = { 0x002A,     0x1009,     0x1104     };
+static const unsigned int defaultConfigKeyR[MAX_BINDS]          = { 0x0036,     0x100A,     0x101B     };
+static const unsigned int defaultConfigKeyZ[MAX_BINDS]          = { 0x0025,     0x1007,     0x101A     };
+static const unsigned int defaultConfigKeyCUp[MAX_BINDS]        = { 0x0148,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyCDown[MAX_BINDS]      = { 0x0150,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyCLeft[MAX_BINDS]      = { 0x014B,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyCRight[MAX_BINDS]     = { 0x014D,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyStickUp[MAX_BINDS]    = { 0x0011,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyStickDown[MAX_BINDS]  = { 0x001F,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyStickLeft[MAX_BINDS]  = { 0x001E,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyStickRight[MAX_BINDS] = { 0x0020,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyChat[MAX_BINDS]       = { 0x001C,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyPlayerList[MAX_BINDS] = { 0x000F,     0x1004,     VK_INVALID };
+static const unsigned int defaultConfigKeyDUp[MAX_BINDS]        = { 0x0147,     0x100b,     VK_INVALID };
+static const unsigned int defaultConfigKeyDDown[MAX_BINDS]      = { 0x014f,     0x100c,     VK_INVALID };
+static const unsigned int defaultConfigKeyDLeft[MAX_BINDS]      = { 0x0153,     0x100d,     VK_INVALID };
+static const unsigned int defaultConfigKeyDRight[MAX_BINDS]     = { 0x0151,     0x100e,     VK_INVALID };
+static const unsigned int defaultConfigKeyConsole[MAX_BINDS]    = { 0x0029,     0x003B,     VK_INVALID };
+static const unsigned int defaultConfigKeyPrevPage[MAX_BINDS]   = { 0x0016,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyNextPage[MAX_BINDS]   = { 0x0018,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyDisconnect[MAX_BINDS] = { 0x0058,     VK_INVALID, VK_INVALID };
+
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
 unsigned int configKeyX[MAX_BINDS]                = { 0x0017,     0x1002,     VK_INVALID };
@@ -122,11 +151,12 @@ unsigned int configKeyDRight[MAX_BINDS]           = { 0x0151,     0x100e,     VK
 unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK_INVALID };
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
-unsigned int configKeyDisconnect[MAX_BINDS]       = { VK_INVALID, VK_INVALID, VK_INVALID };
+unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
+bool         configExtendedReports                = false;
 bool         configDisableGamepads                = false;
 bool         configUseStandardKeyBindingsChat     = false;
 bool         configSmoothScrolling                = false;
@@ -146,9 +176,9 @@ unsigned int configFreeCameraDegrade              = 50; // 0 - 100%
 unsigned int configEnableRomhackCamera            = 0; // 0 for automatic, 1 for force on, 2 for force off
 bool         configRomhackCameraBowserFights      = false;
 bool         configRomhackCameraHasCollision      = true;
-bool         configRomhackCameraHasCentering      = false;
+bool         configRomhackCameraSwitchable      = false;
 bool         configRomhackCameraDPadBehavior      = false;
-bool         configRomhackCameraSlowFall          = true;
+bool         configRomhackCameraFollowing          = true;
 
 // common camera settings
 bool         configCameraInvertX                  = false;
@@ -209,6 +239,7 @@ unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 // other
 unsigned int configRulesVersion                   = 0;
+bool         configHideSocketWarning              = false;
 bool         configCompressOnStartup              = false;
 bool         configSkipPackGeneration             = false;
 
@@ -225,6 +256,7 @@ static const struct ConfigOption options[] = {
     {.name = "vsync",                          .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
     {.name = "msaa",                           .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.msaa},
     // display settings
+    {.name = "graphics_backend",               .type = CONFIG_TYPE_UINT, .uintValue = &configGraphicsBackend},
     {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
     {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL, .boolValue = &configShowFPS},
     {.name = "show_ping",                      .type = CONFIG_TYPE_BOOL, .boolValue = &configShowPing},
@@ -239,6 +271,7 @@ static const struct ConfigOption options[] = {
     {.name = "env_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFadeoutDistantSounds},
     {.name = "mute_focus_loss",                .type = CONFIG_TYPE_BOOL, .boolValue = &configMuteFocusLoss},
+    {.name = "sound_output",                   .type = CONFIG_TYPE_UINT, .uintValue = &configSoundOutput},
     // control binds
     {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
@@ -270,6 +303,7 @@ static const struct ConfigOption options[] = {
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
     {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT, .boolValue = &configBackgroundGamepad},
+    {.name = "extended_reports",               .type = CONFIG_TYPE_BOOL, .boolValue = &configExtendedReports},
 #ifndef HANDHELD
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
 #endif
@@ -297,9 +331,9 @@ static const struct ConfigOption options[] = {
     {.name = "romhackcam_enable",              .type = CONFIG_TYPE_UINT, .uintValue = &configEnableRomhackCamera},
     {.name = "romhackcam_bowser",              .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
     {.name = "romhackcam_collision",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
-    {.name = "romhackcam_centering",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
+    {.name = "romhackcam_switchable",          .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSwitchable},
     {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDPadBehavior},
-    {.name = "romhackcam_slowfall",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSlowFall},
+    {.name = "romhackcam_following",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraFollowing},
     // common camera settings
     {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
     {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
@@ -364,6 +398,7 @@ static const struct ConfigOption options[] = {
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
     {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
+    {.name = "hide_socket_warning",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configHideSocketWarning},
     {.name = "compress_on_startup",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCompressOnStartup},
     {.name = "skip_pack_generation",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipPackGeneration},
 };
@@ -778,6 +813,8 @@ NEXT_OPTION:
 
     fs_close(file);
 
+    if (configGraphicsBackend < GAPI_GL || configGraphicsBackend > GAPI_MAX) { configGraphicsBackend = GAPI_GL; }
+
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
@@ -815,6 +852,38 @@ NEXT_OPTION:
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;
 #endif
+}
+
+void configfile_reset_keybinds(bool extra) {
+    if (!extra) {
+        memcpy(configKeyA, defaultConfigKeyA, sizeof(configKeyA));
+        memcpy(configKeyB, defaultConfigKeyB, sizeof(configKeyB));
+        memcpy(configKeyStart, defaultConfigKeyStart, sizeof(configKeyStart));
+        memcpy(configKeyL, defaultConfigKeyL, sizeof(configKeyL));
+        memcpy(configKeyR, defaultConfigKeyR, sizeof(configKeyR));
+        memcpy(configKeyZ, defaultConfigKeyZ, sizeof(configKeyZ));
+        memcpy(configKeyCUp, defaultConfigKeyCUp, sizeof(configKeyCUp));
+        memcpy(configKeyCDown, defaultConfigKeyCDown, sizeof(configKeyCDown));
+        memcpy(configKeyCLeft, defaultConfigKeyCLeft, sizeof(configKeyCLeft));
+        memcpy(configKeyCRight, defaultConfigKeyCRight, sizeof(configKeyCRight));
+        memcpy(configKeyStickUp, defaultConfigKeyStickUp, sizeof(configKeyStickUp));
+        memcpy(configKeyStickDown, defaultConfigKeyStickDown, sizeof(configKeyStickDown));
+        memcpy(configKeyStickLeft, defaultConfigKeyStickLeft, sizeof(configKeyStickLeft));
+        memcpy(configKeyStickRight, defaultConfigKeyStickRight, sizeof(configKeyStickRight));
+    } else {
+        memcpy(configKeyX, defaultConfigKeyX, sizeof(configKeyX));
+        memcpy(configKeyY, defaultConfigKeyY, sizeof(configKeyY));
+        memcpy(configKeyChat, defaultConfigKeyChat, sizeof(configKeyChat));
+        memcpy(configKeyPlayerList, defaultConfigKeyPlayerList, sizeof(configKeyPlayerList));
+        memcpy(configKeyDUp, defaultConfigKeyDUp, sizeof(configKeyDUp));
+        memcpy(configKeyDDown, defaultConfigKeyDDown, sizeof(configKeyDDown));
+        memcpy(configKeyDLeft, defaultConfigKeyDLeft, sizeof(configKeyDLeft));
+        memcpy(configKeyDRight, defaultConfigKeyDRight, sizeof(configKeyDRight));
+        memcpy(configKeyConsole, defaultConfigKeyConsole, sizeof(configKeyConsole));
+        memcpy(configKeyPrevPage, defaultConfigKeyPrevPage, sizeof(configKeyPrevPage));
+        memcpy(configKeyNextPage, defaultConfigKeyNextPage, sizeof(configKeyNextPage));
+        memcpy(configKeyDisconnect, defaultConfigKeyDisconnect, sizeof(configKeyDisconnect));
+    }
 }
 
 void configfile_load(void) {

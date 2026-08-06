@@ -56,8 +56,8 @@ const char *sys_file_extension(const char *fpath) {
 }
 
 const char *sys_file_name(const char *fpath) {
-    const char *sep1 = strrchr(fpath, '/');
-    const char *sep2 = strrchr(fpath, '\\');
+    const char *sep1 = strrchr(fpath, *PATH_SEPARATOR);
+    const char *sep2 = strrchr(fpath, *PATH_SEPARATOR_ALT);
     const char *sep = sep1 > sep2 ? sep1 : sep2;
     if (!sep) return fpath;
     return sep + 1;
@@ -292,9 +292,8 @@ static void sys_fatal_impl(const char *msg) {
     exit(1);
 }
 
-#elif defined(HAVE_SDL2)
+#else
 
-// we can just ask SDL for most of this shit if we have it
 #include <SDL2/SDL.h>
 
 const char *sys_user_path(void) {
@@ -325,7 +324,7 @@ const char *sys_user_path(void) {
 
     // strip the trailing separator
     const unsigned int len = strlen(path);
-    if (path[len-1] == '/' || path[len-1] == '\\') { path[len-1] = 0; }
+    if (path[len-1] == *PATH_SEPARATOR || path[len-1] == *PATH_SEPARATOR_ALT) { path[len-1] = 0; }
 
     return path;
 }
@@ -391,24 +390,4 @@ static void sys_fatal_impl(const char *msg) {
     exit(1);
 }
 
-#else
-
-#ifndef WAPI_DUMMY
-#warning "You might want to implement these functions for your platform"
 #endif
-
-const char *sys_user_path(void) {
-    return ".";
-}
-
-const char *sys_exe_path(void) {
-    return ".";
-}
-
-static void sys_fatal_impl(const char *msg) {
-    fprintf(stderr, "FATAL ERROR:\n%s\n", msg);
-    fflush(stderr);
-    exit(1);
-}
-
-#endif // platform switch
