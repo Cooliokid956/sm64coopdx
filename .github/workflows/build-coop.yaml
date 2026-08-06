@@ -13,7 +13,7 @@ jobs:
         runs-on: ubuntu-22.04
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Install dependencies
               run: |
@@ -35,17 +35,18 @@ jobs:
                 zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
             - name: Upload artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                 name: sm64coopdx-linux
                 path: ./build/us_pc/sm64coopdx_Linux.zip
+                archive: false
 
     build-steamos:
         if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: ubuntu-22.04
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Install dependencies
               run: |
@@ -67,10 +68,11 @@ jobs:
                 zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
             - name: Upload artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                 name: sm64coopdx-steamos
                 path: ./build/us_pc/sm64coopdx_SteamOS.zip
+                archive: false
 
     build-windows:
         if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
@@ -80,7 +82,7 @@ jobs:
                 shell: msys2 {0}
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Install dependencies
               uses: msys2/setup-msys2@v2
@@ -112,17 +114,18 @@ jobs:
                 zip -r sm64coopdx_Windows.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
 
             - name: Upload artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                 name: sm64coopdx-windows
                 path: ./build/us_pc/sm64coopdx_Windows.zip
+                archive: false
 
     build-macos-arm:
         if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: macos-26
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Install dependencies
               run: |
@@ -167,17 +170,18 @@ jobs:
                 zip -r sm64coopdx_macOS_ARM.zip sm64coopdx.app
 
             - name: Upload artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                 name: sm64coopdx-macos-arm
                 path: ./build/us_pc/sm64coopdx_macOS_ARM.zip
+                archive: false
 
     build-macos-intel:
         if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: macos-15-intel
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Install dependencies
               run: |
@@ -221,7 +225,8 @@ jobs:
                 zip -r sm64coopdx_macOS_Intel.zip sm64coopdx.app
 
             - name: Upload artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                 name: sm64coopdx-macos-intel
                 path: ./build/us_pc/sm64coopdx_macOS_Intel.zip
+                archive: false
