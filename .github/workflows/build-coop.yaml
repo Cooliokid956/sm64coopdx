@@ -16,14 +16,24 @@ jobs:
               - name: Windows
                 os: windows-latest
                 shell: msys2 {0}
+                make: make -j$(nproc)
                 exe: .exe
                 zip: dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
 
-              - name: [Linux, SteamOS]
+              - name: Linux
                 os: ubuntu-22.04
                 deps: |
                   sudo apt update
                   sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                make: make -j$(nproc)
+                zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
+
+              - name: SteamOS
+                os: ubuntu-22.04
+                deps: |
+                  sudo apt update
+                  sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                make: make -j$(nproc)
                 zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
               - name: macOS_ARM
@@ -41,15 +51,12 @@ jobs:
                 make: gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
                 internal: .app/Contents/MacOS/sm64coopdx
                 zip: sm64coopdx.app
-            include:
-              - platform:
-                  - make: make -j$(nproc)
-                
-        name: ${{ matrix.plat.name }}
-        runs-on: ${{ matrix.plat.os }}
+
+        name: ${{ matrix.platform.name }}
+        runs-on: ${{ matrix.platform.os }}
         defaults:
             run:
-                shell: ${{ matrix.plat.shell }}
+                shell: ${{ matrix.platform.shell }}
 
         steps:
             - name: Checkout repository
@@ -58,7 +65,7 @@ jobs:
                 persist-credentials: false
 
             - name: Install MSYS2
-              if: ${{ matrix.plat.name == 'Windows' }}
+              if: ${{ matrix.platform.name == 'Windows' }}
               uses: msys2/setup-msys2@v2
               with:
                 msystem: mingw64
@@ -74,30 +81,30 @@ jobs:
                     zip
 
             - name: Install dependencies
-              if: ${{ matrix.plat.name != 'Windows' }}
-              run: ${{ matrix.plat.deps }}
+              if: ${{ matrix.platform.name != 'Windows' }}
+              run: ${{ matrix.platform.deps }}
 
             - name: Build the game
-              run: ${{ matrix.plat.make }} ${{ case(matrix.plat.name == 'SteamOS', 'HANDHELD=1', '') }}
+              run: ${{ matrix.platform.make }} ${{ case(matrix.platform.name == 'SteamOS', 'HANDHELD=1', '') }}
 
             - name: Code sign the app (Ad-Hoc)
-              if: ${{ contains(matrix.plat.name, 'macOS') }}
+              if: ${{ contains(matrix.platform.name, 'macOS') }}
               run: |
                 codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
 
             - name: Generate hash
               run: |
                 cd tools
-                g++ -std=c++17 -o hash_file${{ matrix.plat.exe }} hash_file.cpp
-                echo "::notice ::$(./hash_file${{ matrix.plat.exe }} ../build/us_pc/sm64coopdx${{ matrix.plat.exe }}${{ matrix.plat.internal }})"
+                g++ -std=c++17 -o hash_file${{ matrix.platform.exe }} hash_file.cpp
+                echo "::notice ::$(./hash_file${{ matrix.platform.exe }} ../build/us_pc/sm64coopdx${{ matrix.platform.exe }}${{ matrix.platform.internal }})"
 
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_${{ matrix.plat.name }}.zip ${{ matrix.plat.zip }}
+                zip -r sm64coopdx_${{ matrix.platform.name }}.zip ${{ matrix.platform.zip }}
 
             - name: Upload artifact
               uses: actions/upload-artifact@v7
               with:
-                path: ./build/us_pc/sm64coopdx_${{ matrix.plat.name }}.zip
+                path: ./build/us_pc/sm64coopdx_${{ matrix.platform.name }}.zip
                 archive: false
