@@ -1275,7 +1275,7 @@ Linearly interpolates between `a` and `b` with `delta`
 ## [delta_interpolate_angle](#delta_interpolate_angle)
 
 ### Description
-Linearly interpolates between `a` and `b` with `delta`
+Interpolates angle between `a` and `b` with `delta`
 
 ### Lua Example
 `local integerValue = delta_interpolate_angle(a, b, delta)`

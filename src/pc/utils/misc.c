@@ -171,7 +171,7 @@ s32 delta_interpolate_s32(s32 a, s32 b, f32 delta) {
 
 s16 delta_interpolate_angle(s16 a, s16 b, f32 delta) {
     s32 normalizedDiff = (((s32) b - (s32) a + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
-    return (b - normalizedDiff) * (1.0f - delta) + b * delta;
+    return a + normalizedDiff * delta;
 }
 
 void delta_interpolate_vec3f(VEC_OUT Vec3f res, Vec3f a, Vec3f b, f32 delta) {
