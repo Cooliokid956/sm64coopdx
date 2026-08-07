@@ -7845,6 +7845,15 @@ function delta_interpolate_s32(a, b, delta)
     -- ...
 end
 
+--- @param a integer
+--- @param b integer
+--- @param delta number
+--- @return integer
+--- Linearly interpolates between `a` and `b` with `delta`
+function delta_interpolate_angle(a, b, delta)
+    -- ...
+end
+
 --- @param res Vec3f
 --- @param a Vec3f
 --- @param b Vec3f

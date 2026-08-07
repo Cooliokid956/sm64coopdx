@@ -138,7 +138,7 @@ void patch_carpet_interpolated(f32 delta) {
     if (sCachedCarpetGfx && sFlyingCarpetRippleTimer != sPrevFlyingCarpetRippleTimer) {
         s16 n, row, col, timer;
         Vtx *verts = (Vtx *)sCachedCarpetGfx[1].words.w1;
-        timer = delta_interpolate_s32(sFlyingCarpetRippleTimer - 0x400, sFlyingCarpetRippleTimer, delta);
+        timer = delta_interpolate_angle(sPrevFlyingCarpetRippleTimer, sFlyingCarpetRippleTimer, delta);
         
         for (n = 0; n < NUM_FLYING_CARPET_VERTICES; n++) {
             row = n / 3;
