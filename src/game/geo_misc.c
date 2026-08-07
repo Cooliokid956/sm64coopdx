@@ -127,7 +127,7 @@ Gfx *geo_exec_flying_carpet_timer_update(s32 callContext, UNUSED struct GraphNod
     return NULL;
 }
 
-static Gfx *sCachedCarpetGfx;
+static Gfx *sCachedCarpetGfx = NULL;
 
 void patch_carpet_before(void) {
     sCachedCarpetGfx = NULL;
@@ -140,7 +140,7 @@ void patch_carpet_interpolated(f32 delta) {
         Vtx *verts = (Vtx *)sCachedCarpetGfx[1].words.w1;
         timer = delta_interpolate_s32(sFlyingCarpetRippleTimer - 0x400, sFlyingCarpetRippleTimer, delta);
         
-        for (n = 0; n <= 20; n++) {
+        for (n = 0; n < NUM_FLYING_CARPET_VERTICES; n++) {
             row = n / 3;
             col = n % 3;
 
@@ -172,7 +172,7 @@ Gfx *geo_exec_flying_carpet_create(s32 callContext, struct GraphNode *node, UNUS
                 return NULL;
             }
 
-            for (n = 0; n <= 20; n++) {
+            for (n = 0; n < NUM_FLYING_CARPET_VERTICES; n++) {
                 row = n / 3;
                 col = n % 3;
     
