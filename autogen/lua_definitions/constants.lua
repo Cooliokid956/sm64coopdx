@@ -4809,7 +4809,7 @@ SYNC_DISTANCE_ONLY_EVENTS = -2
 SYNC_DISTANCE_INFINITE = 0
 
 --- @type integer
-PACKET_LENGTH = 3000
+PACKET_LENGTH = 12000
 
 NS_SOCKET  = 0 --- @type NetworkSystemType
 NS_COOPNET = 1 --- @type NetworkSystemType
@@ -11433,7 +11433,7 @@ PLAY_MODE_CHANGE_LEVEL = 4
 PLAY_MODE_FRAME_ADVANCE = 5
 
 --- @type integer
-MAX_PLAYERS = 16
+MAX_PLAYERS = 64
 
 --- @type integer
 COOP_OBJ_FLAG_NETWORK = (1 << 0)
@@ -11448,7 +11448,7 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.6"
+SM64COOPDX_VERSION = "64pdd695f053"
 
 --- @type string
 VERSION_TEXT = "v"
