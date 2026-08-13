@@ -199,7 +199,9 @@ Gfx *geo_exec_flying_carpet_create(s32 callContext, struct GraphNode *node, UNUS
             gSPEndDisplayList(displayListHead);
     
             sCachedCarpetGfx = displayList;
-        } else { displayList = sCachedCarpetGfx; }
+        } else {
+            displayList = sCachedCarpetGfx;
+        }
 
         generatedNode->fnNode.node.flags = (generatedNode->fnNode.node.flags & 0xFF) | 0x100;
 
