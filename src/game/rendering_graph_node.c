@@ -307,13 +307,20 @@ void patch_mtx_before(void) {
 
 void patch_mtx_interpolated(f32 delta) {
     if (sPerspectiveNode != NULL) {
-        if (gCamSkipInterp) {
-            sPerspectiveNode->prevFov = sPerspectiveNode->fov;
-        }
         u16 perspNorm;
-        f32 fov = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
-        f32 near = delta_interpolate_f32(sPerspectiveNode->prevNear, get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear), delta);
-        f32 far = delta_interpolate_f32(sPerspectiveNode->prevFar, replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar), delta);
+        f32 fov = sPerspectiveNode->fov;
+        f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
+        f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
+        
+        if (gCamSkipInterp) {
+            sPerspectiveNode->prevFov = fov;
+            sPerspectiveNode->prevNear = near;
+            sPerspectiveNode->prevFar = far;
+        } else {
+            fov = delta_interpolate_f32(sPerspectiveNode->prevFov, fov, delta);
+            near = delta_interpolate_f32(sPerspectiveNode->prevNear, near, delta);
+            far = delta_interpolate_f32(sPerspectiveNode->prevFar, far, delta);
+        }
 
         // "infinite" draw distance
         if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
