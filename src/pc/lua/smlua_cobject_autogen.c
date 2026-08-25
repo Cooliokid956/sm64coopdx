@@ -397,6 +397,18 @@ static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
     { "yaw",        LVT_S16,     offsetof(struct Camera, yaw),        false, LOT_NONE                 },
 };
 
+#define LUA_CAMERA_FOVSTATUS_FIELD_COUNT 8
+static struct LuaObjectField sCameraFOVStatusFields[LUA_CAMERA_FOVSTATUS_FIELD_COUNT] = {
+    { "decay",            LVT_S16, offsetof(struct CameraFOVStatus, decay),            false, LOT_NONE },
+    { "fov",              LVT_F32, offsetof(struct CameraFOVStatus, fov),              false, LOT_NONE },
+    { "fovFunc",          LVT_U8,  offsetof(struct CameraFOVStatus, fovFunc),          false, LOT_NONE },
+    { "fovOffset",        LVT_F32, offsetof(struct CameraFOVStatus, fovOffset),        false, LOT_NONE },
+    { "shakeAmplitude",   LVT_F32, offsetof(struct CameraFOVStatus, shakeAmplitude),   false, LOT_NONE },
+    { "shakePhase",       LVT_S16, offsetof(struct CameraFOVStatus, shakePhase),       false, LOT_NONE },
+    { "shakeSpeed",       LVT_S16, offsetof(struct CameraFOVStatus, shakeSpeed),       false, LOT_NONE },
+    { "unusedIsSleeping", LVT_U32, offsetof(struct CameraFOVStatus, unusedIsSleeping), false, LOT_NONE },
+};
+
 #define LUA_CHAIN_SEGMENT_FIELD_COUNT 6
 static struct LuaObjectField sChainSegmentFields[LUA_CHAIN_SEGMENT_FIELD_COUNT] = {
     { "pitch", LVT_S16, offsetof(struct ChainSegment, pitch), false, LOT_NONE },
@@ -2711,6 +2723,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_BEHAVIORTRAJECTORIES,         sBehaviorTrajectoriesFields,         LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT           },
     { LOT_BEHAVIORVALUES,               sBehaviorValuesFields,               LUA_BEHAVIOR_VALUES_FIELD_COUNT                 },
     { LOT_CAMERA,                       sCameraFields,                       LUA_CAMERA_FIELD_COUNT                          },
+    { LOT_CAMERAFOVSTATUS,              sCameraFOVStatusFields,              LUA_CAMERA_FOVSTATUS_FIELD_COUNT                },
     { LOT_CHAINSEGMENT,                 sChainSegmentFields,                 LUA_CHAIN_SEGMENT_FIELD_COUNT                   },
     { LOT_CHARACTER,                    sCharacterFields,                    LUA_CHARACTER_FIELD_COUNT                       },
     { LOT_CONTROLLER,                   sControllerFields,                   LUA_CONTROLLER_FIELD_COUNT                      },
@@ -2817,6 +2830,7 @@ const char *sLuaLotNames[] = {
     [LOT_BEHAVIORTRAJECTORIES] = "BehaviorTrajectories",
     [LOT_BEHAVIORVALUES] = "BehaviorValues",
     [LOT_CAMERA] = "Camera",
+    [LOT_CAMERAFOVSTATUS] = "CameraFOVStatus",
     [LOT_CHAINSEGMENT] = "ChainSegment",
     [LOT_CHARACTER] = "Character",
     [LOT_CONTROLLER] = "Controller",

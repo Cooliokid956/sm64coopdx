@@ -346,7 +346,6 @@ structs_blacklist = { "__name__": "structs_blacklist",
 structs_excluded = [
     'AnimationTable',
     'BullyCollisionData',
-    'CameraFOVStatus',
     'CameraStoredInfo',
     'CameraTrigger',
     'Cutscene',

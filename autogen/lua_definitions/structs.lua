@@ -215,6 +215,16 @@
 --- @field public areaCenY number
 --- @field public mtx Mat4
 
+--- @class CameraFOVStatus
+--- @field public fovFunc integer
+--- @field public fov number
+--- @field public fovOffset number
+--- @field public unusedIsSleeping integer
+--- @field public shakeAmplitude number
+--- @field public shakePhase integer
+--- @field public shakeSpeed integer
+--- @field public decay integer
+
 --- @class ChainSegment
 --- @field public posX number
 --- @field public posY number
