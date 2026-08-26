@@ -1284,13 +1284,14 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE                 },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 57
+#define LUA_LEVEL_VALUES_FIELD_COUNT 60
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE          },
     { "ceilNormalMaxY",                   LVT_F32,     offsetof(struct LevelValues, ceilNormalMaxY),                   false, LOT_NONE          },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE          },
     { "coinsRequiredForCoinStar",         LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar),         false, LOT_NONE          },
     { "disableActs",                      LVT_U8,      offsetof(struct LevelValues, disableActs),                      false, LOT_NONE          },
+    { "disableShadows",                   LVT_U8,      offsetof(struct LevelValues, disableShadows),                   false, LOT_NONE          },
     { "entryLevel",                       LVT_S32,     offsetof(struct LevelValues, entryLevel),                       false, LOT_NONE          },
     { "exitCastleArea",                   LVT_S16,     offsetof(struct LevelValues, exitCastleArea),                   false, LOT_NONE          },
     { "exitCastleLevel",                  LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),                  false, LOT_NONE          },
@@ -1329,6 +1330,8 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "shellSequence",                    LVT_S32,     offsetof(struct LevelValues, shellSequence),                    false, LOT_NONE          },
     { "showStarNumber",                   LVT_U8,      offsetof(struct LevelValues, showStarNumber),                   false, LOT_NONE          },
     { "skipCreditsAt",                    LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),                    false, LOT_NONE          },
+    { "skipFileSelect",                   LVT_U8,      offsetof(struct LevelValues, skipFileSelect),                   false, LOT_NONE          },
+    { "skipGoddard",                      LVT_U8,      offsetof(struct LevelValues, skipGoddard),                      false, LOT_NONE          },
     { "starHeal",                         LVT_U8,      offsetof(struct LevelValues, starHeal),                         false, LOT_NONE          },
     { "starPositions",                    LVT_COBJECT, offsetof(struct LevelValues, starPositions),                    true,  LOT_STARPOSITIONS },
     { "useGlobalStarIds",                 LVT_U8,      offsetof(struct LevelValues, useGlobalStarIds),                 false, LOT_NONE          },

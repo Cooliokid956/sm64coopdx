@@ -47,26 +47,23 @@ bool smlua_functions_valid_param_range(lua_State* L, int min, int max) {
 int smlua_func_print(lua_State *L) {
     int top = lua_gettop(L);
 
-    // calculate total length first
-    size_t totalLen = 0;
-    for (int i = 1; i <= top; i++) {
-        size_t len;
-        luaL_tolstring(L, i, &len);
-        totalLen += len;
-        if (i > 1) totalLen += 1;
-        lua_pop(L, 1);
+    char* completeString = calloc(1, 1);
+    if (!completeString) {
+        return 0;
     }
 
-    // allocate string
-    char* completeString = malloc(totalLen + 1);
-    if (!completeString) return 0;
-
     size_t pos = 0;
-
-    // copy string
     for (int i = 1; i <= top; i++) {
         size_t len;
         const char* str = luaL_tolstring(L, i, &len);
+
+        size_t needExtra = len + 1 + (i > 1);
+        char* grownString = realloc(completeString, pos + needExtra);
+        if (!grownString) {
+            free(completeString);
+            return 0;
+        }
+        completeString = grownString;
 
         if (i > 1) {
             completeString[pos] = '\t';
@@ -690,6 +687,9 @@ s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
         s32 macroBhvModelsIdx = lua_gettop(L);
         for (s32 i = 0; *macroData != MACRO_OBJECT_END(); macroData += 5, i++) {
             s32 presetId = (s32) ((macroData[0] & 0x1FF) - 0x1F);
+            if (presetId < 0 || presetId >= MACRO_OBJECT_PRESET_COUNT) {
+                continue;
+            }
             s32 presetParams = MacroObjectPresets[presetId].param;
             s32 objParams = (macroData[4] & 0xFF00) | (presetParams & 0x00FF);
             s32 bhvParams = ((objParams & 0x00FF) << 16) | (objParams & 0xFF00);
@@ -780,9 +780,15 @@ static u16 *smlua_to_u16_list(lua_State* L, int index, u32* length) {
         int indexKey = lua_gettop(L) - 1;
         int indexValue = lua_gettop(L) - 0;
 
-        s32 key = smlua_to_integer(L, indexKey);
+        lua_Integer key = smlua_to_integer(L, indexKey);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA("smlua_to_u16_list: Failed to convert table key");
+            free(values);
+            return 0;
+        }
+
+        if (key < 1 || key > *length) {
+            LOG_LUA("smlua_to_u16_list: Table key out of bounds: " LUA_INTEGER_FMT, key);
             free(values);
             return 0;
         }

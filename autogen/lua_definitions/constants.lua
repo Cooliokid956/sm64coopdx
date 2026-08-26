@@ -4728,6 +4728,9 @@ MOD_FS_MAX_FILES = 0x400
 --- @type integer
 MOD_FS_MAX_PATH = 0x100
 
+--- @type integer
+MOD_FS_MAX_PROPERTIES_SIZE = (MOD_FS_MAX_FILES * MOD_FS_MAX_PATH * 2)
+
 --- @type string
 MOD_FS_URI_PREFIX = "modfs:/"
 
@@ -11479,10 +11482,10 @@ SM64COOPDX_VERSION = "v1.6"
 VERSION_TEXT = "v"
 
 --- @type integer
-VERSION_NUMBER = 42
+VERSION_NUMBER = 43
 
 --- @type integer
-MINOR_VERSION_NUMBER = 2
+MINOR_VERSION_NUMBER = 0
 
 --- @type string
 GAME_NAME = "sm64coopdx"
