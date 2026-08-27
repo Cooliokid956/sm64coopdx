@@ -372,10 +372,9 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| fovFunc | `integer` |  |
+| fovFunc | [enum CameraFov](constants.md#enum-CameraFov) |  |
 | fov | `number` |  |
 | fovOffset | `number` |  |
-| unusedIsSleeping | `integer` |  |
 | shakeAmplitude | `number` |  |
 | shakePhase | `integer` |  |
 | shakeSpeed | `integer` |  |
@@ -1319,6 +1318,8 @@
 | near | `integer` |  |
 | far | `integer` |  |
 | prevFov | `number` |  |
+| prevNear | `number` |  |
+| prevFar | `number` |  |
 | prevTimestamp | `number` |  |
 
 [:arrow_up_small:](#)

@@ -216,10 +216,9 @@
 --- @field public mtx Mat4
 
 --- @class CameraFOVStatus
---- @field public fovFunc integer
+--- @field public fovFunc CameraFov
 --- @field public fov number
 --- @field public fovOffset number
---- @field public unusedIsSleeping integer
 --- @field public shakeAmplitude number
 --- @field public shakePhase integer
 --- @field public shakeSpeed integer
@@ -906,6 +905,8 @@
 --- @field public near integer
 --- @field public far integer
 --- @field public prevFov number
+--- @field public prevNear number
+--- @field public prevFar number
 --- @field public prevTimestamp number
 
 --- @class GraphNodeRoot

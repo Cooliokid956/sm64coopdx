@@ -397,16 +397,15 @@ static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
     { "yaw",        LVT_S16,     offsetof(struct Camera, yaw),        false, LOT_NONE                 },
 };
 
-#define LUA_CAMERA_FOVSTATUS_FIELD_COUNT 8
+#define LUA_CAMERA_FOVSTATUS_FIELD_COUNT 7
 static struct LuaObjectField sCameraFOVStatusFields[LUA_CAMERA_FOVSTATUS_FIELD_COUNT] = {
-    { "decay",            LVT_S16, offsetof(struct CameraFOVStatus, decay),            false, LOT_NONE },
-    { "fov",              LVT_F32, offsetof(struct CameraFOVStatus, fov),              false, LOT_NONE },
-    { "fovFunc",          LVT_U8,  offsetof(struct CameraFOVStatus, fovFunc),          false, LOT_NONE },
-    { "fovOffset",        LVT_F32, offsetof(struct CameraFOVStatus, fovOffset),        false, LOT_NONE },
-    { "shakeAmplitude",   LVT_F32, offsetof(struct CameraFOVStatus, shakeAmplitude),   false, LOT_NONE },
-    { "shakePhase",       LVT_S16, offsetof(struct CameraFOVStatus, shakePhase),       false, LOT_NONE },
-    { "shakeSpeed",       LVT_S16, offsetof(struct CameraFOVStatus, shakeSpeed),       false, LOT_NONE },
-    { "unusedIsSleeping", LVT_U32, offsetof(struct CameraFOVStatus, unusedIsSleeping), false, LOT_NONE },
+    { "decay",          LVT_S16, offsetof(struct CameraFOVStatus, decay),          false, LOT_NONE },
+    { "fov",            LVT_F32, offsetof(struct CameraFOVStatus, fov),            false, LOT_NONE },
+    { "fovFunc",        LVT_S32, offsetof(struct CameraFOVStatus, fovFunc),        false, LOT_NONE },
+    { "fovOffset",      LVT_F32, offsetof(struct CameraFOVStatus, fovOffset),      false, LOT_NONE },
+    { "shakeAmplitude", LVT_F32, offsetof(struct CameraFOVStatus, shakeAmplitude), false, LOT_NONE },
+    { "shakePhase",     LVT_S16, offsetof(struct CameraFOVStatus, shakePhase),     false, LOT_NONE },
+    { "shakeSpeed",     LVT_S16, offsetof(struct CameraFOVStatus, shakeSpeed),     false, LOT_NONE },
 };
 
 #define LUA_CHAIN_SEGMENT_FIELD_COUNT 6
@@ -1159,13 +1158,15 @@ static struct LuaObjectField sGraphNodeOrthoProjectionFields[LUA_GRAPH_NODE_ORTH
     { "scale", LVT_F32,     offsetof(struct GraphNodeOrthoProjection, scale), false, LOT_NONE      },
 };
 
-#define LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT 6
+#define LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT 8
 static struct LuaObjectField sGraphNodePerspectiveFields[LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT] = {
     { "far",           LVT_S16,     offsetof(struct GraphNodePerspective, far),           false, LOT_NONE        },
     { "fnNode",        LVT_COBJECT, offsetof(struct GraphNodePerspective, fnNode),        true,  LOT_FNGRAPHNODE },
     { "fov",           LVT_F32,     offsetof(struct GraphNodePerspective, fov),           false, LOT_NONE        },
     { "near",          LVT_S16,     offsetof(struct GraphNodePerspective, near),          false, LOT_NONE        },
+    { "prevFar",       LVT_F32,     offsetof(struct GraphNodePerspective, prevFar),       false, LOT_NONE        },
     { "prevFov",       LVT_F32,     offsetof(struct GraphNodePerspective, prevFov),       false, LOT_NONE        },
+    { "prevNear",      LVT_F32,     offsetof(struct GraphNodePerspective, prevNear),      false, LOT_NONE        },
     { "prevTimestamp", LVT_F32,     offsetof(struct GraphNodePerspective, prevTimestamp), false, LOT_NONE        },
 };
 
