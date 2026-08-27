@@ -658,12 +658,15 @@ static void level_cmd_create_painting_warp_node(void) {
             }
         }
 
-        node = &gAreas[sCurrAreaIndex].paintingWarpNodes[CMD_GET(u8, 2)];
+        u8 id = CMD_GET(u8, 2);
+        if (id < MAX_PAINTING_WARP_NODES) {
+            node = &gAreas[sCurrAreaIndex].paintingWarpNodes[id];
 
-        node->id = 1;
-        node->destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
-        node->destArea = CMD_GET(u8, 4);
-        node->destNode = CMD_GET(u8, 5);
+            node->id = 1;
+            node->destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
+            node->destArea = CMD_GET(u8, 4);
+            node->destNode = CMD_GET(u8, 5);
+        }
     }
 
     sCurrentCmd = CMD_NEXT;

@@ -15,6 +15,9 @@ enum NetworkType {
 #define PORT_MAX_LEN 16
 
 struct CLIOptions {
+#if defined(_WIN32)
+    bool console;
+#endif
     char savePath[SYS_MAX_PATH];
     char configFile[SYS_MAX_PATH];
     unsigned int fullscreen;
