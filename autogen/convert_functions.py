@@ -528,6 +528,13 @@ def process_function(fname, line, description):
             param = {}
             param_str = param_str.strip()
 
+            if 'enum (' in param_str:
+                print(param_str)
+                param['enum'] = re.sub(r'.*enum \((.*)\).*', '\\1', param_str)
+                param_str = re.sub(r'enum \((.*)\) ', '', param_str)
+                print(param['enum'])
+                print(param_str)
+
             for param_keyword in parameter_keywords:
                 keyword_index = param_str.find(param_keyword + ' ')
                 if keyword_index != -1:

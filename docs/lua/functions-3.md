@@ -3310,7 +3310,7 @@ Gets the current DJUI HUD text alignment
 - `number`
 
 ### C Prototype
-`void djui_hud_get_text_alignment(RET f32 *textHAlign, RET f32 *textVAlign);`
+`void djui_hud_get_text_alignment(RET enum (HudUtilsHorizontalAlign) f32 *textHAlign, RET enum (HudUtilsVerticalAlign) f32 *textVAlign);`
 
 [:arrow_up_small:](#)
 
@@ -3334,7 +3334,7 @@ Sets the current DJUI HUD text alignment
 - None
 
 ### C Prototype
-`void djui_hud_set_text_alignment(f32 textHAlign, f32 textVAlign);`
+`void djui_hud_set_text_alignment(enum (HudUtilsHorizontalAlign) f32 textHAlign, enum (HudUtilsVerticalAlign) f32 textVAlign);`
 
 [:arrow_up_small:](#)
 
@@ -3360,7 +3360,7 @@ Sets the current DJUI HUD text alignment interpolated
 - None
 
 ### C Prototype
-`void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVAlign, f32 textHAlign, f32 textVAlign);`
+`void djui_hud_set_text_alignment_interpolated(enum (HudUtilsHorizontalAlign) f32 prevTextHAlign, enum (HudUtilsVerticalAlign) f32 prevTextVAlign, enum (HudUtilsHorizontalAlign) f32 textHAlign, enum (HudUtilsVerticalAlign) f32 textVAlign);`
 
 [:arrow_up_small:](#)
 

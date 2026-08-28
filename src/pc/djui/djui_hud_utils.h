@@ -2,17 +2,21 @@
 #define DJUI_HUD_UTILS_H
 
 // Common pivot values for rotation
+ENUM (HudUtilsRotationPivotX, 3)
 #define ROTATION_PIVOT_X_LEFT       0.0
 #define ROTATION_PIVOT_X_CENTER     0.5
 #define ROTATION_PIVOT_X_RIGHT      1.0
+ENUM (HudUtilsRotationPivotY, 3)
 #define ROTATION_PIVOT_Y_TOP        0.0
 #define ROTATION_PIVOT_Y_CENTER     0.5
 #define ROTATION_PIVOT_Y_BOTTOM     1.0
 
 // Common alignment values for text alignment
+ENUM (HudUtilsHorizontalAlign, 3)
 #define TEXT_HALIGN_LEFT            0.0
 #define TEXT_HALIGN_CENTER          0.5
 #define TEXT_HALIGN_RIGHT           1.0
+ENUM (HudUtilsVerticalAlign, 3)
 #define TEXT_VALIGN_TOP             0.0
 #define TEXT_VALIGN_CENTER          0.5
 #define TEXT_VALIGN_BOTTOM          1.0
@@ -31,7 +35,7 @@ enum HudUtilsFilter {
 
 enum DjuiFontType {
     FONT_LEGACY = -1,
-    FONT_NORMAL = 0,
+    FONT_NORMAL,
     FONT_MENU,
     FONT_HUD,
     FONT_ALIASED,
@@ -95,11 +99,11 @@ void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);
 /* |description|Sets the current DJUI HUD rotation interpolated|descriptionEnd| */
 void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY);
 /* |description|Gets the current DJUI HUD text alignment|descriptionEnd| */
-void djui_hud_get_text_alignment(RET f32 *textHAlign, RET f32 *textVAlign);
+void djui_hud_get_text_alignment(RET enum (HudUtilsHorizontalAlign) f32 *textHAlign, RET enum (HudUtilsVerticalAlign) f32 *textVAlign);
 /* |description|Sets the current DJUI HUD text alignment|descriptionEnd| */
-void djui_hud_set_text_alignment(f32 textHAlign, f32 textVAlign);
+void djui_hud_set_text_alignment(enum (HudUtilsHorizontalAlign) f32 textHAlign, enum (HudUtilsVerticalAlign) f32 textVAlign);
 /* |description|Sets the current DJUI HUD text alignment interpolated|descriptionEnd| */
-void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVAlign, f32 textHAlign, f32 textVAlign);
+void djui_hud_set_text_alignment_interpolated(enum (HudUtilsHorizontalAlign) f32 prevTextHAlign, enum (HudUtilsVerticalAlign) f32 prevTextVAlign, enum (HudUtilsHorizontalAlign) f32 textHAlign, enum (HudUtilsVerticalAlign) f32 textVAlign);
 
 /* |description|Gets the screen width in the current DJUI HUD resolution|descriptionEnd| */
 u32 djui_hud_get_screen_width(void);
