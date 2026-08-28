@@ -401,7 +401,7 @@ static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
 static struct LuaObjectField sCameraFOVStatusFields[LUA_CAMERA_FOVSTATUS_FIELD_COUNT] = {
     { "decay",          LVT_S16, offsetof(struct CameraFOVStatus, decay),          false, LOT_NONE },
     { "fov",            LVT_F32, offsetof(struct CameraFOVStatus, fov),            false, LOT_NONE },
-    { "fovFunc",        LVT_S32, offsetof(struct CameraFOVStatus, fovFunc),        false, LOT_NONE },
+    { "fovFunc",        LVT_U8,  offsetof(struct CameraFOVStatus, fovFunc),        false, LOT_NONE },
     { "fovOffset",      LVT_F32, offsetof(struct CameraFOVStatus, fovOffset),      false, LOT_NONE },
     { "shakeAmplitude", LVT_F32, offsetof(struct CameraFOVStatus, shakeAmplitude), false, LOT_NONE },
     { "shakePhase",     LVT_S16, offsetof(struct CameraFOVStatus, shakePhase),     false, LOT_NONE },

@@ -372,7 +372,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| fovFunc | [enum CameraFov](constants.md#enum-CameraFov) |  |
+| fovFunc | `integer` |  |
 | fov | `number` |  |
 | fovOffset | `number` |  |
 | shakeAmplitude | `number` |  |

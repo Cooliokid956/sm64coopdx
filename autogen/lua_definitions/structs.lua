@@ -216,7 +216,7 @@
 --- @field public mtx Mat4
 
 --- @class CameraFOVStatus
---- @field public fovFunc CameraFov
+--- @field public fovFunc integer
 --- @field public fov number
 --- @field public fovOffset number
 --- @field public shakeAmplitude number
