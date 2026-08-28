@@ -213,7 +213,6 @@ def process_file(filename):
                     enum_entries -= 1
                     if enum_entries == 0:
                         c = enum_constants
-                        print(c)
                     else: continue
                 if block_stack and not block_stack[-1]['ignore']:
                     current = block_stack[-1]
@@ -343,7 +342,7 @@ def doc_constant(fname, processed_constant):
             return ''
 
         enum = 'enum ' + processed_constant['identifier']
-        s += '\n### [%s](#%s)\n' % (enum, processed_constant['identifier'])
+        s += '\n### [%s](#%s)\n' % (enum, 'enum-' + processed_constant['identifier'])
         s += '| Identifier | Value |\n'
         s += '| :--------- | :---- |\n'
         for c in constants:
