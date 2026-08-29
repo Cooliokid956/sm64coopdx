@@ -93,11 +93,11 @@ void djui_hud_set_text_color(u8 r, u8 g, u8 b, u8 a);
 /* |description|Resets the current DJUI HUD text default color. This color is overridden by color codes|descriptionEnd| */
 void djui_hud_reset_text_color(void);
 /* |description|Gets the current DJUI HUD rotation|descriptionEnd| */
-void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);
+void djui_hud_get_rotation(RET s16 *rotation, RET enum (HudUtilsRotationPivotX) f32 *pivotX, RET enum (HudUtilsRotationPivotY) f32 *pivotY);
 /* |description|Sets the current DJUI HUD rotation|descriptionEnd| */
-void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);
+void djui_hud_set_rotation(s16 rotation, enum (HudUtilsRotationPivotX) f32 pivotX, enum (HudUtilsRotationPivotY) f32 pivotY);
 /* |description|Sets the current DJUI HUD rotation interpolated|descriptionEnd| */
-void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY);
+void djui_hud_set_rotation_interpolated(s16 prevRotation, enum (HudUtilsRotationPivotX) f32 prevPivotX, enum (HudUtilsRotationPivotY) f32 prevPivotY, s16 rotation, enum (HudUtilsRotationPivotX) f32 pivotX, enum (HudUtilsRotationPivotY) f32 pivotY);
 /* |description|Gets the current DJUI HUD text alignment|descriptionEnd| */
 void djui_hud_get_text_alignment(RET enum (HudUtilsHorizontalAlign) f32 *textHAlign, RET enum (HudUtilsVerticalAlign) f32 *textVAlign);
 /* |description|Sets the current DJUI HUD text alignment|descriptionEnd| */

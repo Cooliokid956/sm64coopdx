@@ -3235,7 +3235,7 @@ Gets the current DJUI HUD rotation
 - `number`
 
 ### C Prototype
-`void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);`
+`void djui_hud_get_rotation(RET s16 *rotation, RET enum (HudUtilsRotationPivotX) f32 *pivotX, RET enum (HudUtilsRotationPivotY) f32 *pivotY);`
 
 [:arrow_up_small:](#)
 
@@ -3253,14 +3253,14 @@ Sets the current DJUI HUD rotation
 | Field | Type |
 | ----- | ---- |
 | rotation | `integer` |
-| pivotX | `number` |
-| pivotY | `number` |
+| pivotX | [enum HudUtilsRotationPivotX](constants.md#enum-HudUtilsRotationPivotX) |
+| pivotY | [enum HudUtilsRotationPivotY](constants.md#enum-HudUtilsRotationPivotY) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);`
+`void djui_hud_set_rotation(s16 rotation, enum (HudUtilsRotationPivotX) f32 pivotX, enum (HudUtilsRotationPivotY) f32 pivotY);`
 
 [:arrow_up_small:](#)
 
@@ -3278,17 +3278,17 @@ Sets the current DJUI HUD rotation interpolated
 | Field | Type |
 | ----- | ---- |
 | prevRotation | `integer` |
-| prevPivotX | `number` |
-| prevPivotY | `number` |
+| prevPivotX | [enum HudUtilsRotationPivotX](constants.md#enum-HudUtilsRotationPivotX) |
+| prevPivotY | [enum HudUtilsRotationPivotY](constants.md#enum-HudUtilsRotationPivotY) |
 | rotation | `integer` |
-| pivotX | `number` |
-| pivotY | `number` |
+| pivotX | [enum HudUtilsRotationPivotX](constants.md#enum-HudUtilsRotationPivotX) |
+| pivotY | [enum HudUtilsRotationPivotY](constants.md#enum-HudUtilsRotationPivotY) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY);`
+`void djui_hud_set_rotation_interpolated(s16 prevRotation, enum (HudUtilsRotationPivotX) f32 prevPivotX, enum (HudUtilsRotationPivotY) f32 prevPivotY, s16 rotation, enum (HudUtilsRotationPivotX) f32 pivotX, enum (HudUtilsRotationPivotY) f32 pivotY);`
 
 [:arrow_up_small:](#)
 
@@ -3327,8 +3327,8 @@ Sets the current DJUI HUD text alignment
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| textHAlign | `number` |
-| textVAlign | `number` |
+| textHAlign | [enum HudUtilsHorizontalAlign](constants.md#enum-HudUtilsHorizontalAlign) |
+| textVAlign | [enum HudUtilsVerticalAlign](constants.md#enum-HudUtilsVerticalAlign) |
 
 ### Returns
 - None
@@ -3351,10 +3351,10 @@ Sets the current DJUI HUD text alignment interpolated
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| prevTextHAlign | `number` |
-| prevTextVAlign | `number` |
-| textHAlign | `number` |
-| textVAlign | `number` |
+| prevTextHAlign | [enum HudUtilsHorizontalAlign](constants.md#enum-HudUtilsHorizontalAlign) |
+| prevTextVAlign | [enum HudUtilsVerticalAlign](constants.md#enum-HudUtilsVerticalAlign) |
+| textHAlign | [enum HudUtilsHorizontalAlign](constants.md#enum-HudUtilsHorizontalAlign) |
+| textVAlign | [enum HudUtilsVerticalAlign](constants.md#enum-HudUtilsVerticalAlign) |
 
 ### Returns
 - None
@@ -7127,242 +7127,6 @@ To work properly, object `o` must be able to trigger a warp (for example, with i
 
 ### C Prototype
 `struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from level_update.h
-
-<br />
-
-
-## [level_control_timer_running](#level_control_timer_running)
-
-### Description
-Returns if the level timer is running
-
-### Lua Example
-`local integerValue = level_control_timer_running()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 level_control_timer_running(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [pressed_pause](#pressed_pause)
-
-### Description
-Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
-
-### Lua Example
-`local booleanValue = pressed_pause()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool pressed_pause(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [fade_into_special_warp](#fade_into_special_warp)
-
-### Description
-Fades into a special warp with `arg` and using `color`
-
-### Lua Example
-`fade_into_special_warp(arg, color)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg | [enum SpecialWarpDestination](constants.md#enum-SpecialWarpDestination) |
-| color | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void fade_into_special_warp(enum SpecialWarpDestination arg, u32 color);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_instant_warp](#get_instant_warp)
-
-### Description
-Gets an instant warp from the current area's instant warp array (0-3)
-
-### Lua Example
-`local instantWarpValue = get_instant_warp(index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-
-### Returns
-- [InstantWarp](structs.md#InstantWarp)
-
-### C Prototype
-`struct InstantWarp *get_instant_warp(u8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_painting_warp_node](#get_painting_warp_node)
-
-### Description
-Gets a painting warp node from the local mario's floor type
-
-### Lua Example
-`local warpNodeValue = get_painting_warp_node()`
-
-### Parameters
-- None
-
-### Returns
-- [WarpNode](structs.md#WarpNode)
-
-### C Prototype
-`struct WarpNode *get_painting_warp_node(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [initiate_painting_warp](#initiate_painting_warp)
-
-### Description
-Initiates a painting warp of `paintingIndex`
-
-### Lua Example
-`initiate_painting_warp(paintingIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| paintingIndex | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void initiate_painting_warp(s16 paintingIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [level_trigger_warp](#level_trigger_warp)
-
-### Description
-Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
-
-### Lua Example
-`local integerValue = level_trigger_warp(m, warpOp)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| warpOp | [enum WarpOperation](constants.md#enum-WarpOperation) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 level_trigger_warp(struct MarioState *m, enum WarpOperation warpOp);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [warp_special](#warp_special)
-
-### Description
-Special warps to arg (`WARP_SPECIAL_*`)
-
-### Lua Example
-`warp_special(arg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg | [enum SpecialWarpDestination](constants.md#enum-SpecialWarpDestination) |
-
-### Returns
-- None
-
-### C Prototype
-`void warp_special(enum SpecialWarpDestination arg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [initiate_warp](#initiate_warp)
-
-### Description
-Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead
-
-### Lua Example
-`initiate_warp(destLevel, destArea, destWarpNode, warpFlags)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| destLevel | `integer` |
-| destArea | `integer` |
-| destWarpNode | `integer` |
-| warpFlags | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 warpFlags);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [lvl_set_current_level](#lvl_set_current_level)
-
-### Description
-Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
-
-### Lua Example
-`local integerValue = lvl_set_current_level(param, levelNum)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| param | `integer` |
-| levelNum | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 lvl_set_current_level(s16 param, s16 levelNum);`
 
 [:arrow_up_small:](#)
 

@@ -529,11 +529,8 @@ def process_function(fname, line, description):
             param_str = param_str.strip()
 
             if 'enum (' in param_str:
-                print(param_str)
-                param['enum'] = re.sub(r'.*enum \((.*)\).*', '\\1', param_str)
-                param_str = re.sub(r'enum \((.*)\) ', '', param_str)
-                print(param['enum'])
-                print(param_str)
+                param['enum'] = re.sub(r'.*enum \((.*)\).*', 'enum \\1', param_str)
+                param_str = re.sub(r'enum \(.*\) ', '', param_str)
 
             for param_keyword in parameter_keywords:
                 keyword_index = param_str.find(param_keyword + ' ')
@@ -1013,8 +1010,7 @@ def doc_function(fname, function):
         s += '| ----- | ---- |\n'
         for param in fparams:
             pid = param['identifier']
-            ptype = param['type']
-            ptype, plink = translate_type_to_lua(ptype)
+            ptype, plink = translate_type_to_lua(param.get('enum', param['type']))
 
             # build lua function params
             if param['type'] == 'LuaFunction' and 'lua_function_params' in param:
@@ -1149,7 +1145,7 @@ def def_function(fname, function):
 
     fparams, freturns = split_function_parameters_and_returns(function)
     for param in freturns:
-        rtype, _ = translate_type_to_lua(param['rtype'])
+        rtype, _ = translate_type_to_lua(param.get('enum', param['rtype']))
         rid = param['identifier']
         rtypes.append((rtype, rid))
 
@@ -1158,8 +1154,7 @@ def def_function(fname, function):
 
     for param in fparams:
         pid = param['identifier']
-        ptype = param['type']
-        ptype, _ = translate_type_to_lua(ptype)
+        ptype, _ = translate_type_to_lua(param.get('enum', param['type']))
 
         ptype = translate_to_def(ptype)
         if ptype.startswith('Pointer_') and ptype not in def_pointers:
