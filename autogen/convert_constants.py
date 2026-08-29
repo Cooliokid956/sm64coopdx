@@ -160,7 +160,7 @@ def process_line(filename, line, inIfBlock):
         global enum_constants, enum_entries
         enum_constants = {}
         enum_constants['identifier'], enum_entries = line[6:-1].split(", ")
-        enum_constants['constants'], enum_entries = [], int(enum_entries)
+        enum_constants['constants'], enum_entries = [], int(enum_entries) + 1
     elif line.startswith('enum '):
         return process_enum(filename, line, inIfBlock)
     elif line.startswith('#define '):
@@ -206,14 +206,15 @@ def process_file(filename):
                 constants.extend(block['else'])
         else:
             c = process_line(filename, line, block_stack is not None)
-            if c is not None:
-                global enum_constants, enum_entries
-                if enum_entries > 0:
+            global enum_constants, enum_entries
+            if enum_entries > 0:
+                if c is not None:
                     enum_constants['constants'].append(c)
-                    enum_entries -= 1
-                    if enum_entries == 0:
-                        c = enum_constants
-                    else: continue
+                enum_entries -= 1
+                if enum_entries == 0:
+                    c = enum_constants
+                else: continue
+            if c is not None:
                 if block_stack and not block_stack[-1]['ignore']:
                     current = block_stack[-1]
                     if current['else'] is not None:
