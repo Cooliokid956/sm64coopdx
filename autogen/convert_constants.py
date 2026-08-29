@@ -213,7 +213,8 @@ def process_file(filename):
                 enum_entries -= 1
                 if enum_entries == 0:
                     c = enum_constants
-                else: continue
+                else:
+                    continue
             if c is not None:
                 if block_stack and not block_stack[-1]['ignore']:
                     current = block_stack[-1]
