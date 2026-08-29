@@ -3940,7 +3940,7 @@ function djui_gfx_get_scale()
     -- ...
 end
 
---- @return integer
+--- @return HudUtilsResolution
 --- Gets the current DJUI HUD resolution
 function djui_hud_get_resolution()
     -- ...
@@ -3952,7 +3952,7 @@ function djui_hud_set_resolution(resolutionType)
     -- ...
 end
 
---- @return integer
+--- @return HudUtilsFilter
 --- Gets the current DJUI HUD texture filter
 function djui_hud_get_filter()
     -- ...
@@ -3964,13 +3964,13 @@ function djui_hud_set_filter(filterType)
     -- ...
 end
 
---- @return integer
+--- @return DjuiFontType
 --- Gets the current DJUI HUD font
 function djui_hud_get_font()
     -- ...
 end
 
---- @param fontType integer
+--- @param fontType DjuiFontType
 --- Sets the current DJUI HUD font
 function djui_hud_set_font(fontType)
     -- ...

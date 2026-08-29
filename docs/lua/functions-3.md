@@ -2956,16 +2956,16 @@ Gets the current visual scaling factor of DJUI
 Gets the current DJUI HUD resolution
 
 ### Lua Example
-`local integerValue = djui_hud_get_resolution()`
+`local enumValue = djui_hud_get_resolution()`
 
 ### Parameters
 - None
 
 ### Returns
-- `integer`
+- [enum HudUtilsResolution](constants.md#enum-HudUtilsResolution)
 
 ### C Prototype
-`u8 djui_hud_get_resolution(void);`
+`enum (HudUtilsResolution) u8 djui_hud_get_resolution(void);`
 
 [:arrow_up_small:](#)
 
@@ -2988,7 +2988,7 @@ Sets the current DJUI HUD resolution
 - None
 
 ### C Prototype
-`void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);`
+`void djui_hud_set_resolution(enum (HudUtilsResolution) u8 resolutionType);`
 
 [:arrow_up_small:](#)
 
@@ -3000,16 +3000,16 @@ Sets the current DJUI HUD resolution
 Gets the current DJUI HUD texture filter
 
 ### Lua Example
-`local integerValue = djui_hud_get_filter()`
+`local enumValue = djui_hud_get_filter()`
 
 ### Parameters
 - None
 
 ### Returns
-- `integer`
+- [enum HudUtilsFilter](constants.md#enum-HudUtilsFilter)
 
 ### C Prototype
-`u8 djui_hud_get_filter(void);`
+`enum (HudUtilsFilter) u8 djui_hud_get_filter(void);`
 
 [:arrow_up_small:](#)
 
@@ -3032,7 +3032,7 @@ Sets the current DJUI HUD texture filter
 - None
 
 ### C Prototype
-`void djui_hud_set_filter(enum HudUtilsFilter filterType);`
+`void djui_hud_set_filter(enum (HudUtilsFilter) u8 filterType);`
 
 [:arrow_up_small:](#)
 
@@ -3044,16 +3044,16 @@ Sets the current DJUI HUD texture filter
 Gets the current DJUI HUD font
 
 ### Lua Example
-`local integerValue = djui_hud_get_font()`
+`local enumValue = djui_hud_get_font()`
 
 ### Parameters
 - None
 
 ### Returns
-- `integer`
+- [enum DjuiFontType](constants.md#enum-DjuiFontType)
 
 ### C Prototype
-`s8 djui_hud_get_font(void);`
+`enum (DjuiFontType) s8 djui_hud_get_font(void);`
 
 [:arrow_up_small:](#)
 
@@ -3070,13 +3070,13 @@ Sets the current DJUI HUD font
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fontType | `integer` |
+| fontType | [enum DjuiFontType](constants.md#enum-DjuiFontType) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_font(s8 fontType);`
+`void djui_hud_set_font(enum (DjuiFontType) s8 fontType);`
 
 [:arrow_up_small:](#)
 

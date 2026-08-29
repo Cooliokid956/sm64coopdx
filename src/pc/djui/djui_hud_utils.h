@@ -69,17 +69,17 @@ extern bool gDjuiHudLockMouse;
 void djui_hud_clear_interp_data();
 
 /* |description|Gets the current DJUI HUD resolution|descriptionEnd| */
-u8 djui_hud_get_resolution(void);
+enum (HudUtilsResolution) u8 djui_hud_get_resolution(void);
 /* |description|Sets the current DJUI HUD resolution|descriptionEnd| */
-void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);
+void djui_hud_set_resolution(enum (HudUtilsResolution) u8 resolutionType);
 /* |description|Gets the current DJUI HUD texture filter|descriptionEnd| */
-u8 djui_hud_get_filter(void);
+enum (HudUtilsFilter) u8 djui_hud_get_filter(void);
 /* |description|Sets the current DJUI HUD texture filter|descriptionEnd| */
-void djui_hud_set_filter(enum HudUtilsFilter filterType);
+void djui_hud_set_filter(enum (HudUtilsFilter) u8 filterType);
 /* |description|Gets the current DJUI HUD font|descriptionEnd| */
-s8 djui_hud_get_font(void);
+enum (DjuiFontType) s8 djui_hud_get_font(void);
 /* |description|Sets the current DJUI HUD font|descriptionEnd| */
-void djui_hud_set_font(s8 fontType);
+void djui_hud_set_font(enum (DjuiFontType) s8 fontType);
 /* |description|Gets the current DJUI HUD global color|descriptionEnd| */
 struct DjuiColor* djui_hud_get_color(void);
 /* |description|Sets the current DJUI HUD global color|descriptionEnd| */
