@@ -233,10 +233,11 @@ def parse_struct(struct_str, sortFields = False):
 
         field = {}
         field['type'] = field_type.strip()
-        if field_enum: field['enum'] = field_enum
         field['identifier'] = field_id.strip()
         field['field_str'] = field_str
         field['is_c_array'] = is_c_array
+        if field_enum:
+            field['enum'] = field_enum
 
         # handle function members
         if field['type'].startswith(cobject_function_identifier):
