@@ -1000,7 +1000,7 @@ def doc_function(fname, function):
 
     fparams, freturns = split_function_parameters_and_returns(function)
     for param in freturns:
-        ptype, plink = translate_type_to_lua(param['rtype'])
+        ptype, plink = translate_type_to_lua(param.get('enum', param['rtype']))
         rvalues.append((param['identifier'], ptype, plink))
 
     if rvalues:

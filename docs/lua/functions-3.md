@@ -3231,8 +3231,8 @@ Gets the current DJUI HUD rotation
 
 ### Returns
 - `integer`
-- `number`
-- `number`
+- [enum HudUtilsRotationPivotX](constants.md#enum-HudUtilsRotationPivotX)
+- [enum HudUtilsRotationPivotY](constants.md#enum-HudUtilsRotationPivotY)
 
 ### C Prototype
 `void djui_hud_get_rotation(RET s16 *rotation, RET enum (HudUtilsRotationPivotX) f32 *pivotX, RET enum (HudUtilsRotationPivotY) f32 *pivotY);`
@@ -3306,8 +3306,8 @@ Gets the current DJUI HUD text alignment
 - None
 
 ### Returns
-- `number`
-- `number`
+- [enum HudUtilsHorizontalAlign](constants.md#enum-HudUtilsHorizontalAlign)
+- [enum HudUtilsVerticalAlign](constants.md#enum-HudUtilsVerticalAlign)
 
 ### C Prototype
 `void djui_hud_get_text_alignment(RET enum (HudUtilsHorizontalAlign) f32 *textHAlign, RET enum (HudUtilsVerticalAlign) f32 *textVAlign);`
