@@ -44,8 +44,8 @@ void djui_gfx_displaylist_end(void) {
 struct CombinerState gCombinerState = { 0 };
 bool gCombinerUpdated = false;
 bool gCombinerOverride = false;
+u32 gCombinerCycleType = 0;
 static Gfx sDjuiCombineMode = { 0 };
-static u32 sCombinerCycleType = G_CYC_1CYCLE;
 
 static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum CombinerSource source) {
     if (alpha) {
@@ -108,9 +108,9 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
         default: break;
     }
 
-    if (sCombinerCycleType != cycleType) {
+    if (gCombinerCycleType != cycleType) {
         gDPSetCycleType(gDisplayListHead++, cycleType);
-        sCombinerCycleType = cycleType;
+        gCombinerCycleType = cycleType;
     }
 }
 

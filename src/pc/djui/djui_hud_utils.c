@@ -434,6 +434,7 @@ void djui_hud_set_combiner(u8 cycle, bool alpha,
 void djui_hud_reset_combiner() {
     gCombinerState.is2cycle = false;
     gCombinerOverride = false;
+    gCombinerCycleType = 0;
 }
 
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY) {

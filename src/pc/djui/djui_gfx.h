@@ -37,6 +37,7 @@ struct CombinerState {
 extern struct CombinerState gCombinerState;
 extern bool gCombinerUpdated;
 extern bool gCombinerOverride;
+extern u32 gCombinerCycleType;
 void djui_gfx_update_combine_mode(enum CombinerSource mode);
 
 /* |description|Gets the current visual scaling factor of DJUI|descriptionEnd| */
