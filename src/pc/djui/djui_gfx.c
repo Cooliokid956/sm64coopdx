@@ -44,7 +44,7 @@ void djui_gfx_displaylist_end(void) {
 struct CombinerState gCombinerState = { 0 };
 bool gCombinerUpdated = false;
 bool gCombinerOverride = false;
-u32 gCombinerCycleType = 0;
+u32 gCombinerCycleType = G_CYC_FILL;
 static Gfx sDjuiCombineMode = { 0 };
 
 static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum CombinerSource source) {
