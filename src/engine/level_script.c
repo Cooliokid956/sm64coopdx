@@ -27,6 +27,7 @@
 #include "surface_load.h"
 #include "level_table.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/lua/smlua.h"
 #include "pc/djui/djui.h"
 #include "pc/debug_context.h"
@@ -104,30 +105,7 @@ static s32 eval_script_op(s8 op, s32 arg) {
     return result;
 }
 
-struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o) {
-    if (gCurrAreaIndex < 0 || gCurrAreaIndex >= MAX_AREAS) {
-        return NULL;
-    }
-
-    struct ObjectWarpNode *warpNode = dynamic_pool_alloc(gLevelPool, sizeof(struct ObjectWarpNode));
-    if (!warpNode) {
-        return NULL;
-    }
-
-    warpNode->node.id = id;
-    warpNode->node.destLevel = destLevel + checkpoint;
-    warpNode->node.destArea = destArea;
-    warpNode->node.destNode = destNode;
-
-    warpNode->object = o;
-
-    warpNode->next = gAreas[gCurrAreaIndex].warpNodes;
-    gAreas[gCurrAreaIndex].warpNodes = warpNode;
-
-    return warpNode;
-}
-
-static void area_check_red_coin_or_secret(void *arg, bool isMacroObject) {
+void area_check_red_coin_or_secret(void *arg, bool isMacroObject) {
     const BehaviorScript *bhv = NULL;
     if (isMacroObject) {
         MacroObject index = (*((MacroObject *) arg) & 0x1FF) - 0x1F;
@@ -460,6 +438,8 @@ static void level_cmd_begin_area(void) {
 }
 
 static void level_cmd_end_area(void) {
+    level_register_custom_warp_nodes(gCurrLevelNum, sCurrAreaIndex);
+
     sCurrAreaIndex = -1;
     sCurrentCmd = CMD_NEXT;
 }

@@ -1455,7 +1455,7 @@ static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size, en
     if (newTotalSize > MOD_FS_MAX_SIZE) {
         mod_fs_raise_error(
             MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,
-            "modPath: %s, filepath: %s - Cannot write to file: exceeding total size: %u (max is: %u)", file->modFs->modPath, file->filepath, newTotalSize, MOD_FS_MAX_SIZE
+            "modPath: %s, filepath: %s - Cannot write to file: exceeding total size: %llu (max is: %u)", file->modFs->modPath, file->filepath, newTotalSize, MOD_FS_MAX_SIZE
         );
         return false;
     }

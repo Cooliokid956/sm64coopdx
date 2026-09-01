@@ -980,7 +980,6 @@
 <br />
 
 - level_script.h
-   - [area_create_warp_node](functions-3.md#area_create_warp_node)
 
 <br />
 
@@ -2039,6 +2038,11 @@
    - [warp_to_start_level](functions-7.md#warp_to_start_level)
    - [warp_exit_level](functions-7.md#warp_exit_level)
    - [warp_to_castle](functions-7.md#warp_to_castle)
+   - [level_create_warp_node](functions-7.md#level_create_warp_node)
+   - [level_create_warp_node_with_object](functions-7.md#level_create_warp_node_with_object)
+   - [level_get_warp_node](functions-7.md#level_get_warp_node)
+   - [level_delete_warp_node](functions-7.md#level_delete_warp_node)
+   - [level_clear_warp_nodes](functions-7.md#level_clear_warp_nodes)
 
 <br />
 
