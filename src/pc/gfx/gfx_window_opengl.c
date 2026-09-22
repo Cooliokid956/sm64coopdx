@@ -124,14 +124,12 @@ static void gfx_window_opengl_init(const char *window_title) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 #endif
 
-    int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
-    int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
-
     sSdlWindow = SDL_CreateWindow(
         window_title,
-        xpos, ypos, configWindow.w, configWindow.h,
+        configWindow.x, configWindow.y, configWindow.w, configWindow.h,
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
+    SDL_SetWindowBordered(sSdlWindow, !configWindow.borderless);
     sGlContext = SDL_GL_CreateContext(sSdlWindow);
 
     gfx_wm_set_window(sSdlWindow);

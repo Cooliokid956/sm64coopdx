@@ -108,7 +108,7 @@ bool djui_chat_box_render(struct DjuiBase* base) {
     djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - 32 - 8);
     if (chatBox->scrolling) {
         f32 yMax = chatBox->chatContainer->base.elem.height - chatBox->chatFlow->base.height.value;
-        f32 target = chatBox->chatFlow->base.y.value + (chatBox->scrollY - chatBox->chatFlow->base.y.value) * (configSmoothScrolling ? 0.5f : 1.f);
+        f32 target = chatBox->chatFlow->base.y.value + (chatBox->scrollY - chatBox->chatFlow->base.y.value) * (configSmoothScroll ? 0.5f : 1.f);
 
         chatBox->chatFlow->base.y.value = clamp(target, yMax, 0.f);
         if (target < yMax || 0.f < target) {

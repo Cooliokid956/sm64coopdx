@@ -92,14 +92,12 @@ static void gfx_window_dxgi_init(const char *window_title) {
 
     dxgi.window_title = window_title;
 
-    int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
-    int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
-
     sSdlWindow = SDL_CreateWindow(
         window_title,
-        xpos, ypos, configWindow.w, configWindow.h,
+        configWindow.x, configWindow.y, configWindow.w, configWindow.h,
         SDL_WINDOW_RESIZABLE
     );
+    SDL_SetWindowBordered(sSdlWindow, (SDL_bool)!configWindow.borderless);
 
     gfx_wm_set_window(sSdlWindow);
 

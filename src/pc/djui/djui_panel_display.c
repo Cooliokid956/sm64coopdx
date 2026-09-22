@@ -8,6 +8,9 @@
 
 #define OPTION_ORIGINAL_UNSET ((u32)-1)
 
+static struct DjuiRect* sWindowPosCont = NULL;
+static struct DjuiRect* sWindowResCont = NULL;
+static struct DjuiSelectionbox* sFullscreenResBox = NULL;
 static struct DjuiInputbox* sFrameLimitInput = NULL;
 static struct DjuiSelectionbox* sInterpolationSelectionBox = NULL;
 static struct DjuiText* sRestartText = NULL;
@@ -17,6 +20,10 @@ static u32 sGfxWindowBackendOriginal = OPTION_ORIGINAL_UNSET;
 
 static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
+
+    djui_base_set_visible(&sWindowPosCont->base, !configWindow.fullscreen);
+    djui_base_set_visible(&sWindowResCont->base, !configWindow.fullscreen);
+    djui_base_set_visible(&sFullscreenResBox->base, configWindow.fullscreen);
 }
 
 static void djui_panel_display_framerate_mode_change(UNUSED struct DjuiBase* caller) {
@@ -36,6 +43,20 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
     }
     djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || configFramerateMode != RRM_MANUAL));
+}
+
+static void djui_panel_window_limit_text_change(struct DjuiBase* caller) {
+    struct DjuiInputbox* inputbox = (struct DjuiInputbox*)caller;
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiColor* textColor = &theme->interactables.textColor;
+    s32 value = atoi(inputbox->buffer);
+    if ((value >= (caller->tag > &configWindow.y)) && value <= 4096) {
+        djui_inputbox_set_text_color(inputbox, textColor->r, textColor->g, textColor->b, textColor->a);
+        *(unsigned int *)caller->tag = value;
+        configWindow.settings_changed = true;
+    } else {
+        djui_inputbox_set_text_color(inputbox, 255, 0, 0, 255);
+    }
 }
 
 static void djui_panel_display_update_restart_text(UNUSED struct DjuiBase* caller) {
@@ -67,6 +88,109 @@ void djui_panel_display_create(struct DjuiBase* caller) {
     if (sGfxWindowBackendOriginal == OPTION_ORIGINAL_UNSET) { sGfxWindowBackendOriginal = configGraphicsBackend; }
 
     {
+        struct DjuiRect* windowPosCont = djui_rect_container_create(body, 32);
+        {
+            struct DjuiText* text1 = djui_text_create(&windowPosCont->base, DLANG(DISPLAY, POSITION));
+            djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_color(&text1->base, 220, 220, 220, 255);
+            djui_base_set_size(&text1->base, 0.585f, 64);
+            djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+            djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
+
+            struct DjuiRect* inputsCont = djui_rect_container_create(&windowPosCont->base, 32);
+            djui_base_set_alignment(&inputsCont->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            djui_base_set_size_type(&inputsCont->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&inputsCont->base, 0.45f, 32);
+            {
+                struct DjuiInputbox* widthInput = djui_inputbox_create(&inputsCont->base, 6);
+                widthInput->base.width.type = DJUI_SVT_RELATIVE;
+                widthInput->base.width.value = 0.45f;
+                widthInput->base.tag = (s64)&configWindow.x;
+                char widthString[6] = { 0 };
+                snprintf(widthString, 6, "%d", configWindow.x);
+                djui_inputbox_set_text(widthInput, widthString);
+                djui_interactable_hook_value_change(&widthInput->base, djui_panel_window_limit_text_change);
+    
+                struct DjuiInputbox* heightInput = djui_inputbox_create(&inputsCont->base, 6);
+                heightInput->base.hAlign = DJUI_HALIGN_RIGHT;
+                heightInput->base.width.type = DJUI_SVT_RELATIVE;
+                heightInput->base.width.value = 0.45f;
+                heightInput->base.tag = (s64)&configWindow.y;
+                char heightString[6] = { 0 };
+                snprintf(heightString, 6, "%d", configWindow.y);
+                djui_inputbox_set_text(heightInput, heightString);
+                djui_interactable_hook_value_change(&heightInput->base, djui_panel_window_limit_text_change);
+            }
+
+            sWindowPosCont = windowPosCont;
+        }
+
+        struct DjuiRect* windowResCont = djui_rect_container_create(body, 32);
+        {
+            struct DjuiText* text1 = djui_text_create(&windowResCont->base, DLANG(DISPLAY, RESOLUTION));
+            djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_color(&text1->base, 220, 220, 220, 255);
+            djui_base_set_size(&text1->base, 0.585f, 64);
+            djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+            djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
+
+            struct DjuiRect* inputsCont = djui_rect_container_create(&windowResCont->base, 32);
+            djui_base_set_alignment(&inputsCont->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            djui_base_set_size_type(&inputsCont->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&inputsCont->base, 0.45f, 32);
+            {
+                struct DjuiInputbox* widthInput = djui_inputbox_create(&inputsCont->base, 6);
+                widthInput->base.width.type = DJUI_SVT_RELATIVE;
+                widthInput->base.width.value = 0.45f;
+                widthInput->base.tag = (s64)&configWindow.w;
+                char widthString[6] = { 0 };
+                snprintf(widthString, 6, "%d", configWindow.w);
+                djui_inputbox_set_text(widthInput, widthString);
+                djui_interactable_hook_value_change(&widthInput->base, djui_panel_window_limit_text_change);
+    
+                struct DjuiInputbox* heightInput = djui_inputbox_create(&inputsCont->base, 6);
+                heightInput->base.width.type = DJUI_SVT_RELATIVE;
+                heightInput->base.width.value = 0.45f;
+                heightInput->base.hAlign = DJUI_HALIGN_RIGHT;
+                heightInput->base.tag = (s64)&configWindow.h;
+                char heightString[6] = { 0 };
+                snprintf(heightString, 6, "%d", configWindow.h);
+                djui_inputbox_set_text(heightInput, heightString);
+                djui_interactable_hook_value_change(&heightInput->base, djui_panel_window_limit_text_change);
+            }
+
+            sWindowResCont = windowResCont;
+        }
+
+        SDL_DisplayMode mode;
+        int display = SDL_GetWindowDisplayIndex(gfx_wm_get_window()); printf("display %d\n", display);
+        int modes = SDL_GetNumDisplayModes(display); printf("%d mode\ns", modes);
+
+        char** displayModes = calloc(modes, sizeof(char*));
+        for (int i = 0; i < modes; i++) {
+            SDL_GetDisplayMode(display, i, &mode);
+
+            displayModes[i] = malloc(sizeof(char) * 20);
+            snprintf(displayModes[i], 20, "%dx%d@%dhz", mode.w, mode.h, mode.refresh_rate);
+            printf("mode %d: %dx%d@%dhz (%s)\n", i, mode.w, mode.h, mode.refresh_rate, SDL_GetPixelFormatName(mode.format));
+        }
+
+        sFullscreenResBox = djui_selectionbox_create(body, DLANG(DISPLAY, RESOLUTION), displayModes, modes, &configWindow.display_mode, djui_panel_display_apply);
+
+        for (int i = 0; i < modes; i++) {
+            free(displayModes[i]);
+        }
+
+        free(displayModes);
+        
+        if (configWindow.fullscreen) {
+            djui_base_set_visible(&sWindowPosCont->base, false);
+            djui_base_set_visible(&sWindowResCont->base, false);
+        } else {
+            djui_base_set_visible(&sFullscreenResBox->base, false);
+        }
+
+        djui_checkbox_create(body, DLANG(DISPLAY, BORDERLESS), &configWindow.borderless, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, FULLSCREEN), &configWindow.fullscreen, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
@@ -80,18 +204,18 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         char* framerateModeChoices[3] = { DLANG(DISPLAY, AUTO), DLANG(DISPLAY, MANUAL), DLANG(DISPLAY, UNCAPPED) };
         djui_selectionbox_create(body, DLANG(DISPLAY, FRAMERATE_MODE), framerateModeChoices, 3, &configFramerateMode, djui_panel_display_framerate_mode_change);
 
-        struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
+        struct DjuiRect* frameLimitRect = djui_rect_container_create(body, 32);
         {
             if (configFrameLimit < 30) { configFrameLimit = 30; }
             if (configFrameLimit > 3000) { configFrameLimit = 3000; }
-            struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(DISPLAY, FRAME_LIMIT));
+            struct DjuiText* text1 = djui_text_create(&frameLimitRect->base, DLANG(DISPLAY, FRAME_LIMIT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text1->base, 220, 220, 220, 255);
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 32);
+            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&frameLimitRect->base, 32);
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputbox1->base, 0.45f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);

@@ -6,9 +6,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// special value for window position that signifies centered position
-#define WAPI_WIN_CENTERPOS 0xFFFFFFFF
-
 #define WAPI_CLIPBOARD_BUFSIZ 1024
 
 typedef bool (*kb_callback_t)(int code);

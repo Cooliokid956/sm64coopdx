@@ -67,13 +67,15 @@ char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
 
 // Video/audio stuff
 ConfigWindow configWindow = {
-    .x = WAPI_WIN_CENTERPOS,
-    .y = WAPI_WIN_CENTERPOS,
+    .x = SDL_WINDOWPOS_CENTERED,
+    .y = SDL_WINDOWPOS_CENTERED,
     .w = DESIRED_SCREEN_WIDTH,
     .h = DESIRED_SCREEN_HEIGHT,
     .vsync = 1,
     .reset = false,
+    .borderless = false,
     .fullscreen = false,
+    .display_mode = 0,
     .exiting_fullscreen = false,
     .settings_changed = false,
     .msaa = 0,
@@ -162,7 +164,7 @@ bool         configBackgroundGamepad              = true;
 bool         configExtendedReports                = false;
 bool         configDisableGamepads                = false;
 bool         configUseStandardKeyBindingsChat     = false;
-bool         configSmoothScrolling                = false;
+bool         configSmoothScroll                   = true;
 // free camera settings
 bool         configEnableFreeCamera               = false;
 bool         configFreeCameraAnalog               = false;
@@ -252,6 +254,8 @@ bool configExCoopTheme = false;
 
 static const struct ConfigOption options[] = {
     // window settings
+    {.name = "display_mode",                   .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.display_mode},
+    {.name = "borderless",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.borderless},
     {.name = "fullscreen",                     .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
     {.name = "window_x",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.x},
     {.name = "window_y",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.y},
@@ -314,7 +318,7 @@ static const struct ConfigOption options[] = {
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
-    {.name = "smooth_scrolling",               .type = CONFIG_TYPE_BOOL, .boolValue = &configSmoothScrolling},
+    {.name = "smooth_scroll",                  .type = CONFIG_TYPE_BOOL, .boolValue = &configSmoothScroll},
     {.name = "stick_rotate_left",              .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateLeft},
     {.name = "stick_invert_left_x",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftX},
     {.name = "stick_invert_left_y",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftY},

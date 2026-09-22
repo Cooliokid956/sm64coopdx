@@ -43,7 +43,7 @@ static void (*kb_text_editing)(char*, int) = NULL;
 
 static void (*m_scroll)(float, float) = NULL;
 
-#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
+#define IS_FULLSCREEN ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN) != 0)
 
 // Getter for the current window backend API
 static struct GfxWindowBackendAPI *gfx_wm_backend(void) {
@@ -64,12 +64,11 @@ static void gfx_wm_set_fullscreen(void) {
         configWindow.fullscreen = false;
     }
 
-    if (configWindow.fullscreen == IS_FULLSCREEN()) {
-        return;
-    }
-
     if (configWindow.fullscreen) {
-        SDL_SetWindowFullscreen(sSdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_SetWindowFullscreen(sSdlWindow, SDL_WINDOW_FULLSCREEN);
+        SDL_DisplayMode mode;
+        SDL_GetDisplayMode(SDL_GetWindowDisplayIndex(sSdlWindow), configWindow.display_mode, &mode);
+        SDL_SetWindowDisplayMode(sSdlWindow, &mode);
     } else {
         SDL_SetWindowFullscreen(sSdlWindow, 0);
         SDL_ShowCursor(1);
@@ -85,8 +84,8 @@ static void gfx_wm_reset_dimension_and_pos(void) {
     }
 
     if (configWindow.reset) {
-        configWindow.x = WAPI_WIN_CENTERPOS;
-        configWindow.y = WAPI_WIN_CENTERPOS;
+        configWindow.x = SDL_WINDOWPOS_CENTERED;
+        configWindow.y = SDL_WINDOWPOS_CENTERED;
         configWindow.w = DESIRED_SCREEN_WIDTH;
         configWindow.h = DESIRED_SCREEN_HEIGHT;
         configWindow.reset = false;
@@ -94,11 +93,9 @@ static void gfx_wm_reset_dimension_and_pos(void) {
         return;
     }
 
-    int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
-    int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
-
+    SDL_SetWindowBordered(sSdlWindow, !configWindow.borderless);
     SDL_SetWindowSize(sSdlWindow, configWindow.w, configWindow.h);
-    SDL_SetWindowPosition(sSdlWindow, xpos, ypos);
+    SDL_SetWindowPosition(sSdlWindow, configWindow.x, configWindow.y);
 }
 
 void gfx_wm_init(const char *window_title) {
@@ -142,10 +139,7 @@ void gfx_wm_get_dimensions(uint32_t *width, uint32_t *height) {
         if (height) { *height = 240; }
         return;
     }
-    int w, h;
-    SDL_GetWindowSize(sSdlWindow, &w, &h);
-    if (width) { *width = w; }
-    if (height) { *height = h; }
+    SDL_GetWindowSize(sSdlWindow, (int*)width, (int*)height);
 }
 
 static void gfx_wm_onkeydown(int scancode) {
@@ -201,7 +195,7 @@ void gfx_wm_handle_events(void) {
             case SDL_TEXTINPUT:
                 if (kb_text_input) { kb_text_input(event.text.text); }
                 break;
-            case SDL_TEXTEDITING: //IME composition
+            case SDL_TEXTEDITING: // IME composition
                 if (kb_text_editing) { kb_text_editing(event.edit.text,event.edit.start); }
                 break;
             case SDL_KEYDOWN:
@@ -214,7 +208,7 @@ void gfx_wm_handle_events(void) {
                 gfx_wm_onscroll(event.wheel.preciseX, event.wheel.preciseY);
                 break;
             case SDL_WINDOWEVENT:
-                if (!IS_FULLSCREEN()) {
+                if (!IS_FULLSCREEN) {
                     switch (event.window.event) {
                         case SDL_WINDOWEVENT_MOVED:
                             if (!configWindow.exiting_fullscreen) {
