@@ -102,24 +102,24 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&inputsCont->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputsCont->base, 0.45f, 32);
             {
-                struct DjuiInputbox* widthInput = djui_inputbox_create(&inputsCont->base, 6);
-                widthInput->base.width.type = DJUI_SVT_RELATIVE;
-                widthInput->base.width.value = 0.45f;
-                widthInput->base.tag = (s64)&configWindow.x;
+                struct DjuiInputbox* x = djui_inputbox_create(&inputsCont->base, 6);
+                x->base.width.type = DJUI_SVT_RELATIVE;
+                x->base.width.value = 0.45f;
+                x->base.tag = (s64)&configWindow.x;
                 char widthString[6] = { 0 };
                 snprintf(widthString, 6, "%d", configWindow.x);
-                djui_inputbox_set_text(widthInput, widthString);
-                djui_interactable_hook_value_change(&widthInput->base, djui_panel_window_limit_text_change);
+                djui_inputbox_set_text(x, widthString);
+                djui_interactable_hook_value_change(&x->base, djui_panel_window_limit_text_change);
     
-                struct DjuiInputbox* heightInput = djui_inputbox_create(&inputsCont->base, 6);
-                heightInput->base.hAlign = DJUI_HALIGN_RIGHT;
-                heightInput->base.width.type = DJUI_SVT_RELATIVE;
-                heightInput->base.width.value = 0.45f;
-                heightInput->base.tag = (s64)&configWindow.y;
+                struct DjuiInputbox* y = djui_inputbox_create(&inputsCont->base, 6);
+                y->base.hAlign = DJUI_HALIGN_RIGHT;
+                y->base.width.type = DJUI_SVT_RELATIVE;
+                y->base.width.value = 0.45f;
+                y->base.tag = (s64)&configWindow.y;
                 char heightString[6] = { 0 };
                 snprintf(heightString, 6, "%d", configWindow.y);
-                djui_inputbox_set_text(heightInput, heightString);
-                djui_interactable_hook_value_change(&heightInput->base, djui_panel_window_limit_text_change);
+                djui_inputbox_set_text(y, heightString);
+                djui_interactable_hook_value_change(&y->base, djui_panel_window_limit_text_change);
             }
 
             sWindowPosCont = windowPosCont;
@@ -139,24 +139,24 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&inputsCont->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputsCont->base, 0.45f, 32);
             {
-                struct DjuiInputbox* widthInput = djui_inputbox_create(&inputsCont->base, 6);
-                widthInput->base.width.type = DJUI_SVT_RELATIVE;
-                widthInput->base.width.value = 0.45f;
-                widthInput->base.tag = (s64)&configWindow.w;
+                struct DjuiInputbox* width = djui_inputbox_create(&inputsCont->base, 6);
+                width->base.width.type = DJUI_SVT_RELATIVE;
+                width->base.width.value = 0.45f;
+                width->base.tag = (s64)&configWindow.w;
                 char widthString[6] = { 0 };
                 snprintf(widthString, 6, "%d", configWindow.w);
-                djui_inputbox_set_text(widthInput, widthString);
-                djui_interactable_hook_value_change(&widthInput->base, djui_panel_window_limit_text_change);
+                djui_inputbox_set_text(width, widthString);
+                djui_interactable_hook_value_change(&width->base, djui_panel_window_limit_text_change);
     
-                struct DjuiInputbox* heightInput = djui_inputbox_create(&inputsCont->base, 6);
-                heightInput->base.width.type = DJUI_SVT_RELATIVE;
-                heightInput->base.width.value = 0.45f;
-                heightInput->base.hAlign = DJUI_HALIGN_RIGHT;
-                heightInput->base.tag = (s64)&configWindow.h;
+                struct DjuiInputbox* height = djui_inputbox_create(&inputsCont->base, 6);
+                height->base.width.type = DJUI_SVT_RELATIVE;
+                height->base.width.value = 0.45f;
+                height->base.hAlign = DJUI_HALIGN_RIGHT;
+                height->base.tag = (s64)&configWindow.h;
                 char heightString[6] = { 0 };
                 snprintf(heightString, 6, "%d", configWindow.h);
-                djui_inputbox_set_text(heightInput, heightString);
-                djui_interactable_hook_value_change(&heightInput->base, djui_panel_window_limit_text_change);
+                djui_inputbox_set_text(height, heightString);
+                djui_interactable_hook_value_change(&height->base, djui_panel_window_limit_text_change);
             }
 
             sWindowResCont = windowResCont;
