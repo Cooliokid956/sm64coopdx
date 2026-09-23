@@ -32,31 +32,13 @@ static void djui_panel_display_framerate_mode_change(UNUSED struct DjuiBase* cal
 }
 
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
-    struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
-    struct DjuiColor* textColor = &theme->interactables.textColor;
-    s32 frameLimit = atoi(inputbox1->buffer);
-    if (frameLimit >= 30 && frameLimit <= 3000) {
-        djui_inputbox_set_text_color(inputbox1, textColor->r, textColor->g, textColor->b, textColor->a);
-        configFrameLimit = frameLimit;
-    } else {
-        djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
-    }
+    djui_input_number_text_change(caller);
     djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || configFramerateMode != RRM_MANUAL));
 }
 
 static void djui_panel_window_limit_text_change(struct DjuiBase* caller) {
-    struct DjuiInputbox* inputbox = (struct DjuiInputbox*)caller;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
-    struct DjuiColor* textColor = &theme->interactables.textColor;
-    s32 value = atoi(inputbox->buffer);
-    if ((value >= (caller->tag > &configWindow.y)) && value <= 4096) {
-        djui_inputbox_set_text_color(inputbox, textColor->r, textColor->g, textColor->b, textColor->a);
-        *(unsigned int *)caller->tag = value;
-        configWindow.settings_changed = true;
-    } else {
-        djui_inputbox_set_text_color(inputbox, 255, 0, 0, 255);
-    }
+    djui_input_number_text_change(caller);
+    configWindow.settings_changed = true;
 }
 
 static void djui_panel_display_update_restart_text(UNUSED struct DjuiBase* caller) {
@@ -102,24 +84,16 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&inputsCont->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputsCont->base, 0.45f, 32);
             {
-                struct DjuiInputbox* x = djui_inputbox_create(&inputsCont->base, 6);
-                x->base.width.type = DJUI_SVT_RELATIVE;
-                x->base.width.value = 0.45f;
-                x->base.tag = (s64)&configWindow.x;
-                char widthString[6] = { 0 };
-                snprintf(widthString, 6, "%d", configWindow.x);
-                djui_inputbox_set_text(x, widthString);
-                djui_interactable_hook_value_change(&x->base, djui_panel_window_limit_text_change);
+                struct DjuiInputNumber* x = djui_input_number_create(&inputsCont->base, &configWindow.x, 0, 1920);
+                x->input.base.width.type = DJUI_SVT_RELATIVE;
+                x->input.base.width.value = 0.45f;
+                djui_interactable_hook_value_change(&x->input.base, djui_panel_window_limit_text_change);
     
-                struct DjuiInputbox* y = djui_inputbox_create(&inputsCont->base, 6);
-                y->base.hAlign = DJUI_HALIGN_RIGHT;
-                y->base.width.type = DJUI_SVT_RELATIVE;
-                y->base.width.value = 0.45f;
-                y->base.tag = (s64)&configWindow.y;
-                char heightString[6] = { 0 };
-                snprintf(heightString, 6, "%d", configWindow.y);
-                djui_inputbox_set_text(y, heightString);
-                djui_interactable_hook_value_change(&y->base, djui_panel_window_limit_text_change);
+                struct DjuiInputNumber* y = djui_input_number_create(&inputsCont->base, &configWindow.y, 0, 1080);
+                y->input.base.hAlign = DJUI_HALIGN_RIGHT;
+                y->input.base.width.type = DJUI_SVT_RELATIVE;
+                y->input.base.width.value = 0.45f;
+                djui_interactable_hook_value_change(&y->input.base, djui_panel_window_limit_text_change);
             }
 
             sWindowPosCont = windowPosCont;
@@ -139,24 +113,16 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&inputsCont->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputsCont->base, 0.45f, 32);
             {
-                struct DjuiInputbox* width = djui_inputbox_create(&inputsCont->base, 6);
-                width->base.width.type = DJUI_SVT_RELATIVE;
-                width->base.width.value = 0.45f;
-                width->base.tag = (s64)&configWindow.w;
-                char widthString[6] = { 0 };
-                snprintf(widthString, 6, "%d", configWindow.w);
-                djui_inputbox_set_text(width, widthString);
-                djui_interactable_hook_value_change(&width->base, djui_panel_window_limit_text_change);
+                struct DjuiInputNumber* width = djui_input_number_create(&inputsCont->base, &configWindow.w, 0, 1920);
+                width->input.base.width.type = DJUI_SVT_RELATIVE;
+                width->input.base.width.value = 0.45f;
+                djui_interactable_hook_value_change(&width->input.base, djui_panel_window_limit_text_change);
     
-                struct DjuiInputbox* height = djui_inputbox_create(&inputsCont->base, 6);
-                height->base.width.type = DJUI_SVT_RELATIVE;
-                height->base.width.value = 0.45f;
-                height->base.hAlign = DJUI_HALIGN_RIGHT;
-                height->base.tag = (s64)&configWindow.h;
-                char heightString[6] = { 0 };
-                snprintf(heightString, 6, "%d", configWindow.h);
-                djui_inputbox_set_text(height, heightString);
-                djui_interactable_hook_value_change(&height->base, djui_panel_window_limit_text_change);
+                struct DjuiInputNumber* height = djui_input_number_create(&inputsCont->base, &configWindow.h, 0, 1080);
+                height->input.base.width.type = DJUI_SVT_RELATIVE;
+                height->input.base.width.value = 0.45f;
+                height->input.base.hAlign = DJUI_HALIGN_RIGHT;
+                djui_interactable_hook_value_change(&height->input.base, djui_panel_window_limit_text_change);
             }
 
             sWindowResCont = windowResCont;
@@ -215,16 +181,14 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&frameLimitRect->base, 32);
-            djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&inputbox1->base, 0.45f, 32);
-            djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            char frameLimitString[32] = { 0 };
-            snprintf(frameLimitString, 32, "%d", configFrameLimit);
-            djui_inputbox_set_text(inputbox1, frameLimitString);
-            djui_interactable_hook_value_change(&inputbox1->base, djui_panel_display_frame_limit_text_change);
-            djui_base_set_enabled(&inputbox1->base, configFramerateMode == RRM_MANUAL);
-            sFrameLimitInput = inputbox1;
+            struct DjuiInputNumber* number = djui_input_number_create(&frameLimitRect->base, &configFrameLimit, 30, 3000);
+            struct DjuiInputbox* inputbox = &number->input;
+            djui_base_set_size_type(&inputbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&inputbox->base, 0.45f, 32);
+            djui_base_set_alignment(&inputbox->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            djui_interactable_hook_value_change(&inputbox->base, djui_panel_display_frame_limit_text_change);
+            djui_base_set_enabled(&inputbox->base, configFramerateMode == RRM_MANUAL);
+            sFrameLimitInput = inputbox;
         }
 
         char* interpChoices[2] = { DLANG(DISPLAY, FAST), DLANG(DISPLAY, ACCURATE) };

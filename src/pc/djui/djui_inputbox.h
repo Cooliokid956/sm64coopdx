@@ -34,4 +34,5 @@ void djui_inputbox_on_key_up(struct DjuiBase* base, int scancode);
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text);
 void djui_inputbox_on_text_editing(struct DjuiBase *base, char* text, int cursorPos);
 
+struct DjuiInputbox* djui_inputbox_init(struct DjuiBase* parent, struct DjuiInputbox* inputbox, u16 bufferSize);
 struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize);

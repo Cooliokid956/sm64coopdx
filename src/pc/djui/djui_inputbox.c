@@ -679,8 +679,7 @@ static void djui_inputbox_destroy(struct DjuiBase* base) {
     free(inputbox);
 }
 
-struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize) {
-    struct DjuiInputbox* inputbox = calloc(1, sizeof(struct DjuiInputbox));
+struct DjuiInputbox* djui_inputbox_init(struct DjuiBase* parent, struct DjuiInputbox* inputbox, u16 bufferSize) {
     struct DjuiBase* base         = &inputbox->base;
     struct DjuiTheme* theme       = gDjuiThemes[configDjuiTheme];
     struct DjuiColor* textColor = &theme->interactables.textColor;
@@ -702,4 +701,8 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     djui_inputbox_update_style(base);
 
     return inputbox;
+}
+
+struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize) {
+    return djui_inputbox_init(parent, calloc(1, sizeof(struct DjuiInputbox)), bufferSize);
 }
