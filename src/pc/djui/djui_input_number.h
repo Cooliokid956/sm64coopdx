@@ -6,6 +6,7 @@ struct DjuiInputNumber {
     int min, max;
     int *value;
     int saved;
+    bool valid;
 };
 
 void djui_input_number_text_change(struct DjuiBase *caller);

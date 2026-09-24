@@ -12,7 +12,7 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
     struct DjuiInputNumber *number = (struct DjuiInputNumber*)base;
     struct DjuiInputbox *inputbox = &number->input;
     if (*text == '-') {
-        if (*inputbox->buffer != '-') {
+        if (*inputbox->buffer != '-' && number->min < 0) {
             u16 sel[2];
             sel[0] = ++inputbox->selection[0];
             sel[1] = ++inputbox->selection[1];
@@ -57,7 +57,8 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
     struct DjuiTheme *theme = gDjuiThemes[configDjuiTheme];
     struct DjuiColor *textColor = &theme->interactables.textColor;
     int value = atoi(number->input.buffer);
-    if (value >= number->min && value <= number->max) {
+    number->valid = value >= number->min && value <= number->max;
+    if (number->valid) {
         djui_inputbox_set_text_color(&number->input, textColor->r, textColor->g, textColor->b, textColor->a);
         *number->value = number->saved = value;
     } else {
@@ -71,6 +72,7 @@ struct DjuiInputNumber *djui_input_number_create(struct DjuiBase *parent, int *v
     number->saved = *value;
     number->min = min;
     number->max = max;
+    number->valid = true;
     djui_interactable_hook_text_input(&number->input.base, djui_input_number_on_text_input);
     djui_interactable_hook_value_change(&number->input.base, djui_input_number_text_change);
     number->input.base.on_render_pre = djui_input_number_render_pre;
