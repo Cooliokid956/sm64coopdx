@@ -75,6 +75,6 @@ struct DjuiInputNumber *djui_input_number_create(struct DjuiBase *parent, int *v
     djui_interactable_hook_value_change(&number->input.base, djui_input_number_text_change);
     number->input.base.on_render_pre = djui_input_number_render_pre;
     
-    snprintf(number->input.buffer, number->input.bufferSize, "%d", *value);
+    djui_inputbox_set_number(&number->input, *value);
     return number;
 }

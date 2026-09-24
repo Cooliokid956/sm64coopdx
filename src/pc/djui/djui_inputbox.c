@@ -62,6 +62,10 @@ void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text) {
     snprintf(inputbox->buffer, inputbox->bufferSize, "%s", text);
 }
 
+void djui_inputbox_set_number(struct DjuiInputbox* inputbox, int value) {
+    snprintf(inputbox->buffer, inputbox->bufferSize, "%d", value);
+}
+
 void djui_inputbox_select_all(struct DjuiInputbox* inputbox) {
     inputbox->selection[1] = 0;
     inputbox->selection[0] = djui_unicode_len(inputbox->buffer);

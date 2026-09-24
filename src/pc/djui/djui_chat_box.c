@@ -629,10 +629,10 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     djui_base_set_size_type(ciBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(ciBase, 1.0f, 32);
     djui_base_set_alignment(ciBase, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
-    djui_interactable_hook_key(&chatInput->base, djui_chat_box_input_on_key_down, djui_inputbox_on_key_up);
-    djui_interactable_hook_text_input(&chatInput->base, djui_chat_box_input_on_text_input);
-    djui_interactable_hook_text_editing(&chatInput->base, djui_chat_box_input_on_text_editing);
-    djui_interactable_hook_scroll(&chatInput->base, djui_chat_box_input_on_scroll);
+    djui_interactable_hook_key(ciBase, djui_chat_box_input_on_key_down, djui_inputbox_on_key_up);
+    djui_interactable_hook_text_input(ciBase, djui_chat_box_input_on_text_input);
+    djui_interactable_hook_text_editing(ciBase, djui_chat_box_input_on_text_editing);
+    djui_interactable_hook_scroll(ciBase, djui_chat_box_input_on_scroll);
     chatBox->chatInput = chatInput;
 
     gDjuiChatBox = chatBox;
