@@ -17,7 +17,7 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
 
     // toggle sign
     if (*text == '-') {
-        if (*msg != '-' && number->min < 0) {
+        if (number->type & NUMTYPE_SIGNED && *msg != '-' && number->min < 0) {
             memmove(msg + 1, msg, strlen(msg) + 1);
             *msg = '-'; sel[0]++; sel[1]++;
             djui_input_number_text_change(base);
