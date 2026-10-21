@@ -17,6 +17,7 @@
 struct Mods gLocalMods = { 0 };
 struct Mods gRemoteMods = { 0 };
 struct Mods gActiveMods = { 0 };
+bool gModsPausable = true;
 
 char gRemoteModsBasePath[SYS_MAX_PATH] = { 0 };
 
@@ -48,24 +49,10 @@ u16 mods_get_enabled_count(void) {
     u16 enabled = 0;
 
     for (u16 i = 0; i < gLocalMods.entryCount; i++) {
-        if (!gLocalMods.entries[i]->enabled) { continue; }
-        enabled++;
+        if (gLocalMods.entries[i]->enabled) { enabled++; }
     }
 
     return enabled;
-}
-
-bool mods_get_all_pausable(void) {
-    bool pausable = true;
-
-    for (u16 i = 0; i < gActiveMods.entryCount; i++) {
-        if (!gActiveMods.entries[i]->pausable) {
-            pausable = false;
-            break;
-        }
-    }
-
-    return pausable;
 }
 
 static void mods_local_store_enabled(void) {
@@ -73,7 +60,7 @@ static void mods_local_store_enabled(void) {
     struct LocalEnabledPath* prev = NULL;
     struct Mods* mods = &gLocalMods;
 
-    for (u16 i = 0; i < mods->entryCount; i ++) {
+    for (u16 i = 0; i < mods->entryCount; i++) {
         if (!mods->entries[i]->enabled) { continue; }
 
         struct LocalEnabledPath* n = calloc(1, sizeof(struct LocalEnabledPath));
@@ -148,14 +135,11 @@ void mods_activate(struct Mods* mods) {
         return;
     }
 
-    // copy enabled entries
-    gActiveMods.entryCount = 0;
-    gActiveMods.size = 0;
+    // activate enabled entries
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
         if (mod->enabled) {
-            mod->index = gActiveMods.entryCount;
-            gActiveMods.entries[gActiveMods.entryCount++] = mod;
+            gActiveMods.entries[mod->index = gActiveMods.entryCount++] = mod;
             gActiveMods.size += mod->size;
             mod_activate(mod);
         }
@@ -312,7 +296,7 @@ void mods_clear(struct Mods* mods) {
     if (mods == &gActiveMods) {
         // don't clear the mods of gActiveMods since they're a copy
         // just close all file pointers
-        for (int i = 0; i < mods->entryCount; i ++) {
+        for (int i = 0; i < mods->entryCount; i++) {
             struct Mod* mod = mods->entries[i];
             for (int j = 0; j < mod->fileCount; j++) {
                 struct ModFile* file = &mod->files[j];
@@ -323,9 +307,11 @@ void mods_clear(struct Mods* mods) {
                 }
             }
         }
+
+        gModsPausable = true;
     } else {
         // clear mods of gLocalMods and gRemoteMods
-        for (int i = 0; i < mods->entryCount; i ++) {
+        for (int i = 0; i < mods->entryCount; i++) {
             struct Mod* mod = mods->entries[i];
             mod_clear(mod);
             mods->entries[i] = NULL;

@@ -3049,7 +3049,7 @@ void update_lakitu(struct Camera *c) {
 
     u8 allowPauseCheck = (c->mode != CAMERA_MODE_NEWCAM);
 
-    if (allowPauseCheck && (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN)) {
+    if (allowPauseCheck && network_check_singleplayer_pause()) {
     } else {
         if (c->cutscene) {
         }
@@ -3724,9 +3724,13 @@ void zoom_out_if_paused_and_outside(struct GraphNodeCamera *camera) {
         areaMaskIndex = 0;
         areaBit = 0;
     }
-    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && !gDjuiInPlayerMenu && !get_first_person_enabled()) {
+    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN && gLevelValues.zoomOutCameraOnPause && !gDjuiInPlayerMenu && !get_first_person_enabled()) {
         if (sFramesPaused >= 2) {
             if (sZoomOutAreaMasks[areaMaskIndex] & areaBit) {
+                if (sFramesPaused == 2) {
+                    skip_camera_interpolation();
+                    sFramesPaused++;
+                }
 
                 camera->focus[0] = gCamera->areaCenX;
                 camera->focus[1] = (sMarioCamState->pos[1] + gCamera->areaCenY) / 2;
@@ -9419,7 +9423,7 @@ void cutscene_dialog_start(struct Camera *c) {
 
 
     cutscene_soften_music(c);
-    //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_DIALOG);
+    set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_DIALOG);
 
 #ifndef VERSION_JP
     if (c->mode == CAMERA_MODE_BOSS_FIGHT) {
@@ -9586,7 +9590,7 @@ void cutscene_read_message(struct Camera *c) {
         case 0:
             if (get_dialog_id() != DIALOG_NONE) {
                 sCutsceneVars[0].angle[0] += 1;
-                //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_DIALOG);
+                set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_DIALOG);
             }
             break;
         // Leave the dialog.

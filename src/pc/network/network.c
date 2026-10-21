@@ -35,6 +35,7 @@
 #include "game/first_person_cam.h"
 #include "game/envfx_snow.h"
 #include "game/mario.h"
+#include "game/obj_behaviors.h"
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
 #include "audio/load.h"

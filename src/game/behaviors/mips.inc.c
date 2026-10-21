@@ -284,7 +284,7 @@ void bhv_mips_held(void) {
             dialogID = gBehaviorValues.dialogs.Mips2Dialog;
 
         if (should_start_or_continue_dialog(&gMarioStates[o->heldByPlayerIndex], o) && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_mips_held_continue_dialog) == 2) {
-            //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
+            o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
             if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, dialogID)) {
                 o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
                 o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;

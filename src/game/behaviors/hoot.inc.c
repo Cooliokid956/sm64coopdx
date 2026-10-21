@@ -207,7 +207,7 @@ void hoot_action_loop(void) {
             o->oMoveAnglePitch = 0x71C;
 
             if (o->oPosY < 2700.0f) {
-                //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
+                set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
 
                 if (marioState == &gMarioStates[0] && cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.HootTiredDialog)) {
                     clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);

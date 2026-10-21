@@ -253,9 +253,8 @@ bool pressed_pause(void) {
     } else {
         u32 dialogActive = get_dialog_id() != DIALOG_NONE;
         u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
-        u32 firstPerson = gMarioState->action == ACT_FIRST_PERSON;
 
-        if (!intangible && !dialogActive && !firstPerson && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE) {
+        if (!intangible && !dialogActive && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE) {
             return (gPlayer1Controller->buttonPressed & START_BUTTON);
         }
     }
@@ -315,7 +314,7 @@ void load_level_init_text(u32 arg) {
     }
 
     if (!gotAchievement) {
-        //level_set_transition(-1, NULL);
+        level_set_transition(-1, NULL);
         create_dialog_box(dialogID);
         // since coop doesn't use timefreeze, freeze mario to preserve no input when there
         // is a dialog on screen when loading a new level
@@ -1280,6 +1279,8 @@ void stop_demo(UNUSED struct DjuiBase* caller) {
 int gPressedStart = 0;
 
 s32 play_mode_normal(void) {
+    if (sTransitionTimer < 0 && !is_other_player_active()) { return 0; }
+
     if (!gDjuiInMainMenu) {
         if (gCurrDemoInput != NULL) {
             print_intro_text();
@@ -1340,7 +1341,7 @@ s32 play_mode_normal(void) {
     if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
         if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
             set_play_mode(PLAY_MODE_CHANGE_LEVEL);
-        } else if (sTransitionTimer != 0) {
+        } else if (sTransitionTimer > 0) {
             set_play_mode(PLAY_MODE_CHANGE_AREA);
         } else if (
             (gCurrCreditsEntry == NULL || gCurrCreditsEntry == &sCreditsSequence[0]) &&
@@ -1361,11 +1362,13 @@ s32 play_mode_paused(void) {
     } else if (gMenuOptSelectIndex == MENU_OPT_DEFAULT) {
         raise_background_noise(1);
         gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+        skip_camera_interpolation();
         set_play_mode(PLAY_MODE_NORMAL);
     } else if (gMenuOptSelectIndex == MENU_OPT_EXIT_COURSE) {
         extern s16 gPrevMenuMode;
         if (gPrevMenuMode > 1) { // Course complete screen
             raise_background_noise(1);
+            skip_camera_interpolation();
             gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
         } else { // Pause menu
             level_trigger_warp(&gMarioStates[0], WARP_OP_EXIT);
@@ -1383,9 +1386,6 @@ s32 play_mode_paused(void) {
         set_play_mode(PLAY_MODE_CHANGE_LEVEL);
     }
 
-    if (!gLevelValues.zoomOutCameraOnPause || !network_check_singleplayer_pause()) {
-        gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
-    }
     return 0;
 }
 

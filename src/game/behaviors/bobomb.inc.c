@@ -394,7 +394,7 @@ static u8 bobomb_buddy_act_talk_continue_dialog(void) {
 
 void bobomb_buddy_act_talk(void) {
     if (set_mario_npc_dialog(&gMarioStates[0], 1, bobomb_buddy_act_talk_continue_dialog) == 2) {
-        //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
+        o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
 
         switch (o->oBobombBuddyRole) {
             case BOBOMB_BUDDY_ROLE_ADVICE:

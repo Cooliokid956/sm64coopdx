@@ -778,7 +778,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
     if (luaVertexColor) {
         if (!(rsp.geometry_mode & G_LIGHTING)) {
-            for (int i = 0; i < 3; i ++) {
+            for (int i = 0; i < 3; i++) {
                 vertexColorCached[i] = gVertexColor[i] / 255.0f;
             }
         }

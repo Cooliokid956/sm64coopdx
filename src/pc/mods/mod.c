@@ -151,6 +151,8 @@ static void mod_activate_bhv(struct Mod *mod, struct ModFile *file) {
 }
 
 void mod_activate(struct Mod* mod) {
+    if (!mod->pausable) { gModsPausable = false; }
+
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
